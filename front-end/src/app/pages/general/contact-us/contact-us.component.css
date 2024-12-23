@@ -1,0 +1,95 @@
+.btn-style-one {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 27px;
+    padding: 8px 36px;
+    background: #48bdc5;
+    border: 1px solid #48bdc5;
+    display: inline-block;
+    text-transform: uppercase;
+    font-family: "Source Sans Pro", sans-serif;
+    transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+  }
+  
+  .btn-style-one:hover {
+    color: #48bdc5;
+    border: 1px solid #48bdc5;
+    background: #ffffff;
+    transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+  }
+.contact .contact-form .form-control {
+    margin-bottom: 30px;
+  }
+  
+  .contact .address-block .media {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  
+  @media (max-width: 767px) {
+    .contact .address-block .media {
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+      text-align: center;
+    }
+    .contact .address-block .media:last-child {
+      margin-bottom: 30px;
+    }
+  }
+  
+  .contact .address-block .media i {
+    color: #48bdc5;
+    font-size: 30px;
+    margin-right: 35px;
+    width: 40px;
+    display: block;
+  }
+  
+  @media (max-width: 767px) {
+    .contact .address-block .media i {
+      -ms-flex-preferred-size: 100%;
+          flex-basis: 100%;
+      margin-right: 0;
+      margin-bottom: 30px;
+    }
+  }
+  
+  .contact .address-block .media .media-body h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .contact .address-block .media .media-body p {
+    line-height: 25px;
+  }
+  
+  .contact .address-block .media:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  
+  .form-control {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 15px 20px;
+    font-size: 14px;
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+    border: 1px solid #48bdc5;
+  }
+  
+  .form-control.main {
+    padding: 20px;
+  }
+

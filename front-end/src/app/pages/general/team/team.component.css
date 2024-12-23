@@ -1,0 +1,106 @@
+.team-members .team-person {
+    display: flex; 
+    flex-direction: column; 
+    text-align: center; 
+}
+
+.team-members .col-md-4, .team-members .col-sm-6 {
+    display: inline-block; 
+    float: none; 
+    vertical-align: top; 
+}
+
+
+.team-section {
+  position: relative;
+  background: #ffffff;
+  z-index: 1;
+}
+
+.team-section .section-title h3 {
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.team-section .section-title p {
+  font-size: 15px;
+  line-height: 26px;
+  color: #777777;
+  font-weight: 400;
+  padding-bottom: 30px;
+}
+
+.team-section .team-member {
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px -5px rgba(0, 0, 0, 0.2);
+}
+
+.team-section .team-member img {
+  width: 100%;
+}
+
+.team-section .team-member .contents {
+  background: #fff;
+  padding: 20px 10px;
+}
+
+.team-section .team-member .contents h4 {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  color: #000;
+  position: relative;
+}
+
+.team-section .team-member .contents h4:before {
+  position: absolute;
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: #777777;
+  bottom: -8px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
+.team-section .team-member .contents .btn-main {
+  margin-top: 30px;
+  background: #fff;
+  text-transform: uppercase;
+  color: #48bdc5;
+  padding: 10px 25px;
+  border: 1px solid #48bdc5;
+  transition: all .2s ease-in;
+}
+
+.team-section .team-member .contents .btn-main:hover {
+  background: #48bdc5;
+  color: #fff;
+}
+
+.team-members .team-person {
+  margin-top: 30px;
+}
+
+.team-members .team-person img {
+  border-radius: 5px;
+  width: 100%;
+}
+
+.team-members .team-person h6 {
+  margin-top: 20px;
+  font-size: 20px;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.team-members .team-person p {
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-family: "Source Sans Pro", sans-serif;
+}

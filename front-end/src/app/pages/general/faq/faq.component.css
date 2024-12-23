@@ -1,0 +1,56 @@
+.accordion-section .accordion-holder {
+    margin-top: 60px;
+  }
+  
+  .accordion-section .accordion-holder .panel-default {
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading {
+    background: #fff;
+    padding: 0;
+    border-radius: 0;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading h4 {
+    position: relative;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading h4 a {
+    font-weight: bold;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 20px;
+    display: block;
+    background: #48bdc5;
+    color: #fff;
+    padding: 20px 30px;
+    transition: all .3s ease;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading h4 a:before {
+    content: '\f106';
+    position: absolute;
+    right: 20px;
+    font-family: FontAwesome;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading h4 a.collapsed {
+    background: #fff;
+    color: #000;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading h4 a.collapsed:before {
+    content: '\f107';
+    position: absolute;
+    font-family: FontAwesome;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-heading h4 a.collapsed:hover {
+    color: #48bdc5;
+  }
+  
+  .accordion-section .accordion-holder .panel-default .panel-body {
+    padding: 20px 30px;
+  }
+  
