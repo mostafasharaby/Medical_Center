@@ -45,7 +45,7 @@
   .footer-main .footer-top .location-link .item i {
     position: absolute;
     top: 0px;
-    left: 0px;
+    left: 80px;
   }
   
   .footer-main .footer-top .location-link .item i:before {
@@ -65,6 +65,10 @@
     background: #fff;
     text-align: center;
     border-radius: 50%;
+  }
+  .footer-main .footer-top .social-icons li {
+    display: inline-block; /* Ensure list items are inline */
+    margin-right: 10px; /* Add spacing between icons */
   }
   
   .footer-main .footer-top .social-icons li a i {

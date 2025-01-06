@@ -14,6 +14,7 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { TeamComponent } from './team/team.component';
 import { FaqComponent } from './faq/faq.component';
 import { AppointmentRequestComponent } from './appointment-request/appointment-request.component';
+import { DoctorcsComponent } from './doctorcs/doctorcs.component';
 
 
 const routes: Routes = [
@@ -48,6 +49,7 @@ const routes: Routes = [
     MedicalServiceComponent,
     GalleryComponent,
     TeamComponent,
+    DoctorcsComponent,
     FaqComponent,
     AppointmentRequestComponent
   ]
