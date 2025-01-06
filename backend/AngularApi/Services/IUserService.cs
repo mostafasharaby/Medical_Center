@@ -1,4 +1,4 @@
-﻿using Hotel_Backend.Models;
+﻿using AngularApi.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
@@ -6,20 +6,20 @@ namespace AngularApi.Services
 {
     public interface IUserService
     {
-        Task<Guest> GetCurrentUserAsync();
+        Task<Patient> GetCurrentUserAsync();
     }
     public class UserService : IUserService
     {
-        private readonly UserManager<Guest> _userManager;
+        private readonly UserManager<Patient> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(UserManager<Guest> userManager, IHttpContextAccessor httpContextAccessor)
+        public UserService(UserManager<Patient> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Guest> GetCurrentUserAsync()
+        public async Task<Patient> GetCurrentUserAsync()
         {
             var context = _httpContextAccessor.HttpContext;
             if (context == null)

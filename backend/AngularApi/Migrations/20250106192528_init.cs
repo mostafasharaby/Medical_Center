@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Hotel_Backend.Migrations
+namespace AngularApi.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration
@@ -11,6 +11,19 @@ namespace Hotel_Backend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AppointmentStatus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentStatus", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -31,7 +44,6 @@ namespace Hotel_Backend.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -53,58 +65,16 @@ namespace Hotel_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Blogs",
-                columns: table => new
-                {
-                    BlogID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Blogs", x => x.BlogID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Specializations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    SpecializationName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Country",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CountryName = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Country", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Room_Types",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeName = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Room_Types", x => x.Id);
+                    table.PrimaryKey("PK_Specializations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,235 +184,201 @@ namespace Hotel_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservations",
+                name: "Appointments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GuestId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TsCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TsUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MedicalCenterId = table.Column<int>(type: "int", nullable: true),
+                    ProbableStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ActualEndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AppointmentStatusId = table.Column<int>(type: "int", nullable: true),
+                    AppointmentTakenDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AppBookingChannelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_GuestId",
-                        column: x => x.GuestId,
+                        name: "FK_Appointments_AppointmentStatus_AppointmentStatusId",
+                        column: x => x.AppointmentStatusId,
+                        principalTable: "AppointmentStatus",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_PatientId",
+                        column: x => x.PatientId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlogDetails",
+                name: "ClientReviews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BlogID = table.Column<int>(type: "int", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VideoURL = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    IsReviewAnonymous = table.Column<bool>(type: "bit", nullable: true),
+                    WaitTimeRating = table.Column<int>(type: "int", nullable: true),
+                    BedsideMannerRating = table.Column<int>(type: "int", nullable: true),
+                    OverallRating = table.Column<int>(type: "int", nullable: true),
+                    Review = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDoctorRecommended = table.Column<bool>(type: "bit", nullable: true),
+                    ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlogDetails", x => x.Id);
+                    table.PrimaryKey("PK_ClientReviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BlogDetails_Blogs_BlogID",
-                        column: x => x.BlogID,
-                        principalTable: "Blogs",
-                        principalColumn: "BlogID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CountryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cities_Country_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Country",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InvoiceGuests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GuestId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ReservationId = table.Column<int>(type: "int", nullable: true),
-                    InvoiceAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    TsIssued = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TsPaid = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TsCanceled = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InvoiceGuests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InvoiceGuests_AspNetUsers_GuestId",
-                        column: x => x.GuestId,
+                        name: "FK_ClientReviews_AspNetUsers_PatientId",
+                        column: x => x.PatientId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_InvoiceGuests_Reservations_ReservationId",
-                        column: x => x.ReservationId,
-                        principalTable: "Reservations",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReservationStatusEvents",
+                name: "DoctorQualifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationId = table.Column<int>(type: "int", nullable: true),
-                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TsCreated = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    QualificationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InstituteName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProcurementYear = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReservationStatusEvents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ReservationStatusEvents_Reservations_ReservationId",
-                        column: x => x.ReservationId,
-                        principalTable: "Reservations",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_DoctorQualifications", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Company",
+                name: "Doctors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VATID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfessionalStatement = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PracticingFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MedicalCenterId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Company", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Company_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_Doctors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Hotels",
+                name: "DoctorSpecialization",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HotelName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true),
-                    CompanyId = table.Column<int>(type: "int", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    SpecializationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Hotels", x => x.Id);
+                    table.PrimaryKey("PK_DoctorSpecialization", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Hotels_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_DoctorSpecialization_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Hotels_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Hotels_Company_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Company",
+                        name: "FK_DoctorSpecialization_Specializations_SpecializationId",
+                        column: x => x.SpecializationId,
+                        principalTable: "Specializations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    RoomID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    RoomTypeId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Capacity = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Size = table.Column<int>(type: "int", nullable: true),
-                    Services = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HotelId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.RoomID);
-                    table.ForeignKey(
-                        name: "FK_Rooms_Hotels_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotels",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Rooms_Room_Types_RoomTypeId",
-                        column: x => x.RoomTypeId,
-                        principalTable: "Room_Types",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ReservedRooms",
+                name: "HospitalAffiliation",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    HospitalName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReservedRooms", x => x.Id);
+                    table.PrimaryKey("PK_HospitalAffiliation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReservedRooms_Reservations_ReservationId",
-                        column: x => x.ReservationId,
-                        principalTable: "Reservations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ReservedRooms_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
-                        principalColumn: "RoomID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_HospitalAffiliation_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalCenter",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HospitalAffiliationId = table.Column<int>(type: "int", nullable: true),
+                    TimeSlotPerClientInMin = table.Column<int>(type: "int", nullable: true),
+                    FirstConsultationFee = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    FollowupConsultationFee = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalCenter", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicalCenter_HospitalAffiliation_HospitalAffiliationId",
+                        column: x => x.HospitalAffiliationId,
+                        principalTable: "HospitalAffiliation",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalCenterDoctorAvailability",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MedicalCenterId = table.Column<int>(type: "int", nullable: true),
+                    DayOfWeek = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: true),
+                    ReasonOfUnavailability = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalCenterDoctorAvailability", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicalCenterDoctorAvailability_MedicalCenter_MedicalCenterId",
+                        column: x => x.MedicalCenterId,
+                        principalTable: "MedicalCenter",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_AppointmentStatusId",
+                table: "Appointments",
+                column: "AppointmentStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_MedicalCenterId",
+                table: "Appointments",
+                column: "MedicalCenterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_PatientId",
+                table: "Appointments",
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -484,79 +420,89 @@ namespace Hotel_Backend.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlogDetails_BlogID",
-                table: "BlogDetails",
-                column: "BlogID");
+                name: "IX_ClientReviews_DoctorId",
+                table: "ClientReviews",
+                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cities_CountryId",
-                table: "Cities",
-                column: "CountryId");
+                name: "IX_ClientReviews_PatientId",
+                table: "ClientReviews",
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Company_CityId",
-                table: "Company",
-                column: "CityId");
+                name: "IX_DoctorQualifications_DoctorId",
+                table: "DoctorQualifications",
+                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hotels_CategoryId",
-                table: "Hotels",
-                column: "CategoryId");
+                name: "IX_Doctors_MedicalCenterId",
+                table: "Doctors",
+                column: "MedicalCenterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hotels_CityId",
-                table: "Hotels",
-                column: "CityId");
+                name: "IX_DoctorSpecialization_DoctorId",
+                table: "DoctorSpecialization",
+                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hotels_CompanyId",
-                table: "Hotels",
-                column: "CompanyId");
+                name: "IX_DoctorSpecialization_SpecializationId",
+                table: "DoctorSpecialization",
+                column: "SpecializationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceGuests_GuestId",
-                table: "InvoiceGuests",
-                column: "GuestId");
+                name: "IX_HospitalAffiliation_DoctorId",
+                table: "HospitalAffiliation",
+                column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceGuests_ReservationId",
-                table: "InvoiceGuests",
-                column: "ReservationId");
+                name: "IX_MedicalCenter_HospitalAffiliationId",
+                table: "MedicalCenter",
+                column: "HospitalAffiliationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_GuestId",
-                table: "Reservations",
-                column: "GuestId");
+                name: "IX_MedicalCenterDoctorAvailability_MedicalCenterId",
+                table: "MedicalCenterDoctorAvailability",
+                column: "MedicalCenterId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ReservationStatusEvents_ReservationId",
-                table: "ReservationStatusEvents",
-                column: "ReservationId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_Appointments_MedicalCenter_MedicalCenterId",
+                table: "Appointments",
+                column: "MedicalCenterId",
+                principalTable: "MedicalCenter",
+                principalColumn: "Id");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ReservedRooms_ReservationId",
-                table: "ReservedRooms",
-                column: "ReservationId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_ClientReviews_Doctors_DoctorId",
+                table: "ClientReviews",
+                column: "DoctorId",
+                principalTable: "Doctors",
+                principalColumn: "Id");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ReservedRooms_RoomId",
-                table: "ReservedRooms",
-                column: "RoomId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_DoctorQualifications_Doctors_DoctorId",
+                table: "DoctorQualifications",
+                column: "DoctorId",
+                principalTable: "Doctors",
+                principalColumn: "Id");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Rooms_HotelId",
-                table: "Rooms",
-                column: "HotelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Rooms_RoomTypeId",
-                table: "Rooms",
-                column: "RoomTypeId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_Doctors_MedicalCenter_MedicalCenterId",
+                table: "Doctors",
+                column: "MedicalCenterId",
+                principalTable: "MedicalCenter",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Doctors_MedicalCenter_MedicalCenterId",
+                table: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "Appointments");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -573,49 +519,37 @@ namespace Hotel_Backend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BlogDetails");
+                name: "ClientReviews");
 
             migrationBuilder.DropTable(
-                name: "InvoiceGuests");
+                name: "DoctorQualifications");
 
             migrationBuilder.DropTable(
-                name: "ReservationStatusEvents");
+                name: "DoctorSpecialization");
 
             migrationBuilder.DropTable(
-                name: "ReservedRooms");
+                name: "MedicalCenterDoctorAvailability");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentStatus");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Blogs");
-
-            migrationBuilder.DropTable(
-                name: "Reservations");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Hotels");
+                name: "Specializations");
 
             migrationBuilder.DropTable(
-                name: "Room_Types");
+                name: "MedicalCenter");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "HospitalAffiliation");
 
             migrationBuilder.DropTable(
-                name: "Company");
-
-            migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
-                name: "Country");
+                name: "Doctors");
         }
     }
 }

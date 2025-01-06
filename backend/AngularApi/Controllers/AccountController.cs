@@ -1,8 +1,8 @@
 ﻿using AngularApi.DTO;
+using AngularApi.Models;
 using AngularApi.Services;
 using Azure;
 using Hotel_Backend.DTO;
-using Hotel_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +28,11 @@ namespace AngularApi.Controllers
         ///   { "email": "ramyy@gmail.com", "password": "0133asdASD*"}      
         ///   works
         /// </summary>
-        private readonly UserManager<Guest> userManager;
+        private readonly UserManager<Patient> userManager;
         private readonly IConfiguration Configuration;
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
-        public AccountController(UserManager<Guest> _userManager, IConfiguration Configuration , IEmailService _emailService )
+        public AccountController(UserManager<Patient> _userManager, IConfiguration Configuration , IEmailService _emailService )
         {
             userManager = _userManager;
             this.Configuration = Configuration;
@@ -45,7 +45,7 @@ namespace AngularApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                Guest appUser = new Guest();
+                Patient appUser = new Patient();
                 appUser.UserName = registerUser.UserName;
                 appUser.Email = registerUser.Email;
           
@@ -69,7 +69,7 @@ namespace AngularApi.Controllers
                 var found = await userManager.FindByEmailAsync(logInUser.Email);
                 if (found != null)
                 {
-                    Guest appUser = new Guest();
+                    Patient appUser = new Patient();
                     appUser.Email = logInUser.Email;
 
                  
@@ -283,8 +283,7 @@ namespace AngularApi.Controllers
             user.Email = model.Email;
             user.Address = model.Address;
             user.PhoneNumber =model.PhoneNumber;
-            user.PersonalImgUrl = model.PersonalImgUrl;
-            user.CoverImgUrl = model.CoverImgUrl;
+       
 
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded) return BadRequest(result.Errors);
@@ -335,9 +334,7 @@ namespace AngularApi.Controllers
                 user.Email,
                 user.UserName,
                 user.Address,
-                user.PhoneNumber,                
-                user.CoverImgUrl,
-                user.PersonalImgUrl
+                user.PhoneNumber                      
             });
         }
 

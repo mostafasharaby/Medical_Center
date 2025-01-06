@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using Hotel_Backend.Models;
 using AngularApi.Services;
+using AngularApi.Models;
 
 namespace WebApiDemo
 {
@@ -55,11 +55,11 @@ namespace WebApiDemo
            
 
             // builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AngularDbContext>().AddDefaultTokenProviders();
-            builder.Services.AddIdentity<Guest, IdentityRole>(options =>
+            builder.Services.AddIdentity<Patient, IdentityRole>(options =>
             {
                 options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
             })
-             .AddEntityFrameworkStores<HotelDbContext>()
+             .AddEntityFrameworkStores<MedicalCenterDbContext>()
              .AddDefaultTokenProviders();
 
 
@@ -68,7 +68,7 @@ namespace WebApiDemo
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            builder.Services.AddDbContext<HotelDbContext>(option =>
+            builder.Services.AddDbContext<MedicalCenterDbContext>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("connection"));
             });
