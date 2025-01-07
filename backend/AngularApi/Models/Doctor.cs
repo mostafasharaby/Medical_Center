@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string? Name { get; set; } = string.Empty;
+        public string? Image { get; set; } = string.Empty;
         public string ?ProfessionalStatement { get; set; } = string.Empty;
         public DateTime?PracticingFrom { get; set; }
 

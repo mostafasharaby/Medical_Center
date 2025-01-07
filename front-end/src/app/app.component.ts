@@ -16,9 +16,9 @@ export class AppComponent {
   ) { }
 
 
-  // ngAfterViewInit(): void {   
-  //   this.reload.initializeLoader();
-  // }
+  ngAfterViewInit(): void {   
+    this.reload.initializeLoader();
+  }
   
   ngOnInit(): void {
     this.router.events.subscribe(() => {

@@ -25,17 +25,17 @@ export class ReloadService implements AfterViewInit {
     // Reset the loader visibility if needed
     preloader.style.display = 'block';
     loader.classList.remove('fade-out');
-    loader.classList.add('fade-in'); // Ensure the loader is visible first
+    loader.classList.add('fade-in'); 
 
     // Fade out the loader after a short timeout
     setTimeout(() => {
       loader.classList.add('fade-out');
     }, 300); 
 
-    // Hide preloader after fade-out transition
+   
     setTimeout(() => {
       preloader.style.display = 'none';
-    }, 600); // Wait a little longer for fade-out to complete
+    }, 600); 
   }
 
   resetLoader(): void {

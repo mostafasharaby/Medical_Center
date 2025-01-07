@@ -1,4 +1,7 @@
-
+<div id="preloader">
+    <div class="loader"></div>
+  </div>
+  
 <!--Page Title-->
 <section class="page-title text-center" style="background-image:url(images/background/3.jpg);">
   <div class="container">
@@ -43,31 +46,20 @@
                       </li>
                   </ul>
               </div>
-              <div class="tab-content">
-                  <!--Start single tab content-->
-                  <div class="team-members tab-pane  active row" id="doctor">
-                      <div class="col-md-4 col-sm-6">
-                          <div class="team-person text-center">
-                              <img src="images/team/doctor-1.jpg" class="img-responsive" alt="team">
-                              <h6>Dr. Emely Robert</h6>
-                              <p>Bone Specialist</p>
-                          </div>
+              <div class="tab-content">                 
+                  <div class="team-members tab-pane active row" id="doctor">
+                    <div class="col-md-4 col-sm-6" *ngFor="let doctor of doctorsData">
+                      <div class="team-person text-center">
+                        <img [src]="doctor.image" class="img-responsive" alt="team">
+                        <h6>{{ doctor.name }}</h6>
+                        <p >
+                           {{doctor.specializations[0] }}
+                        </p>
                       </div>
-                      <div class="col-md-4 col-sm-6">
-                          <div class="team-person text-center">
-                              <img src="images/team/doctor-2.jpg" class="img-responsive" alt="team">
-                              <h6>Dr. Rag Jhon</h6>
-                              <p>Eye Specialist</p>
-                          </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6">
-                          <div class="team-person text-center">
-                              <img src="images/team/doctor-3.jpg" class="img-responsive" alt="team">
-                              <h6>Dr. Tent Richardson</h6>
-                              <p>Skin Specialist</p>
-                          </div>
-                      </div>
+                    </div>
                   </div>
+                  
+                  
                   <!--End single tab content-->
                   <!--Start single tab content-->
                   <div class="team-members tab-pane  row" id="event-planning">

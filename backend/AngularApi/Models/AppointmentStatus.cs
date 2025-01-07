@@ -2,10 +2,11 @@
 {
     public enum AppointmentStatusEnum
     {
-        Active,
-        Complete,
-        Canceled
+        Active,    // 0
+        Complete,  // 1
+        Canceled   // 2
     }
+
 
     public class AppointmentStatus
     {

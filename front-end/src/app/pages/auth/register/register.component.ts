@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -12,7 +12,13 @@ import { ReloadService } from '../../../shared/service/reload.service';
   styleUrls: ['./register.component.css']
 })
 
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit,AfterViewInit {
+
+  ngAfterViewInit(): void {   
+    this.reload.initializeLoader();
+  }
+  
+
   user: User = {
     fullName: '',
     email: '',
@@ -40,10 +46,7 @@ export class RegisterComponent implements OnInit {
         validators: this.passwordMatch(true, true) //function is invoked when the form group is created to return the actual validator function (Cross-Field Validation)
       });
   }
-  ngAfterViewInit(): void {   
-    this.reload.initializeLoader();
-  }
-  
+
 
   passwordMatch(complexPassword: boolean = false, complexPasswordWithFullName: boolean = false): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {

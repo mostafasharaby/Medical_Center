@@ -221,8 +221,7 @@ namespace AngularApi.Controllers
             return Redirect($"http://localhost:4200/auth/reset-password?token={token}&email={email}");
         }
 
-
-      
+              
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDTO resetPasswordDto)

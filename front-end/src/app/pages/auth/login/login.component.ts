@@ -18,6 +18,9 @@ export class LoginComponent implements OnInit, AfterViewInit{
   
   ngOnInit() {
   }
+  ngAfterViewInit(): void {   
+    this.reload.initializeLoader();
+  }
 
    loginForm: FormGroup;
   constructor(private fb: FormBuilder,
@@ -42,10 +45,6 @@ export class LoginComponent implements OnInit, AfterViewInit{
     });
   }
 
-  ngAfterViewInit(): void {   
-    this.reload.initializeLoader();
-  }
-  
 
   isDialogOpen = false;
   isDialogMounted = false;

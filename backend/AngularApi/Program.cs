@@ -23,7 +23,7 @@ namespace WebApiDemo
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Hotel-backend",
+                    Title = "Medical Center",
                     Description = "ASP.NET Core Web API"
                 });
 

@@ -7,33 +7,13 @@
       </div>
       <div class="top-right">
         <ul class="social-links">
-          <li>
-            <a href="#">
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-twitter" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-google-plus" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-instagram" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-pinterest-p" aria-hidden="true"></i>
+          <li *ngFor="let link of socialLinks">
+            <a [href]="link.href">
+              <i class="fa" [ngClass]="link.icon" [attr.aria-hidden]="true"></i>
             </a>
           </li>
         </ul>
-      </div>
+      </div>      
     </div>
   </div>
   <!--header top-->
@@ -68,6 +48,25 @@
             <br>
             <span>+ (88017) - 123 - 4567</span>
           </li>
+          <li class="item" *ngIf="!isLoggedIn">
+            <div class="icon-box">
+              <a href="/auth/login">
+               <i class="fa-regular fa-user text-xl text-dark "></i>
+              </a>
+            </div>             
+            <div class="my-auto"><strong>Log In </strong></div>     
+            <br>                     
+          </li>     
+          
+          <li class="item"  *ngIf="isLoggedIn" >
+            <div class="icon-box">
+              <a data-bs-toggle="modal" data-bs-target="#logoutModal" routerLinkActive="active" >
+               <i  title="Logout" class=" fa-solid fa-arrow-right-from-bracket text-xl text-dark"></i>
+              </a>
+            </div>                                
+            <div class="my-auto"><strong>Log Out </strong></div>   
+            <br>                              
+          </li>   
         </ul>
         <div class="link-btn">
           <a href="#" class="btn-style-one">Appoinment</a>
@@ -82,12 +81,11 @@
         <div class="hidden mt-2 mr-4 sm:inline-block">
           <span></span>
         </div>
-
         <button data-collapse-toggle="mobile-menu-2" type="button"
-          class="inline-flex left-0  items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          aria-controls="mobile-menu-2" aria-expanded="true">
+          class="inline-flex left-0 items-center  p-2 ml-1 text-sm text-white rounded-lg lg:hidden hover:bg-info-100"
+          aria-controls="mobile-menu-2" aria-expanded="false" (click)="toggleDrawer()" >
           <span class="sr-only">Open main menu</span>
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <svg  *ngIf="!isDrawerOpen" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd"
               d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
               clip-rule="evenodd"></path>
@@ -97,45 +95,61 @@
               d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
               clip-rule="evenodd"></path>
           </svg>
+          <i *ngIf="isDrawerOpen" class="fas fa-times w-6 h-6 duration-300" style="font-size: 24px;"
+            aria-label="Close Icon">
+          </i>
         </button>
       </div>
       <div class="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
-        <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0 ">
-          <li>
-            <a href="/pages/home" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 20px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Home</a>
-          </li>
-          <li>
-            <a href="/pages/about-us" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 20px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">About</a>
-          </li>
-          <li>
-            <a href="/pages/service" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 25px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Service</a>
-          </li>
-          <li>
-            <a href="/pages/gallery" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 25px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Gallery</a>
-          </li>
-          <li>
-            <a href="/pages/team" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 25px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Team</a>
-          </li>
-          <li>
-            <a href="/pages/appointment" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 25px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Appointment</a>
-          </li>
-          <li>
-            <a href="/pages/blog" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 25px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Blog</a>
-          </li>
-          <li>
-            <a href="/pages/contact" style=" font-family: 'Source Sans Pro sans-serif'; font-size: 17px;    text-transform: uppercase;padding: 25px 20px; "      
-              class="block py-2 pl-3 pr-4 text-white  border-b border-gray-100  lg:border-0 ">Contact</a>
-          </li>
+        <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+            <li *ngFor="let item of menuItems">
+                <a [href]="item.href" 
+                   style="font-family: 'Source Sans Pro sans-serif'; font-size: 17px; text-transform: uppercase; padding: 25px 20px;" 
+                   class="block py-2 pl-3 pr-4 text-white border-b border-gray-100 lg:border-0">
+                   {{ item.label }}
+                </a>
+            </li>
         </ul>
-      </div>
+      </div>    
     </div>
   </nav>
+</div>
+<!--logout Model-->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class=" modal-dialog modal-dialog-centered flex items-center justify-center">
+    <div class=" modal-content  rounded-md w-full max-w-[300px] sm:max-w-[500px] text-center p-4 sm:p-10 ">
+      <div class="modal-body">
+        <div class="flex flex-col items-center justify-center">
+          <span
+            class="mb-4 inline-flex justify-center items-center w-[62px] h-[62px] rounded-full border-4 border-yellow-50 bg-yellow-100 text-yellow-500">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              viewBox="0 0 16 16">
+              <path
+                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z">
+              </path>
+            </svg>
+          </span>
 
+          <h3 class="mb-2 text-2xl font-bold text-gray-800">
+            Sign out
+          </h3>
+          <p class="text-gray-500">
+            Are you sure you would like to sign out of your account?
+          </p>
+        </div>
+        <div class="modal-footer mt-6 flex justify-center gap-x-4">
+          <button type="button"
+            class="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
+            (click)="confirmLogout()">
+            Sign out
+          </button>
+          <button type="button"
+            class="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
+            data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

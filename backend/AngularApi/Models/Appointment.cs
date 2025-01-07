@@ -9,7 +9,6 @@
         public DateTime? ActualEndTime { get; set; }
         public int? AppointmentStatusId { get; set; }
         public DateTime? AppointmentTakenDate { get; set; }
-        public int? AppBookingChannelId { get; set; }
 
         public Patient? Patient { get; set; } = null!;
         public MedicalCenter? MedicalCenter { get; set; } = null!;

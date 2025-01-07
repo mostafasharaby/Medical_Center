@@ -267,3 +267,7 @@
     color: #fff;
   }
   
+  .fade-out {
+    opacity: 0; !important;
+    transition: opacity 0.5s ease-out; !important;
+    }
