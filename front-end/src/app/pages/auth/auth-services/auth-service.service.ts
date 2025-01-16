@@ -15,6 +15,7 @@ export class AuthServiceService {
     this.isLoggedSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn);
   }
   private loginUrl = `${environment.api}/Account/login`;
+  public googleloginUrl = `${environment.api}/Account/LoginWithGoogle`;
   private registerUrl = `${environment.api}/Account/register`;
   private userUrl = '';
   usernameTakenError: boolean = false;
@@ -71,7 +72,6 @@ export class AuthServiceService {
   getloggedStatus(): Observable<boolean> {
     return this.isLoggedSubject.asObservable();
   }
-
 
 
   isAdmin(): boolean {

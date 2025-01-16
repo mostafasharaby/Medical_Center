@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using AngularApi.Services;
 using AngularApi.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebApiDemo
 {
@@ -73,26 +74,60 @@ namespace WebApiDemo
                 option.UseSqlServer(builder.Configuration.GetConnectionString("connection"));
             });
 
+            //builder.Services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            // .AddJwtBearer(op =>
+            // {
+            //     op.SaveToken = true;
+            //     op.RequireHttpsMetadata = false;
+            //     op.TokenValidationParameters = new TokenValidationParameters()
+            //     {
+            //         ValidateIssuer = true,
+            //         ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
+            //         ValidateAudience = true,
+            //         ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+            //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])) // Corrected spelling
+            //     };
+            // })
+            // .AddGoogle(options =>
+            // {
+            //     options.ClientId = builder.Configuration["GoogleAuth:ClientId"];
+            //     options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"];
+            // });
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                // Set Cookie as the default for Google authentication
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(op =>
+            .AddJwtBearer(options =>
             {
-                op.SaveToken = true;
-                op.RequireHttpsMetadata = false;
-                op.TokenValidationParameters = new TokenValidationParameters()
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["Jwt:ValidIssuer"], 
+                    ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["Jwt:ValidAudience"], 
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])) // Corrected spelling
+                    ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
                 };
+            })
+            .AddCookie() // Add cookie authentication for Google
+            .AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["GoogleAuth:ClientId"];
+                options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"];
+                options.CallbackPath = "/GoogleLoginCallback"; // Make sure this matches your Google API Console setup
             });
 
-            
+
+
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("MyPolicy", builder =>

@@ -23,7 +23,8 @@ export class HeaderComponent implements OnInit {
   }
   
   //---------------------Toggle----------------------
-  isCollapsed = true; // Navbar state  
+
+  isCollapsed = true;
   toggleNavbar() {
     this.isCollapsed = !this.isCollapsed;
   }
@@ -50,7 +51,7 @@ export class HeaderComponent implements OnInit {
 
 
 
-//-------------------- social icons loop-------------------
+//-------------------- social icons loops-------------------
   socialLinks = [
     { href: '#', icon: 'fa-facebook', aria: 'Facebook' },
     { href: '#', icon: 'fa-twitter', aria: 'Twitter' },

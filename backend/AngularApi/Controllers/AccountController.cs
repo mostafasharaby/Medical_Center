@@ -3,6 +3,7 @@ using AngularApi.Models;
 using AngularApi.Services;
 using Azure;
 using Hotel_Backend.DTO;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -76,54 +77,12 @@ namespace AngularApi.Controllers
                     var checkpass = await userManager.CheckPasswordAsync(found, logInUser.Password);
                     if (checkpass)
                     {
-                                          
-                        var claim = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.NameIdentifier, found.Id), 
-                            new Claim(ClaimTypes.Email, found.Email),
-                            new Claim(ClaimTypes.Name, found.UserName),
-                            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) 
-                        };
-                        Console.WriteLine("UserId "+ found.Id);
 
-                        var userId = found.Id;
-                        Console.WriteLine("UserId: "+ userId);
-
-
-                        var role = await userManager.GetRolesAsync(appUser);
-                        foreach (var r in role)  
-                        {
-                            claim.Add(new Claim(ClaimTypes.Role, r));
-                        }
-                        var roles = await userManager.GetRolesAsync(found);
-                        foreach (var roleee in roles)
-                        {
-                            claim.Add(new Claim(ClaimTypes.Role, roleee));
-                        }
-
-                        foreach (var c in claim)
-                        {
-                            Console.WriteLine($"Claim Type: {c}");
-                        }
-
-
-                       
-                        SecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]));
-                        SigningCredentials signing = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-                        // Create the token
-                        JwtSecurityToken jwtSecurity = new JwtSecurityToken(
-                            issuer: Configuration["Jwt:validissuer"],
-                            audience: Configuration["Jwt:validaudience"],  
-                            claims: claim,
-                            expires: DateTime.Now.AddDays(1),
-                            signingCredentials: signing
-                            );
-
+                        var tokenGenerated = GenerateJwtToken(found);                       
                         return Ok(new
                         {
-                            token = new JwtSecurityTokenHandler().WriteToken(jwtSecurity),
-                            expiration = jwtSecurity.ValidTo
+                            token = tokenGenerated,
+                            expiration = DateTime.Now.AddDays(1)
                         });
                     }
                 }
@@ -131,6 +90,101 @@ namespace AngularApi.Controllers
             }
             return BadRequest(ModelState);
         }
+
+        [HttpGet("LoginWithGoogle")]
+        public IActionResult LoginWithGoogle()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action(nameof(GoogleLoginCallback))
+            };
+            return Challenge(properties, "Google");
+        }
+
+
+        [HttpGet("GoogleLoginCallback")]
+        public async Task<IActionResult> GoogleLoginCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync("Google");
+
+            if (!authenticateResult.Succeeded)
+            {
+                return Unauthorized("External login information could not be retrieved.");
+            }
+
+            var externalUser = authenticateResult.Principal;
+            var email = externalUser.FindFirstValue(ClaimTypes.Email);
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                // Optionally, create a new user if one doesn't exist
+                user = new Patient { UserName = email, Email = email };
+                var createUserResult = await userManager.CreateAsync(user);
+
+                if (!createUserResult.Succeeded)
+                {
+                    return BadRequest("Error creating user.");
+                }
+
+                await userManager.AddLoginAsync(user, new UserLoginInfo("Google", externalUser.FindFirstValue(ClaimTypes.NameIdentifier), "Google"));
+            }
+
+            var token = GenerateJwtToken(user);
+            return Ok(new { Token = token });
+        }
+
+        private string GenerateJwtToken(Patient user)
+        {
+
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+            if (string.IsNullOrEmpty(user.Id))
+                throw new ArgumentNullException(nameof(user.Id), "User Id cannot be null or empty");
+            if (string.IsNullOrEmpty(user.Email))
+                throw new ArgumentNullException(nameof(user.Email), "User Email cannot be null or empty");
+            if (string.IsNullOrEmpty(user.UserName))
+                throw new ArgumentNullException(nameof(user.UserName), "User Name cannot be null or empty");
+
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+
+            };
+
+            //var role =  userManager.GetRolesAsync(user);
+            //foreach (var r in role)
+            //{
+            //    claims.Add(new Claim(ClaimTypes.Role, r));
+            //}
+            //var roles =  userManager.GetRolesAsync(user);
+            //foreach (var roleee in roles)
+            //{
+            //    claims.Add(new Claim(ClaimTypes.Role, roleee));
+            //}
+
+            //foreach (var c in claim)
+            //{
+            //    Console.WriteLine($"Claim Type: {c}");
+            //}
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: Configuration["Jwt:ValidIssuer"],
+                audience: Configuration["Jwt:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
 
         //[HttpPost("LoginWith2FA")]
         //public async Task<IActionResult> LoginWith2FA(LoginWith2FADTO model)

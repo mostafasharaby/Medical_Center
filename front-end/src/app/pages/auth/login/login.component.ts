@@ -94,7 +94,9 @@ export class LoginComponent implements OnInit, AfterViewInit{
     this.snackBar.showSnakeBar('Login Failed');
   }
 
-  errorMessage: string | null = null; 
+  errorMessage: string | null = null;
+  
+  //-----------------------------Login-----------------------------------
   onSubmit() {
     const { email, password } = this.loginForm.value;
       console.log("login val : " + email, password);
@@ -118,7 +120,12 @@ export class LoginComponent implements OnInit, AfterViewInit{
       );
     }
   }
-// -------------------------------------------------------Forget password---------
+
+  //----------------------------login With Google------------------------------------
+  googleLogin() {
+    window.location.href = this.authService.googleloginUrl;
+  }
+// ------------------------------Forget password-------------------------------------
 
 
 forgetForm !: FormGroup;
