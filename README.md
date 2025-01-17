@@ -1,4 +1,4 @@
-# Medical Center - Full Stack Web Application with Advanced Admin Dashboard
+# Medical Center - Full Stack Web Application 
 
 The **Medical Center** full-stack web application is a comprehensive platform for managing healthcare services. It is built with **.NET 8** for a robust and scalable backend and **Angular 18** for a dynamic and responsive frontend. This application offers seamless functionality for patients, doctors, and administrators, including appointment management and medical records.
 
