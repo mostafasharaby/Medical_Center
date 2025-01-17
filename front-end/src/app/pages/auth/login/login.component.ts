@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit, AfterViewInit{
     private forgetpasswordService :ForgotServiceService, 
     private resetPasswordService :ResetPasswordService,
     ) {
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -43,6 +44,7 @@ export class LoginComponent implements OnInit, AfterViewInit{
     this.resetForm = this.fb.group({
       resetPassword: ['', [Validators.required]],     
     });
+    
   }
 
 
