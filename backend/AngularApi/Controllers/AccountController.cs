@@ -92,6 +92,7 @@ namespace AngularApi.Controllers
             return BadRequest(ModelState);
         }
 
+
         [HttpGet("LoginWithGoogle")]
         public IActionResult LoginWithGoogle()
         {
@@ -119,7 +120,6 @@ namespace AngularApi.Controllers
 
             if (user == null)
             {
-                // Optionally, create a new user if one doesn't exist
                 user = new Patient { UserName = email, Email = email };
                 var createUserResult = await userManager.CreateAsync(user);
 
@@ -169,11 +169,7 @@ namespace AngularApi.Controllers
             //{
             //    claims.Add(new Claim(ClaimTypes.Role, roleee));
             //}
-
-            //foreach (var c in claim)
-            //{
-            //    Console.WriteLine($"Claim Type: {c}");
-            //}
+     
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

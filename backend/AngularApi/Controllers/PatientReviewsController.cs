@@ -24,7 +24,7 @@ namespace AngularApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PatientReview>>> GetPatientReviews()
         {
-            return await _context.PatientReviews.ToListAsync();
+            return await _context.PatientReviews.Include(i=>i.Patient).ToListAsync();
         }
 
         
