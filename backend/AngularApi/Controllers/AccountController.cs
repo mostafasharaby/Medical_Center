@@ -4,6 +4,7 @@ using AngularApi.Services;
 using Azure;
 using Hotel_Backend.DTO;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -105,7 +106,7 @@ namespace AngularApi.Controllers
         [HttpGet("GoogleLoginCallback")]
         public async Task<IActionResult> GoogleLoginCallback()
         {
-            var authenticateResult = await HttpContext.AuthenticateAsync("Google");
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             if (!authenticateResult.Succeeded)
             {
@@ -131,7 +132,9 @@ namespace AngularApi.Controllers
             }
 
             var token = GenerateJwtToken(user);
-            return Ok(new { Token = token });
+          
+            //return Ok(new { Token = token });
+            return Redirect($"http://localhost:4200/auth/login-success?token={token}");
         }
 
         private string GenerateJwtToken(Patient user)

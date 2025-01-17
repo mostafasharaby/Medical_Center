@@ -10,14 +10,18 @@ import { environment } from '../../../../environments/environment';
 })
 
 export class AuthServiceService {
-  private isLoggedSubject: BehaviorSubject<boolean>;
+
+  isLoggedSubject: BehaviorSubject<boolean>;
   constructor(private http: HttpClient) {
     this.isLoggedSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn);
+    console.log("isUserLoggedIn", this.isUserLoggedIn);
   }
+
   private loginUrl = `${environment.api}/Account/login`;
   public googleloginUrl = `${environment.api}/Account/LoginWithGoogle`;
   private registerUrl = `${environment.api}/Account/register`;
   private userUrl = '';
+  
   usernameTakenError: boolean = false;
   private username: string | null = null;
 
@@ -65,7 +69,7 @@ export class AuthServiceService {
   }
 
 
-  get isUserLoggedIn(): boolean {
+  get isUserLoggedIn(): boolean {    
     return (localStorage.getItem('token')) ? true : false;
   }
 

@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using AngularApi.Services;
 using AngularApi.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace WebApiDemo
 {
@@ -99,10 +100,11 @@ namespace WebApiDemo
             // });
             builder.Services.AddAuthentication(options =>
             {
-                // Set Cookie as the default for Google authentication
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                //options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -117,12 +119,11 @@ namespace WebApiDemo
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
                 };
             })
-            .AddCookie() // Add cookie authentication for Google
+            .AddCookie() 
             .AddGoogle(options =>
             {
                 options.ClientId = builder.Configuration["GoogleAuth:ClientId"];
                 options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"];
-                options.CallbackPath = "/GoogleLoginCallback"; // Make sure this matches your Google API Console setup
             });
 
 

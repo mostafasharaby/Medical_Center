@@ -9,6 +9,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { LoginSuccessComponent } from './LoginSuccess/LoginSuccess.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -17,7 +18,7 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgetPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'reset-password/:token/:email', component: ForgetPasswordComponent },
-
+  { path: 'login-success', component: LoginSuccessComponent },
 ] 
 
 @NgModule({
@@ -33,7 +34,8 @@ const routes: Routes = [
     LoginComponent,
     RegisterComponent,
     LogoutComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    LoginSuccessComponent
   ]
 })
 export class AuthModule { }
