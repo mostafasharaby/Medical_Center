@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AngularApi.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace AngularApi.Controllers
 {
@@ -14,9 +16,11 @@ namespace AngularApi.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly MedicalCenterDbContext _context;
+        private readonly UserManager<Patient> userManager;
 
-        public AppointmentsController(MedicalCenterDbContext context)
+        public AppointmentsController(MedicalCenterDbContext context , UserManager<Patient> _userManager)
         {
+            userManager = _userManager;
             _context = context;
         }
 
@@ -74,13 +78,37 @@ namespace AngularApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
         {
+
+            if (!string.IsNullOrEmpty(appointment.DoctorName))
+            {
+                var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Name == appointment.DoctorName);
+                if (doctor != null)
+                {
+                    appointment.DoctorId = doctor.Id; 
+                }
+                else
+                {
+                    return BadRequest("Invalid DoctorName");
+                }
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            appointment.PatientId = user.Id;
+            appointment.MedicalCenterId = 2;
+            appointment.AppointmentTakenDate = DateTime.Now;
+           
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAppointment", new { id = appointment.Id }, appointment);
+            return CreatedAtAction("GetAppointment", new { id = appointment.Id  }, appointment);
         }
 
-        // DELETE: api/Appointments/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {

@@ -4,6 +4,7 @@ using AngularApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AngularApi.Migrations
 {
     [DbContext(typeof(MedicalCenterDbContext))]
-    partial class MedicalCenterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250123193216_applyDoctorToAppointment")]
+    partial class applyDoctorToAppointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,9 +44,6 @@ namespace AngularApi.Migrations
 
                     b.Property<int?>("DoctorId")
                         .HasColumnType("int");
-
-                    b.Property<string>("DoctorName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");

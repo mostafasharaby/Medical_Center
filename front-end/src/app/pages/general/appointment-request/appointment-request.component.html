@@ -1,48 +1,159 @@
 <div class="contact-area style-two">
-  <div class="section-title">
+    <div class="section-title">
       <h3>Request <span>Appointment</span></h3>
-  </div>
-  <form name="contact_form" class="default-form contact-form" action="sendmail.php" method="post">
+    </div>
+    <form
+      [formGroup]="appointmentForm"
+      (ngSubmit)="onSubmit()"
+      class="default-form contact-form"
+    >
       <div class="row">
-          <div class="col-md-6 col-sm-12 col-xs-12">
-              <div class="form-group">
-                  <input type="text" name="Name"  class="form-control main" placeholder="Name" required="">
-              </div>
-              <div class="form-group">
-                  <input type="email" name="Email"  class="form-control main" placeholder="Email" required="">
-              </div>
-              <div class="form-group " >
-                  <select name="subject" >
-                      <option>Departments</option>
-                      <option>Diagnostic</option>
-                      <option>Psychological</option>
-                  </select>
-              </div>                            
+        <!-- Name Field -->
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <input
+              type="text"
+              formControlName="name"
+              class="form-control main"
+              placeholder="Name"
+              [ngClass]="{ 'is-invalid': name?.invalid && name?.touched }"
+            />
+            <div *ngIf="name?.invalid && name?.touched" class="text-danger">
+              <small *ngIf="name?.hasError('required')">Name is required</small>
+              <small *ngIf="name?.hasError('pattern')"
+                >Name must contain only letters</small
+              >
+            </div>
           </div>
-          <div class="col-md-6 col-sm-12 col-xs-12">
-              <div class="form-group">
-                  <input type="text" name="Phone "  class="form-control main" placeholder="Phone" required="">
-              </div>
-              <div class="form-group">
-                  <input type="text" name="Date"  class="form-control main" placeholder="Date" required="" id="datepicker">
-                  <i class="fa fa-calendar" aria-hidden="true"></i>
-              </div> 
-              <div class="form-group">
-                  <select name="subject">
-                      <option>Doctor</option>
-                      <option>Diagnostic</option>
-                      <option>Psychological</option>
-                  </select>
-              </div>                            
+        </div>
+  
+        <!-- Email Field -->
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <input
+              type="email"
+              formControlName="email"
+              class="form-control main"
+              placeholder="Email"
+              [ngClass]="{ 'is-invalid': email?.invalid && email?.touched }"
+            />
+            <div *ngIf="email?.invalid && email?.touched" class="text-danger">
+              <small *ngIf="email?.hasError('required')">Email is required</small>
+              <small *ngIf="email?.hasError('email')">Invalid email format</small>
+            </div>
           </div>
-          <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="form-group">
-                  <textarea name="form_message" class="form-control main" placeholder="Your Message" required=""></textarea>
-              </div>
-              <div class="form-group text-center">
-                  <button type="submit" class="btn-style-one">submit now</button>
-              </div>                            
+        </div>
+  
+        <!-- Phone Field -->
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <input
+              type="text"
+              formControlName="phone"
+              class="form-control main"
+              placeholder="Phone"
+              [ngClass]="{ 'is-invalid': phone?.invalid && phone?.touched }"
+            />
+            <div *ngIf="phone?.invalid && phone?.touched" class="text-danger">
+              <small *ngIf="phone?.hasError('required')">Phone is required</small>
+              <small *ngIf="phone?.hasError('pattern')"
+                >Phone must contain 10–15 digits</small
+              >
+            </div>
           </div>
+        </div>
+  
+        <!-- Date Field -->
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <input
+              type="date"
+              formControlName="date"
+              class="form-control main"
+              placeholder="Date"
+              id="datepicker"
+              [ngClass]="{ 'is-invalid': date?.invalid && date?.touched }"
+            />
+            <div *ngIf="date?.invalid && date?.touched" class="text-danger">
+              <small *ngIf="date?.hasError('required')">Date is required</small>
+            </div>
+            <!-- <i class="fa fa-calendar" aria-hidden="true"></i> -->
+          </div>
+        </div>
+  
+        <!-- Department Dropdown -->
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <select
+              formControlName="department"
+              [(ngModel)]="selectedDepartment"
+              (change)="filterDoctorsByDepartment()"
+              class="form-control main"
+              [ngClass]="{ 'is-invalid': department?.invalid && department?.touched }"
+            >
+              <option value="">Select Department</option>
+              <option *ngFor="let x of specializations" [value]="x.specializationName">
+                {{ x.specializationName }}
+              </option>
+            </select>
+            <div *ngIf="department?.invalid && department?.touched" class="text-danger">
+              <small *ngIf="department?.hasError('required')"
+                >Department is required</small
+              >
+            </div>
+          </div>
+        </div>
+  
+        <!-- Doctor Dropdown -->
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <select
+              formControlName="doctor"
+              class="form-control main"
+              [ngClass]="{ 'is-invalid': doctor?.invalid && doctor?.touched }"
+            >
+              <option value="">Select Doctor</option>
+              <option *ngFor="let x of filteredDoctors" [value]="x.name">
+                {{ x.name }}
+              </option>
+            </select>
+            <div *ngIf="doctor?.invalid && doctor?.touched" class="text-danger">
+              <small *ngIf="doctor?.hasError('required')">Doctor is required</small>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Message Field -->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <textarea
+              formControlName="message"
+              class="form-control main"
+              placeholder="Your Message"
+              [ngClass]="{ 'is-invalid': message?.invalid && message?.touched }"
+            ></textarea>
+            <div *ngIf="message?.invalid && message?.touched" class="text-danger">
+              <small *ngIf="message?.hasError('required')">Message is required</small>
+              <small *ngIf="message?.hasError('minlength')"
+                >Message must be at least 10 characters long</small
+              >
+            </div>
+          </div>
+        </div>
+  
+        <!-- Submit Button -->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="form-group text-center">
+            <button
+              type="submit"
+              class="btn-style-one"
+              [disabled]="appointmentForm.invalid"
+            >
+              Submit Now
+            </button>
+          </div>
+        </div>
       </div>
-  </form>
-</div>  
+    </form>
+  </div>
+  

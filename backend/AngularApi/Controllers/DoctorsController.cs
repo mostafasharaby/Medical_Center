@@ -21,7 +21,7 @@ namespace AngularApi.Controllers
             _context = context;
         }
 
-        // GET: api/Doctors
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctors()
         {
@@ -49,7 +49,7 @@ namespace AngularApi.Controllers
             return Ok(doctorDTOs);
         }
 
-        // GET: api/Doctors/5
+        
         [HttpGet("{doctorId}")]
         public async Task<ActionResult<Doctor>> GetDoctor(int doctorId)
         {
@@ -74,17 +74,15 @@ namespace AngularApi.Controllers
         }
 
         
-
         [HttpGet("{doctorId}/bookings")]
         public async Task<IActionResult> GetBookings(int doctorId)
         {
             var bookings = await _context.Appointments
-                .Where(a => a.Id == doctorId)
+                .Where(a => a.DoctorId == doctorId)
                 .ToListAsync();
             return Ok(bookings);
         }
 
-        // Get bookings by status
         [HttpGet("{doctorId}/bookings/status/{status}")]
         public async Task<IActionResult> GetBookingsByStatus(int doctorId, AppointmentStatusEnum status)
         {
@@ -92,10 +90,8 @@ namespace AngularApi.Controllers
                 .Where(a => a.Id == doctorId && a.Status == status)
                 .ToListAsync();
             return Ok(bookings);
-        }
-     
+        }    
 
-        // Get today's bookings
         [HttpGet("{doctorId}/bookings/today")]
         public async Task<IActionResult> GetTodaysBookings(int doctorId)
         {
@@ -106,7 +102,7 @@ namespace AngularApi.Controllers
             return Ok(bookings);
         }
 
-        // Get reviews
+
         [HttpGet("{doctorId}/reviews")]
         public async Task<IActionResult> GetReviews(int doctorId)
         {
@@ -116,7 +112,7 @@ namespace AngularApi.Controllers
             return Ok(reviews);
         }
 
-        // Get rating
+        
         [HttpGet("{doctorId}/rating")]
         public async Task<IActionResult> GetRating(int doctorId)
         {
@@ -126,7 +122,7 @@ namespace AngularApi.Controllers
             return Ok(rating);
         }
 
-        // Get rating
+        
         [HttpGet("{doctorId}/qualifications")]
         public async Task<IActionResult> GetQualifications(int doctorId)
         {
@@ -135,6 +131,7 @@ namespace AngularApi.Controllers
                 .ToListAsync();
             return Ok(qualifications);
         }
+
 
         [HttpGet("{doctorId}/specializations")]
         public async Task<IActionResult> GetSpecializations(int doctorId)
@@ -145,7 +142,7 @@ namespace AngularApi.Controllers
             return Ok(specializations);
         }
 
-        //// Get schedules
+       
         //[HttpGet("{doctorId}/schedules")]
         //public async Task<IActionResult> GetSchedules(int doctorId)
         //{
@@ -183,7 +180,8 @@ namespace AngularApi.Controllers
 
             return NoContent();
         }
-        // Update a booking
+        
+
         [HttpPut("bookings/{bookingId}")]
         public async Task<IActionResult> UpdateBooking(int bookingId, [FromBody] Appointment updatedBooking)
         {
