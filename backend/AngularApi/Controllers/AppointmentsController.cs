@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AngularApi.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using AngularApi.DTO;
 
 namespace AngularApi.Controllers
 {
@@ -24,14 +25,45 @@ namespace AngularApi.Controllers
             _context = context;
         }
 
-        // GET: api/Appointments
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
         {
-            return await _context.Appointments.ToListAsync();
+            return await _context.Appointments.Include(i=>i.Patient).ToListAsync();
         }
 
-        // GET: api/Appointments/5
+        [HttpGet("GetAllAppointments")]
+        public async Task<ActionResult<IEnumerable<AppointmentDTO>>> GetAllAppointments()
+        {
+            var appointments = await _context.Appointments
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.DoctorSpecializations).ThenInclude(ds => ds.Specialization)
+                .Include(a => a.Patient)
+                .ToListAsync();
+
+            var appointmentDtos = appointments.Select(appointment => new AppointmentDTO
+            {
+                AppointmentId = appointment.Id,
+                AppointmentDate = appointment.ProbableStartTime,
+                Doctor = new DoctorDTO
+                {
+                    Name = appointment.DoctorName,
+                    Specializations = appointment.Doctor?.DoctorSpecializations
+                        .Select(ds => ds.Specialization?.SpecializationName) 
+                        .ToList() ?? new List<string>() 
+                },
+                Patient = new PatientDTO
+                {
+                    PatientId = appointment.PatientId.ToString(),
+                    Name = appointment.Patient?.UserName,
+                    Email = appointment.Patient?.Email,
+                }
+            }).ToList();
+
+            return Ok(appointmentDtos);
+        }
+
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetAppointment(int id)
         {

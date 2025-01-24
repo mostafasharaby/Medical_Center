@@ -10,11 +10,18 @@ import { AuthServiceService } from '../../auth/auth-services/auth-service.servic
 export class AppointmentService {
 
   private apiUrl =  `${environment.api}/Appointments`;
+  private getAppointmentsUrl = `${environment.api}/Appointments/GetAllAppointments`;
 
   constructor(private http: HttpClient , private authService:AuthServiceService) {}
   postAppointment(data: any): Observable<any> {   
     const headers = this.authService.getHeaders();   
     return this.http.post(this.apiUrl, JSON.stringify(data), { headers });
   }
+
+  getAppointments(): Observable<any[]> {
+    const headers = this.authService.getHeaders();  
+    return this.http.get<any[]>(this.getAppointmentsUrl,{ headers });
+  }
+  
 
 }

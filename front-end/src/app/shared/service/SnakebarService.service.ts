@@ -10,11 +10,10 @@ constructor(private snakebar: MatSnackBar
   
   ) { }
 
-showSnakeBar(message: string) {
-  
+showSnakeBar(message: string) {  
   this.snakebar.open(message, "Close", {
     duration: 3000,
-    horizontalPosition: "left",
+    horizontalPosition: "start",
     verticalPosition: "top",
     panelClass: ['error-snackbar']
   });

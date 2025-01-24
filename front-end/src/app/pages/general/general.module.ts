@@ -51,7 +51,8 @@ const routes: Routes = [
     TeamComponent,
     DoctorcsComponent,
     FaqComponent,
-    AppointmentRequestComponent
+    AppointmentRequestComponent,
+    
   ]
 })
 export class GeneralModule { }

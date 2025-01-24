@@ -20,7 +20,6 @@ namespace AngularApi.Controllers
             _context = context;
         }
 
-        // Get patient details
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPatientById(string id)
         {
@@ -36,8 +35,6 @@ namespace AngularApi.Controllers
         }
 
        
-
-        // Get all patients
         [HttpGet]
         public async Task<IActionResult> GetAllPatients()
         {
@@ -45,7 +42,7 @@ namespace AngularApi.Controllers
                 .Select(user => new
                 {
                     user.Id,
-                    user.Email
+                    user.Email                  
                 })
                 .ToListAsync();
 
@@ -53,16 +50,13 @@ namespace AngularApi.Controllers
         }
         
 
-        // Update patient information
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePatient(string id, [FromBody] UpdateProfileDto model)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
 
-            // Update user details
             user.Email = model.Email;
-            // Update other fields as needed
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded) return NoContent();

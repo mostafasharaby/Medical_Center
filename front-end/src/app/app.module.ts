@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './layout/footer/footer.component';
@@ -18,7 +17,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatListModule } from '@angular/material/list';
-
+import { MatIconModule } from '@angular/material/icon';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AdminModule } from './admin/admin/admin.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,27 +32,27 @@ import { MatListModule } from '@angular/material/list';
     AppRoutingModule,
     RouterModule ,
     AuthModule,
-    GeneralModule,
-    MatSnackBarModule,
+    GeneralModule,  
+    AdminModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,      
     MatSidenavModule,
-    MatToolbarModule,
+    MatToolbarModule,  
+    MatIconModule,      
     MatCardModule,
-    MatListModule,  
+    MatListModule,
+    MatSnackBarModule,
     MatDatepickerModule
   ],
   providers: [
-    provideClientHydration(),
-    // provideAnimationsAsync(),
-    // provideHttpClient(withFetch()),
+    provideClientHydration(),  
+    provideAnimationsAsync(), 
+    provideHttpClient(withFetch()),
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-function provideAnimationsAsync(): import("@angular/core").Provider | import("@angular/core").EnvironmentProviders {
-  throw new Error('Function not implemented.');
-}
+
 

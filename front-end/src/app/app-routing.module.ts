@@ -11,10 +11,10 @@ const routes: Routes = [
   {
     path: 'home', component: HomeComponent // title: 'resolvedChildATitle'
   },
-  // {
-  //   path: 'admin', canActivate: [AdminGuard],
-  //   loadChildren: () => import('./adminModule/AdminModule.module').then(m => m.AdminModule)
-  // },
+  { 
+    path: 'admin',  
+    loadChildren: () => import('./admin/admin/admin.module').then(m => m.AdminModule)
+  },
   {
     path: 'pages',
     loadChildren: () => import('./pages/general/general.module').then(m => m.GeneralModule)
