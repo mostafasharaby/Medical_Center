@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResetPasswordService } from './reset-password-service/resetPassword.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnakebarService } from '../../../shared/service/SnakebarService.service';
+import { ResetPasswordService } from '../auth-services/resetPassword.service';
 
 @Component({
   selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  templateUrl: './reset-password.component.html'
 })
 export class ResetPasswordComponent implements OnInit {
   resetForm!: FormGroup;
@@ -37,10 +36,6 @@ export class ResetPasswordComponent implements OnInit {
     
   }
 
-
-
-
-  // Submit form handler
   onSubmit(): void {
     if (this.resetForm.invalid) {
       this.snakeBarService.showSnakeBar('Please fill out the form correctly.');

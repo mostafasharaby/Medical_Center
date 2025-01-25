@@ -59,7 +59,7 @@
             </label>
           </div>
           <div>
-            <button  (click)="openDialog()" class="text-blue-600 font-semibold hover:text-blue-700  hover:underline text-sm ">
+            <button  (click)="openForgetPasswordModal()" class="text-blue-600 font-semibold hover:text-blue-700  hover:underline text-sm ">
               Forgot Password?
             </button>           
 
@@ -78,26 +78,7 @@
         </div>
 
         <button type="button" onclick="window.location.href='http://localhost:5004/api/Account/LoginWithGoogle'"  class="w-full flex items-center justify-center gap-4 py-3 px-6 text-sm tracking-wide text-gray-800 border border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20px" class="inline" viewBox="0 0 512 512">
-            <path fill="#fbbd00"
-              d="M120 256c0-25.367 6.989-49.13 19.131-69.477v-86.308H52.823C18.568 144.703 0 198.922 0 256s18.568 111.297 52.823 155.785h86.308v-86.308C126.989 305.13 120 281.367 120 256z"
-              data-original="#fbbd00" />
-            <path fill="#0f9d58"
-              d="m256 392-60 60 60 60c57.079 0 111.297-18.568 155.785-52.823v-86.216h-86.216C305.044 385.147 281.181 392 256 392z"
-              data-original="#0f9d58" />
-            <path fill="#31aa52"
-              d="m139.131 325.477-86.308 86.308a260.085 260.085 0 0 0 22.158 25.235C123.333 485.371 187.62 512 256 512V392c-49.624 0-93.117-26.72-116.869-66.523z"
-              data-original="#31aa52" />
-            <path fill="#3c79e6"
-              d="M512 256a258.24 258.24 0 0 0-4.192-46.377l-2.251-12.299H256v120h121.452a135.385 135.385 0 0 1-51.884 55.638l86.216 86.216a260.085 260.085 0 0 0 25.235-22.158C485.371 388.667 512 324.38 512 256z"
-              data-original="#3c79e6" />
-            <path fill="#cf2d48"
-              d="m352.167 159.833 10.606 10.606 84.853-84.852-10.606-10.606C388.668 26.629 324.381 0 256 0l-60 60 60 60c36.326 0 70.479 14.146 96.167 39.833z"
-              data-original="#cf2d48" />
-            <path fill="#eb4132"
-              d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z"
-              data-original="#eb4132" />
-          </svg>
+          <i class="fab fa-google mr-2"></i> 
           Continue with google
         </button>
       </form>
@@ -105,88 +86,4 @@
   </div>
 </div>
 
-<!--model Section Begin -->
-<form  [formGroup]="forgetForm" (ngSubmit)="onForgotSubmit()">
-<div *ngIf="isDialogOpen"
-  class="fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-gray-50 bg-opacity-60 backdrop-blur-sm transition-opacity duration-300"
-  (click)="closeDialog()">
-  <div
-    [ngClass]="{ 'opacity-100 translate-y-0 scale-100': isDialogMounted, 'opacity-0 -translate-y-28 scale-90 pointer-events-none': !isDialogMounted }"
-    class="relative m-4 p-6 w-11/12 sm:w-2/3 md:w-1/2 lg:w-2/5 min-w-[280px] rounded-lg bg-white shadow-sm transition-all duration-300"
-    (click)="$event.stopPropagation()">
-
-    <!-- Dialog Title -->
-    <div  class="flex shrink-0 items-center pb-4 text-xl font-medium text-slate-800">
-      Forgot Password  
-    </div>   
-
-    <div class="flex shrink-0 items-center  text-sm text-slate-800 pb-2"> Enter your email address below and we'll send
-      you a link to reset your password. </div>
-
-    <div class="space-y-4">
-      <div class="flex flex-col">
-        <label class="font-medium text-slate-700">Enter Your Email</label>
-        <input type="email" class="p-2 border rounded-md" formControlName="emailForgot"  placeholder="Enter Your Email" />
-      </div>
-
-    </div>
-
-    <div class="flex shrink-0 flex-wrap items-center pt-6 justify-end space-x-4">
-      <button (click)="closeDialog()"
-        class="rounded-md border border-transparent py-2 px-6 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-        type="button">
-        Close
-      </button>
-      <button [disabled]="!forgetForm.valid"
-        class="rounded-md bg-blue-600 py-2 px-6 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-800 focus:shadow-none active:bg-blue-800 hover:bg-blue-800 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-        type="submit">
-        Apply
-      </button>
-    </div>
-  </div>
-</div>
-</form>
-
-
-
-
-<!--model Section Begin -->
-<!-- <form  [formGroup]="resetForm" (ngSubmit)="onResetSubmit()">
-  <div *ngIf="isDialogOpen"
-    class="fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-gray-50 bg-opacity-60 backdrop-blur-sm transition-opacity duration-300"
-    (click)="closeDialog()">
-    <div
-      [ngClass]="{ 'opacity-100 translate-y-0 scale-100': isDialogMounted, 'opacity-0 -translate-y-28 scale-90 pointer-events-none': !isDialogMounted }"
-      class="relative m-4 p-6 w-11/12 sm:w-2/3 md:w-1/2 lg:w-2/5 min-w-[280px] rounded-lg bg-white shadow-sm transition-all duration-300"
-      (click)="$event.stopPropagation()">
-  
-
-      <div  class="flex shrink-0 items-center pb-4 text-xl font-medium text-slate-800">
-     
-      </div>
-      
-  
-      <div class="space-y-4">
-        <div class="flex flex-col">
-          <input type="email" class="p-2 border rounded-md" formControlName="resetPassword"  placeholder="Enter Your New Password" />
-        </div>
-  
-      </div>
-  
-      <div class="flex shrink-0 flex-wrap items-center pt-6 justify-end space-x-4">
-        <button (click)="closeDialog()"
-          class="rounded-md border border-transparent py-2 px-6 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          type="button">
-          Close
-        </button>
-        <button [disabled]="!resetForm.valid"
-          class="rounded-md bg-blue-600 py-2 px-6 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-800 focus:shadow-none active:bg-blue-800 hover:bg-blue-800 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          type="submit">
-          Apply
-        </button>
-      </div>
-    </div>
-  </div>
-  </form>
-
-   -->
+<app-forgetPassword></app-forgetPassword>

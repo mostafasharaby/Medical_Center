@@ -4,8 +4,7 @@ import { AuthServiceService } from '../auth-services/auth-service.service';
 
 @Component({
   selector: 'app-logout',
-  templateUrl: './logout.component.html',
-  styleUrls: ['./logout.component.css']
+  templateUrl: './logout.component.html'
 })
 export class LogoutComponent implements OnInit {
 
@@ -14,18 +13,21 @@ export class LogoutComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  //--------------------logout Dialog-------------------
+  
   confirmLogout(): void {
-    console.log('Logging out...');
-    this.authService.logout();
-    // this.isLoggedOut= true;
-    this.router.navigate(['/auth/login']);
+    console.log('Logging out...');    
+    this.authService.logout();     
+    this.router.navigate(['/auth/login']).then(() => {
+      window.location.reload();
+    });
   }
-  //private logoutModal: Modal | undefined;
 
   cancelLogout(): void {
     console.log('Logout cancelled.');
     this.router.navigate(['/pages/home']);
-
   }
+
 
 }

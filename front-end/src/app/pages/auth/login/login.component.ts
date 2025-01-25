@@ -4,14 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnakebarService } from '../../../shared/service/SnakebarService.service';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { AuthServiceService } from '../auth-services/auth-service.service';
-import { ForgotServiceService } from '../forgetPassword/forgetPassword-service/forgot-service.service';
+import { ForgotServiceService } from '../auth-services/forgot-service.service';
 import { BehaviorSubject } from 'rxjs';
-import { ResetPasswordService } from '../reset-password/reset-password-service/resetPassword.service';
+import { ResetPasswordService } from '../auth-services/resetPassword.service';
+import { ModelService } from '../auth-services/model.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit, AfterViewInit{
 
@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit, AfterViewInit{
     private snackBar: SnakebarService,
     private forgetpasswordService :ForgotServiceService, 
     private resetPasswordService :ResetPasswordService,
+    private modalService: ModelService
     ) {
 
     this.loginForm = this.fb.group({
@@ -123,11 +124,12 @@ export class LoginComponent implements OnInit, AfterViewInit{
     }
   }
 
-  //----------------------------login With Google------------------------------------
-  googleLogin() {
-    window.location.href = this.authService.googleloginUrl;
-  }
 // ------------------------------Forget password-------------------------------------
+openForgetPasswordModal() {
+  this.modalService.openDialog();
+ /// this.openDialog();
+}
+
 
 
 forgetForm !: FormGroup;

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
-import { HandleErrorsService } from '../../../../shared/service/handle-errors.service';
-import { AuthServiceService } from '../../auth-services/auth-service.service';
+import { AuthServiceService } from './auth-service.service';
+import { HandleErrorsService } from '../../../shared/service/handle-errors.service';
 
 @Injectable({
   providedIn: 'root'

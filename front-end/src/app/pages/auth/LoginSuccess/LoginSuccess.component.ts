@@ -4,8 +4,7 @@ import { AuthServiceService } from '../auth-services/auth-service.service';
 
 @Component({
   selector: 'app-LoginSuccess',
-  templateUrl: './LoginSuccess.component.html',
-  styleUrls: ['./LoginSuccess.component.css']
+  templateUrl: './LoginSuccess.component.html'
 })
 export class LoginSuccessComponent implements OnInit {
 

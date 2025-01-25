@@ -35,22 +35,6 @@ export class HeaderComponent implements OnInit {
     this.isDrawerOpen = !this.isDrawerOpen;
   } 
 
-  //--------------------logout Dialog-------------------
-  
-  confirmLogout(): void {
-    console.log('Logging out...');    
-    this.authService.logout();     
-    this.router.navigate(['/auth/login']).then(() => {
-      window.location.reload();
-    });
-  }
-
-  cancelLogout(): void {
-    console.log('Logout cancelled.');
-    this.router.navigate(['/pages/home']);
-  }
-
-
 
 //-------------------- social icons loops-------------------
   socialLinks = [
