@@ -26,8 +26,18 @@ namespace AngularApi.Controllers
         {
             return await _context.PatientReviews.Include(i=>i.Patient).ToListAsync();
         }
+        [HttpGet("unique-patients")]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetUniquePatients()
+        {
+            var uniquePatients = await _context.PatientReviews
+                .Include(i => i.Patient) 
+                .Select(pr => pr.Patient) 
+                .Distinct() 
+                .ToListAsync();
 
-        
+            return Ok(uniquePatients);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<PatientReview>> GetPatientReview(int id)
         {

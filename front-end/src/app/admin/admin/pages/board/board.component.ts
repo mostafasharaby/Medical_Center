@@ -3,6 +3,7 @@ import { DoctorService } from '../../../../pages/general/services/doctor.service
 import { Doctor } from '../../../../pages/models/doctor';
 import { AppointmentService } from '../../../../pages/general/services/appointment.service';
 import { MENU } from '../../menu';
+import { ReloadService } from '../../../../shared/service/reload.service';
 
 @Component({
   selector: 'app-board',
@@ -17,8 +18,10 @@ export class BoardComponent implements OnInit {
   numOfAppointments: number = 0;
   numOfDoctors: number = 0;
   menuItems = MENU;
-  constructor(private appointmentService: AppointmentService, private doctorService: DoctorService) { }
-
+  constructor(private appointmentService: AppointmentService, private doctorService: DoctorService , private reload :ReloadService) { }
+  ngAfterViewInit(): void {
+    this.reload.initializeLoader();
+  }
   ngOnInit(): void {
     this.loadAppointments();
     this.loadDoctor();

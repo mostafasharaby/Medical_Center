@@ -7,12 +7,14 @@ import { DoctorsComponent } from './pages/doctors/doctors.component';
 import { BoardComponent } from './pages/board/board.component';
 import { ChartsComponent } from './pages/charts/charts.component';
 import { PatientsComponent } from './pages/patients/patients.component';
+import { SideBarComponent } from './pages/side-bar/side-bar.component';
 
 const routes: Routes = [
   { path: 'doctors', component: DoctorsComponent },
   { path: 'dashboard', component: BoardComponent },
   { path: 'chart', component: ChartsComponent },
-  { path: 'patients', component: PatientsComponent }
+  { path: 'patients', component: PatientsComponent },
+  { path: 'side', component: SideBarComponent }
 
 ]
 @NgModule({
@@ -28,7 +30,8 @@ const routes: Routes = [
     DoctorsComponent,
     BoardComponent,
     ChartsComponent,
-    PatientsComponent
+    PatientsComponent,
+    SideBarComponent
     
   ],
   bootstrap: [AdminComponent] 
