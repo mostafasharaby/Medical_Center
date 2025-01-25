@@ -27,7 +27,8 @@ namespace AngularApi.Controllers
 
         /// <summary>
         ///    { "email": "mustafasharaby18@gmail.com", "password": "0133asdASD//"}      
-        ///   { "email": "ramyy@gmail.com", "password": "0133asdASD*"}      
+        ///   { "email": "ramyy@gmail.com", "password": "0133asdASD*"}   
+        ///   {"email": "admin@gmail.com", "password": "0133asdASD*"}
         ///   works
         /// </summary>
         private readonly UserManager<Patient> userManager;
@@ -61,8 +62,32 @@ namespace AngularApi.Controllers
             }
             return BadRequest(ModelState);
         }
+        [HttpPost("RegisterForAdmin")]
+        public async Task<IActionResult> RegisterWithRole(RegisterUserDTO registerUser)
+        {
+            if (ModelState.IsValid)
+            {
+                Patient appUser = new Patient();
+                appUser.UserName = registerUser.UserName;
+                appUser.Email = registerUser.Email;
 
-       
+                // appUser.PasswordHash = registerUser.Password;
+                IdentityResult result = await userManager.CreateAsync(appUser, registerUser.Password);
+                if (result.Succeeded)
+                {
+                   // var role = registerUser.Role ?? "user"; // Default role to "user"
+                    await userManager.AddToRoleAsync(appUser, "admin");
+
+                    return Ok(new { message = "Account created successfully with role." });
+                }
+                return BadRequest(result.Errors.FirstOrDefault().Description.ToString());
+
+            }
+            return BadRequest(ModelState);
+        }
+
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LogInUserDTO logInUser)
         {
@@ -150,26 +175,22 @@ namespace AngularApi.Controllers
                 throw new ArgumentNullException(nameof(user.UserName), "User Name cannot be null or empty");
 
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-
             };
 
-            //var role =  userManager.GetRolesAsync(user);
-            //foreach (var r in role)
-            //{
-            //    claims.Add(new Claim(ClaimTypes.Role, r));
-            //}
-            //var roles =  userManager.GetRolesAsync(user);
-            //foreach (var roleee in roles)
-            //{
-            //    claims.Add(new Claim(ClaimTypes.Role, roleee));
-            //}
-     
+            // Add roles to the claims
+            var roles =  userManager.GetRolesAsync(user).Result; 
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role)); // Add roles dynamically
+            }
+      
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

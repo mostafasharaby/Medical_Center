@@ -4,6 +4,7 @@ import { Doctor } from '../../../../pages/models/doctor';
 import { AppointmentService } from '../../../../pages/general/services/appointment.service';
 import { MENU } from '../../menu';
 import { ReloadService } from '../../../../shared/service/reload.service';
+import { PatientService } from '../../services/patient.service';
 
 @Component({
   selector: 'app-board',
@@ -17,14 +18,19 @@ export class BoardComponent implements OnInit {
   doctorsData: Doctor[] = [];
   numOfAppointments: number = 0;
   numOfDoctors: number = 0;
+  numOfPatients: number = 0;
   menuItems = MENU;
-  constructor(private appointmentService: AppointmentService, private doctorService: DoctorService , private reload :ReloadService) { }
+  constructor(private appointmentService: AppointmentService,
+              private doctorService: DoctorService ,
+              private reload :ReloadService,
+              private patientService:PatientService) { }
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
   }
   ngOnInit(): void {
     this.loadAppointments();
     this.loadDoctor();
+    this.fetchPatientLength();
     this.optimizeWidget();
     this.setBadgeForAppointments();
   }
@@ -61,6 +67,19 @@ export class BoardComponent implements OnInit {
     );
   }
 
+
+  fetchPatientLength(): void {
+    this.patientService.getPatientReviews().subscribe({
+      next: (data) => {     
+        this.numOfPatients = data.length;  
+        this.optimizeWidget();
+      },
+      error: () => {      
+        console.error();
+      }
+    });
+  }
+
   setBadgeForAppointments() {
     const appointmentItem = this.menuItems.find(item => item.title === 'Appointment');
     if (appointmentItem) {
@@ -82,7 +101,7 @@ optimizeWidget(): void{
       bgClass: 'bg-orange',
       iconClass: 'fas fa-user',
       text: 'New Patients',
-      number: 155,
+      number: this.numOfPatients,
       progress: 40,
       description: '40% Increase in 28 Days',
     },
@@ -90,7 +109,7 @@ optimizeWidget(): void{
       bgClass: 'bg-purple',
       iconClass: 'fas fa-syringe',
       text: 'Operations',
-      number: 52,
+      number: 2,
       progress: 85,
       description: '85% Increase in 28 Days',
     },
@@ -98,7 +117,7 @@ optimizeWidget(): void{
       bgClass: 'bg-success',
       iconClass: 'fas fa-dollar-sign',
       text: 'Hospital Earning',
-      number: '13,921$',
+      number: '3,921$',
       progress: 50,
       description: '50% Increase in 28 Days',
     },

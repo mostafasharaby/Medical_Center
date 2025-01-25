@@ -3,6 +3,8 @@ import { SpecializationService } from '../services/specialization.service';
 import { DoctorService } from '../services/doctor.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppointmentService } from '../services/appointment.service';
+import { AuthServiceService } from '../../auth/auth-services/auth-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-request',
@@ -12,31 +14,35 @@ import { AppointmentService } from '../services/appointment.service';
 export class AppointmentRequestComponent implements OnInit {
 
   constructor(private specializationService: SpecializationService,
-              private doctorService: DoctorService,
-              private fb: FormBuilder,
-              private appointmentsService :AppointmentService
-              ) { }
+    private doctorService: DoctorService,
+    private fb: FormBuilder,
+    private appointmentsService: AppointmentService,
+    private authService: AuthServiceService,
+    private router : Router
+  ) { }
 
   specializations: any[] = [];
   doctorsData: any[] = [];
   filteredDoctors: any[] = [];
   selectedDepartment: string = '';
   appointmentForm!: FormGroup;
+  isLoggedIn = true;
   ngOnInit() {
 
     this.appointmentForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]], 
-      email: ['', [Validators.required, Validators.email]], 
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]], 
-      date: ['', Validators.required], 
-      department: ['', Validators.required], 
+      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
+      date: ['', Validators.required],
+      department: ['', Validators.required],
       doctor: ['', Validators.required],
-      message: ['', [Validators.required, Validators.minLength(10)]] 
+      message: ['', [Validators.required, Validators.minLength(10)]]
     });
 
 
     this.loadDoctors();
     this.loadSpecializations();
+    this.checkAuthenication();
   }
   get name() {
     return this.appointmentForm.get('name');
@@ -95,6 +101,12 @@ export class AppointmentRequestComponent implements OnInit {
     );
   }
 
+  checkAuthenication() {
+    this.authService.getloggedStatus().subscribe(status => {
+      this.isLoggedIn = status;
+    });
+  }
+
   filterDoctorsByDepartment() {
     if (this.selectedDepartment) {
       this.filteredDoctors = this.doctorsData.filter(
@@ -104,34 +116,42 @@ export class AppointmentRequestComponent implements OnInit {
       this.filteredDoctors = [];
     }
   }
+  postAppointment(appointmentData:any){
+    this.appointmentsService.postAppointment(appointmentData).subscribe(
+      (response) => {
+        console.log('Appointment posted successfully:', response);
+        alert('Appointment saved!');
+      },
+      (error) => {
+        console.error('Error posting appointment:', error);
+        alert('Failed to save the appointment.');
+      }
+    );
+  }
 
   onSubmit() {
-    if (this.appointmentForm.valid) {
-      const appointmentData = {
-        name: this.name?.value,
-        email: this.email?.value,
-        phone: this.phone?.value,
-        doctorName: this.doctor?.value,
-        probableStartTime: this.date?.value,
-        appointmentStatusId: 3,
-      };
-  
-      this.appointmentsService.postAppointment(appointmentData).subscribe(
-        (response) => {
-          console.log('Appointment posted successfully:', response);
-          alert('Appointment saved!');
-        },
-        (error) => {
-          console.error('Error posting appointment:', error);
-          alert('Failed to save the appointment.');
-        }
-      );
+    if (this.isLoggedIn) {
+      if (this.appointmentForm.valid) {
+        const appointmentData = {
+          name: this.name?.value,
+          email: this.email?.value,
+          phone: this.phone?.value,
+          doctorName: this.doctor?.value,
+          probableStartTime: this.date?.value,
+          appointmentStatusId: 3,
+        };
+
+        this.postAppointment(appointmentData);
+      } else {
+        alert('Please fill all required fields.');
+      }
     } else {
-      alert('Please fill all required fields.');
+      alert('Please login to book an appointment');
+      this.router.navigate(['/auth/login']);  
     }
   }
-  
-  
+
+
 
 
 }

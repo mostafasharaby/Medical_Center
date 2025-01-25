@@ -107,13 +107,13 @@ export class LoginComponent implements OnInit, AfterViewInit{
       this.authService.login(email, password).subscribe(
         (response: any) => {          
           this.onLoginSuccess();
-          // if (this.authService.isAdmin()) {
-          //   this.router.navigate(['admin/dashboard']);  
-          //   console.log("admin");
-          // } else {
+          if (this.authService.isAdmin()) {
+            this.router.navigate(['admin/dashboard']);  
+            console.log("admin");
+          } else {
             this.router.navigate(['/pages/home']);  
             console.log("user");
-          //}
+          }
         },
         (error: any) => {
           console.error('Login failed', error);
@@ -154,17 +154,6 @@ resetForm !: FormGroup;
 get resetPass() {
   return this.forgetForm.get('resetPassword');
 }
-onResetSubmit() {
-  // const reset = this.resetForm.value.resetPassword;
-  // console.log("resetPassword",reset);
-  // this.resetPasswordService.forgetPassword(reset).subscribe({
-  //   next: (res) => {
-  //     alert(`Success: ${res.message}`),
-  //     this.isResetMode$.next(false);
-  //   },
-  //   error: (err) => alert(`Errorrrr: ${err.error.message}`)
-  // });
-  
-}
+
 
 }

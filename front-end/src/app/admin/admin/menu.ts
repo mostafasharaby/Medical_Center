@@ -28,9 +28,10 @@
       icon: 'fas fa-user-injured'
     },
     {
-      title: 'Sign Up',
+      title: 'Sign Out',
       path: '#',
+      toggle:'modal',
+      target:'#logoutModal',
       icon: 'fas fa-sign-out-alt'
     }
   ];
-  

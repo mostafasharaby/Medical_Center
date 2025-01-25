@@ -36,7 +36,8 @@ namespace AngularApi.Controllers
         {
             var appointments = await _context.Appointments
                 .Include(a => a.Doctor)
-                    .ThenInclude(d => d.DoctorSpecializations).ThenInclude(ds => ds.Specialization)
+                    .ThenInclude(d => d.DoctorSpecializations)
+                        .ThenInclude(ds => ds.Specialization)
                 .Include(a => a.Patient)
                 .ToListAsync();
 

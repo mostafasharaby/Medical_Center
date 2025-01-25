@@ -82,7 +82,7 @@ export class AuthServiceService {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token) as any;
-      //console.log("decodedToken ", JSON.stringify(decodedToken));
+      console.log("decodedToken ", JSON.stringify(decodedToken));
       return decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'admin';
     }
     return false;

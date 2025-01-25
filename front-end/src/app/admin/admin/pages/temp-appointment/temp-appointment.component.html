@@ -1,0 +1,55 @@
+  <!-- start admited patient list -->
+  <div class="row">
+    <div class="col-md-12 col-sm-12">
+      <div class="card  card-box">
+        <div class="card-head">
+          <header>ADMIT PATIENT LIST</header>
+          <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+          </div>
+        </div>
+        <div class="card-body ">
+          <div class="table-wrap">
+            <div class="table-responsive">
+              <table class="table display product-overview mb-30" id="support_table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Assigned Doctor</th>
+                    <th>Date Of Admit</th>
+                    <th>Diseases</th>
+                    <th>Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let appointment of appointments, let index = index" class="odd gradeX">
+                    <td>{{index+1}}</td>
+                    <td>{{ appointment.patient?.name || 'Unknown' }}</td>
+                    <td> {{ appointment.patient?.email || 'Unknown' }} </td>
+                    <td>{{ appointment.doctor.name || 'Not Assigned' }}</td>
+                    <td>{{ appointment.appointmentDate | date: 'MM/dd/yyyy' }}</td>
+                    <td>
+                      <span class="label label-sm label-success">{{appointment.doctor.specializations[0]}}</span>
+                    </td>
+
+                    <td>
+                      <a href="javascript:void(0)" class="tblEditBtn">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <a href="javascript:void(0)" class="tblDelBtn">
+                        <i class="fa fa-trash-o"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -8,13 +8,17 @@ import { BoardComponent } from './pages/board/board.component';
 import { ChartsComponent } from './pages/charts/charts.component';
 import { PatientsComponent } from './pages/patients/patients.component';
 import { SideBarComponent } from './pages/side-bar/side-bar.component';
+import { AppointmentsComponent } from './pages/appointments/appointments.component';
+import { TempAppointmentComponent } from './pages/temp-appointment/temp-appointment.component';
+import { AuthModule } from '../../pages/auth/auth.module';
 
 const routes: Routes = [
   { path: 'doctors', component: DoctorsComponent },
   { path: 'dashboard', component: BoardComponent },
   { path: 'chart', component: ChartsComponent },
   { path: 'patients', component: PatientsComponent },
-  { path: 'side', component: SideBarComponent }
+  { path: 'side', component: SideBarComponent },
+  { path: 'appointments', component: AppointmentsComponent }
 
 ]
 @NgModule({
@@ -23,7 +27,8 @@ const routes: Routes = [
        RouterModule.forChild(routes),
        ReactiveFormsModule,
        RouterModule,
-       FormsModule 
+       FormsModule ,
+       AuthModule
   ],
   declarations: [
     AdminComponent,
@@ -31,7 +36,9 @@ const routes: Routes = [
     BoardComponent,
     ChartsComponent,
     PatientsComponent,
-    SideBarComponent
+    SideBarComponent,
+    AppointmentsComponent,
+    TempAppointmentComponent
     
   ],
   bootstrap: [AdminComponent] 

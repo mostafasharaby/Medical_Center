@@ -63,6 +63,8 @@
 		<ul class="space-y-2 font-medium">			
 			<li *ngFor="let item of menuItems">
 				<a [href]="item.path"
+				[attr.data-bs-toggle]="item.toggle" 
+				[attr.data-bs-target]="item.target"
 				   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100">
 				  <i [class]="item.icon"></i>
 				  <span class="flex-1 ms-3 whitespace-nowrap">{{ item.title }}</span>
@@ -74,3 +76,10 @@
 		</ul>
 	</div>
 </aside>
+
+
+<!--logout Model-->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+	<app-logout></app-logout>
+</div>
+	
