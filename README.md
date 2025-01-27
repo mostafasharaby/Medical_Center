@@ -4,7 +4,7 @@ The  **Medical Center** full-stack web application is an innovative platform des
 
 ## Table of Contents
 - [Technologies Used](#technologies-used)
-- [Features](#features) Doctor Role and Appointments
+- [Features](#features) 
 - [Admin Dashboard](#Admin-Dashboard)
 - [Doctor Role and Appointments](#Doctor-Role-and-Appointments)
 - [Security](#security)
@@ -36,13 +36,13 @@ The  **Medical Center** full-stack web application is an innovative platform des
 - **Mobile-Responsive Design**: Optimized for desktops, tablets, and smartphones.
 
 ## Admin Dashboard
-###The Admin Dashboard is a powerful control center designed for administrators to efficiently manage the platform:
+### The Admin Dashboard is a powerful control center designed for administrators to efficiently manage the platform:
 - **User Role Managemen**: Create, edit, and assign roles (e.g., Administrator, Doctor, Patient).
 - **System Analytics**:  Gain insights into appointments, user activity, and system performance through visually appealing charts.
 - **Appointment Oversight**:  View, edit, or cancel appointments for seamless administrative control.
 
 ## Doctor Role and Appointments
-###Doctors have access to a personalized dashboard that enhances their workflow:
+### Doctors have access to a personalized dashboard that enhances their workflow:
 - **Appointments Overview**: View upcoming and past appointments with detailed patient information.
 - **Appointment Status Updates:**: Update appointment statuses (e.g., Completed, Cancelled, Pending).
 - **Medical Records Access**: View patients’ medical histories for informed consultations.
