@@ -23,27 +23,27 @@
 				<div class="flex items-center ms-3">
 					<div>
 						<button type="button"
-							class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+							class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 "
 							aria-expanded="false" data-dropdown-toggle="dropdown-user">
 							<span class="sr-only">Open user menu</span>
 							<img class="w-8 h-8 rounded-full"
 								src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
 						</button>
 					</div>
-					<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600"
+					<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm "
 						id="dropdown-user">
 						<div class="px-4 py-3" role="none">
 							<p class="text-sm text-gray-900 dark:text-white" role="none">
 								Neil Sims
 							</p>
-							<p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+							<p class="text-sm font-medium text-gray-900 truncate" role="none">
 								neil.simsflowbite.com
 							</p>
 						</div>
 						<ul class="py-1" role="none">
 							<li *ngFor="let item of menuItems">
 								<a [href]="item.path"
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
 									role="menuitem">
 									{{ item.title }}
 								</a>
@@ -68,7 +68,7 @@
 				   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100">
 				  <i [class]="item.icon"></i>
 				  <span class="flex-1 ms-3 whitespace-nowrap">{{ item.title }}</span>
-				  <span *ngIf="item.badge" class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
+				  <span *ngIf="item.badge" class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full ">
 					{{ item.badge }}
 				  </span>
 				</a>

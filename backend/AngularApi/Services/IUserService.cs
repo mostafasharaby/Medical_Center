@@ -6,20 +6,20 @@ namespace AngularApi.Services
 {
     public interface IUserService
     {
-        Task<Patient> GetCurrentUserAsync();
+        Task<AppUser> GetCurrentUserAsync();
     }
     public class UserService : IUserService
     {
-        private readonly UserManager<Patient> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(UserManager<Patient> userManager, IHttpContextAccessor httpContextAccessor)
+        public UserService(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Patient> GetCurrentUserAsync()
+        public async Task<AppUser> GetCurrentUserAsync()
         {
             var context = _httpContextAccessor.HttpContext;
             if (context == null)

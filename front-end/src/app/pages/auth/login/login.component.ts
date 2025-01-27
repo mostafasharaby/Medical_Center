@@ -107,10 +107,13 @@ export class LoginComponent implements OnInit, AfterViewInit{
       this.authService.login(email, password).subscribe(
         (response: any) => {          
           this.onLoginSuccess();
-          if (this.authService.isAdmin()) {
+          if (this.authService.isRole('admin')) {
             this.router.navigate(['admin/dashboard']);  
             console.log("admin");
-          } else {
+          } else if (this.authService.isRole('doctor')) {
+            this.router.navigate(['doctor/doctor-appointments']);  
+            console.log("admin");          
+          }else {
             this.router.navigate(['/pages/home']);  
             console.log("user");
           }

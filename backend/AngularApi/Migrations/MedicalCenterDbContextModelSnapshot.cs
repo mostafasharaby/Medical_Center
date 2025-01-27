@@ -22,6 +22,76 @@ namespace AngularApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AngularApi.Models.AppUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
             modelBuilder.Entity("AngularApi.Models.Appointment", b =>
                 {
                     b.Property<int>("Id")
@@ -39,8 +109,8 @@ namespace AngularApi.Migrations
                     b.Property<DateTime?>("AppointmentTakenDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<string>("DoctorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DoctorName")
                         .HasColumnType("nvarchar(max)");
@@ -92,36 +162,6 @@ namespace AngularApi.Migrations
                     b.ToTable("AppointmentStatus");
                 });
 
-            modelBuilder.Entity("AngularApi.Models.Doctor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MedicalCenterId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PracticingFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProfessionalStatement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MedicalCenterId");
-
-                    b.ToTable("Doctors");
-                });
-
             modelBuilder.Entity("AngularApi.Models.DoctorQualification", b =>
                 {
                     b.Property<int>("Id")
@@ -130,8 +170,8 @@ namespace AngularApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<string>("DoctorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("InstituteName")
                         .HasColumnType("nvarchar(max)");
@@ -157,8 +197,8 @@ namespace AngularApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<string>("DoctorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("SpecializationId")
                         .HasColumnType("int");
@@ -186,8 +226,8 @@ namespace AngularApi.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<string>("DoctorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
@@ -277,74 +317,6 @@ namespace AngularApi.Migrations
                     b.ToTable("MedicalCenterDoctorAvailability");
                 });
 
-            modelBuilder.Entity("AngularApi.Models.Patient", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
             modelBuilder.Entity("AngularApi.Models.PatientReview", b =>
                 {
                     b.Property<int>("Id")
@@ -356,8 +328,8 @@ namespace AngularApi.Migrations
                     b.Property<int?>("BedsideMannerRating")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<string>("DoctorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool?>("IsDoctorRecommended")
                         .HasColumnType("bit");
@@ -571,6 +543,43 @@ namespace AngularApi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AngularApi.Models.Doctor", b =>
+                {
+                    b.HasBaseType("AngularApi.Models.AppUser");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MedicalCenterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PracticingFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProfessionalStatement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("MedicalCenterId");
+
+                    b.ToTable("Doctors", (string)null);
+                });
+
+            modelBuilder.Entity("AngularApi.Models.Patient", b =>
+                {
+                    b.HasBaseType("AngularApi.Models.AppUser");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Patients", (string)null);
+                });
+
             modelBuilder.Entity("AngularApi.Models.Appointment", b =>
                 {
                     b.HasOne("AngularApi.Models.AppointmentStatus", "AppointmentStatus")
@@ -596,13 +605,6 @@ namespace AngularApi.Migrations
                     b.Navigation("MedicalCenter");
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("AngularApi.Models.Doctor", b =>
-                {
-                    b.HasOne("AngularApi.Models.MedicalCenter", null)
-                        .WithMany("Doctors")
-                        .HasForeignKey("MedicalCenterId");
                 });
 
             modelBuilder.Entity("AngularApi.Models.DoctorQualification", b =>
@@ -689,7 +691,7 @@ namespace AngularApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("AngularApi.Models.Patient", null)
+                    b.HasOne("AngularApi.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -698,7 +700,7 @@ namespace AngularApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("AngularApi.Models.Patient", null)
+                    b.HasOne("AngularApi.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -713,7 +715,7 @@ namespace AngularApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AngularApi.Models.Patient", null)
+                    b.HasOne("AngularApi.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -722,11 +724,45 @@ namespace AngularApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("AngularApi.Models.Patient", null)
+                    b.HasOne("AngularApi.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AngularApi.Models.Doctor", b =>
+                {
+                    b.HasOne("AngularApi.Models.AppUser", null)
+                        .WithOne()
+                        .HasForeignKey("AngularApi.Models.Doctor", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AngularApi.Models.MedicalCenter", null)
+                        .WithMany("Doctors")
+                        .HasForeignKey("MedicalCenterId");
+                });
+
+            modelBuilder.Entity("AngularApi.Models.Patient", b =>
+                {
+                    b.HasOne("AngularApi.Models.AppUser", null)
+                        .WithOne()
+                        .HasForeignKey("AngularApi.Models.Patient", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AngularApi.Models.MedicalCenter", b =>
+                {
+                    b.Navigation("Doctors");
+
+                    b.Navigation("MedicalCenterDoctorAvailabilities");
+                });
+
+            modelBuilder.Entity("AngularApi.Models.Specialization", b =>
+                {
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("AngularApi.Models.Doctor", b =>
@@ -738,21 +774,9 @@ namespace AngularApi.Migrations
                     b.Navigation("Qualifications");
                 });
 
-            modelBuilder.Entity("AngularApi.Models.MedicalCenter", b =>
-                {
-                    b.Navigation("Doctors");
-
-                    b.Navigation("MedicalCenterDoctorAvailabilities");
-                });
-
             modelBuilder.Entity("AngularApi.Models.Patient", b =>
                 {
                     b.Navigation("PatientReview");
-                });
-
-            modelBuilder.Entity("AngularApi.Models.Specialization", b =>
-                {
-                    b.Navigation("Services");
                 });
 #pragma warning restore 612, 618
         }

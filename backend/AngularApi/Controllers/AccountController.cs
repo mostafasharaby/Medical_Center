@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Mail;
@@ -26,24 +27,26 @@ namespace AngularApi.Controllers
     {
 
         /// <summary>
-        ///    { "email": "mustafasharaby18@gmail.com", "password": "0133asdASD//"}      
+        ///    { "email": "mustafasharaby18@gmail.com", "password": "0133asdASD*"}      
         ///   { "email": "ramyy@gmail.com", "password": "0133asdASD*"}   
         ///   {"email": "admin@gmail.com", "password": "0133asdASD*"}
         ///   works
         /// </summary>
-        private readonly UserManager<Patient> userManager;
+        private readonly UserManager<AppUser> userManager;
         private readonly IConfiguration Configuration;
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
-        public AccountController(UserManager<Patient> _userManager, IConfiguration Configuration , IEmailService _emailService )
+        private readonly EmailTemplateService _emailTemplateService;
+        public AccountController(UserManager<AppUser> _userManager, IConfiguration Configuration , IEmailService _emailService, EmailTemplateService emailTemplateService)
         {
             userManager = _userManager;
             this.Configuration = Configuration;
             this._emailService = _emailService;
-           // this._signInManager = _signInManager;
+            _emailTemplateService = emailTemplateService;
+            // this._signInManager = _signInManager;
 
         }
-        [HttpPost("register")]
+        [HttpPost("register/user")]
         public async Task<IActionResult> Register(RegisterUserDTO registerUser)
         {
             if (ModelState.IsValid)
@@ -53,21 +56,45 @@ namespace AngularApi.Controllers
                 appUser.Email = registerUser.Email;
           
                 IdentityResult result = await userManager.CreateAsync(appUser, registerUser.Password);
-                if (result.Succeeded)
-                {                   
-                    return Ok(new { message = "Account created successfully" });
-                }
-                return BadRequest(result.Errors.FirstOrDefault().Description.ToString());
 
+                if (result.Succeeded)
+                {
+
+                    await userManager.AddToRoleAsync(appUser, "user");
+                   /// return Ok(new { message = "Account created successfully with role." });
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(appUser);
+                    var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
+                        new { userId = appUser.Id, token }, Request.Scheme);
+
+                    var confirmtionLinkForFront = $"http://localhost:4200/auth/confirm-email?userId={appUser.Id}&token={WebUtility.UrlEncode(token)}";
+
+                    var emailBody = _emailTemplateService.GetConfirmationEmail(appUser.UserName, confirmtionLinkForFront);
+                    var message = new Message(new[] { appUser.Email }, "Confirm Your Email", emailBody);
+
+                    try
+                    {
+                        _emailService.SendEmail(message);
+
+                        return Ok(new { message = "Account created successfully. Please check your email to confirm your account." });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle email sending failure
+                        return StatusCode(StatusCodes.Status500InternalServerError, new { error = "Failed to send email. Please try again later." });
+                    }
+                }                
+                return BadRequest(result.Errors.FirstOrDefault().Description.ToString());
             }
             return BadRequest(ModelState);
         }
-        [HttpPost("RegisterForAdmin")]
-        public async Task<IActionResult> RegisterWithRole(RegisterUserDTO registerUser)
+  
+
+        [HttpPost("Register/admin")]
+        public async Task<IActionResult> RegisterWithAdmin(RegisterUserDTO registerUser)
         {
             if (ModelState.IsValid)
             {
-                Patient appUser = new Patient();
+                AppUser appUser = new AppUser();
                 appUser.UserName = registerUser.UserName;
                 appUser.Email = registerUser.Email;
 
@@ -77,15 +104,33 @@ namespace AngularApi.Controllers
                 {
                    // var role = registerUser.Role ?? "user"; // Default role to "user"
                     await userManager.AddToRoleAsync(appUser, "admin");
-
                     return Ok(new { message = "Account created successfully with role." });
                 }
                 return BadRequest(result.Errors.FirstOrDefault().Description.ToString());
-
             }
             return BadRequest(ModelState);
         }
 
+        [HttpPost("Register/doctor")]
+        public async Task<IActionResult> RegisterWithDoctor(RegisterUserDTO registerUser)
+        {
+            if (ModelState.IsValid)
+            {
+                Doctor appUser = new Doctor();
+                appUser.UserName = registerUser.UserName;
+                appUser.Email = registerUser.Email;
+
+                IdentityResult result = await userManager.CreateAsync(appUser, registerUser.Password);
+                if (result.Succeeded)
+                {
+                    // var role = registerUser.Role ?? "user"; // Default role to "user"
+                    await userManager.AddToRoleAsync(appUser, "doctor");
+                    return Ok(new { message = "Account created successfully with role." });
+                }
+                return BadRequest(result.Errors.FirstOrDefault().Description.ToString());
+            }
+            return BadRequest(ModelState);
+        }
 
 
         [HttpPost("login")]
@@ -96,14 +141,12 @@ namespace AngularApi.Controllers
                 var found = await userManager.FindByEmailAsync(logInUser.Email);
                 if (found != null)
                 {
-                    Patient appUser = new Patient();
+                    AppUser appUser = new AppUser();
                     appUser.Email = logInUser.Email;
-
                  
                     var checkpass = await userManager.CheckPasswordAsync(found, logInUser.Password);
                     if (checkpass)
                     {
-
                         var tokenGenerated = GenerateJwtToken(found);                       
                         return Ok(new
                         {
@@ -145,7 +188,7 @@ namespace AngularApi.Controllers
 
             if (user == null)
             {
-                user = new Patient { UserName = email, Email = email };
+                user = new AppUser { UserName = email, Email = email };
                 var createUserResult = await userManager.CreateAsync(user);
 
                 if (!createUserResult.Succeeded)
@@ -162,7 +205,7 @@ namespace AngularApi.Controllers
             return Redirect($"http://localhost:4200/auth/login-success?token={token}");
         }
 
-        private string GenerateJwtToken(Patient user)
+        private string GenerateJwtToken(AppUser user)
         {
 
             if (user == null)
@@ -363,7 +406,6 @@ namespace AngularApi.Controllers
 
             return Ok("Profile updated successfully");
         }
-
         
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -374,9 +416,10 @@ namespace AngularApi.Controllers
             var result = await userManager.ConfirmEmailAsync(user, token);
             if (!result.Succeeded) return BadRequest("Email confirmation failed");
 
-            return Ok("Email confirmed successfully");
+           var confirmtionLinkForFront = $"http://localhost:4200/auth/confirm-email?userId={userId}&token={token}";
+            // return Redirect(confirmtionLinkForFront);
+            return Ok(new { Message = "Email confirmed successfully." });            
         }
-
         
         [HttpPost("resend-email-confirmation")]
         public async Task<IActionResult> ResendEmailConfirmation([FromBody] ResendEmailConfirmationDto model)

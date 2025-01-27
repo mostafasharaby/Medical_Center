@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ReloadService } from './shared/service/reload.service';
 import { Router } from '@angular/router';
-
+import { initFlowbite } from 'flowbite';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -21,8 +21,10 @@ export class AppComponent {
   }
   
   ngOnInit(): void {
+    initFlowbite();  
+
     this.router.events.subscribe(() => {
-      this.showHeaderAndNavbar = !this.router.url.includes('/admin') && !this.router.url.includes('/error') && !this.router.url.includes('/auth');
+      this.showHeaderAndNavbar = !this.router.url.includes('/admin')  &&!this.router.url.includes('/doctor')  && !this.router.url.includes('/error') && !this.router.url.includes('/auth');
     });
   }
   

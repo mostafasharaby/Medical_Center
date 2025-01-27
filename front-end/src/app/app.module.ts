@@ -20,6 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AdminModule } from './admin/admin/admin.module';
+import { DoctorModule } from './doctor/doctor.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +35,7 @@ import { AdminModule } from './admin/admin/admin.module';
     AuthModule,
     GeneralModule,  
     AdminModule,
+    DoctorModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,

@@ -21,7 +21,7 @@ export class AuthServiceService {
   public googleloginUrl = `${environment.api}/Account/LoginWithGoogle`;
   private registerUrl = `${environment.api}/Account/register`;
   private userUrl = '';
-  
+
   usernameTakenError: boolean = false;
   private username: string | null = null;
 
@@ -35,7 +35,7 @@ export class AuthServiceService {
           localStorage.setItem('token', response.token);
           this.isLoggedSubject.next(true);
           this.username = this.getUsernameFromToken();
-          console.log("username", this.username , );
+          console.log("username", this.username,);
           // const decodedToken = jwtDecode(response.token) as any;
           // console.log("decodedToken ", JSON.stringify(decodedToken));
         }
@@ -61,7 +61,7 @@ export class AuthServiceService {
 
   logout() {
     this.isLoggedSubject.next(false);
-    localStorage.removeItem('token');     
+    localStorage.removeItem('token');
   }
 
   getUser(): Observable<any> {
@@ -69,7 +69,7 @@ export class AuthServiceService {
   }
 
 
-  get isUserLoggedIn(): boolean {    
+  get isUserLoggedIn(): boolean {
     return (localStorage.getItem('token')) ? true : false;
   }
 
@@ -77,16 +77,30 @@ export class AuthServiceService {
     return this.isLoggedSubject.asObservable();
   }
 
-
-  isAdmin(): boolean {
+  isRole(role: string): boolean {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token) as any;
-      console.log("decodedToken ", JSON.stringify(decodedToken));
-      return decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'admin';
+      console.log('decodedToken', JSON.stringify(decodedToken));
+      return (
+        decodedToken[
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] === role
+      );
     }
     return false;
   }
+
+  getNameIdentifier(): string | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token) as any;
+      console.log('decodedToken', JSON.stringify(decodedToken));
+      return decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || null;
+    }
+    return null;
+  }
+
 
   getUsernameFromToken(): string | null {
     const token = localStorage.getItem('token');

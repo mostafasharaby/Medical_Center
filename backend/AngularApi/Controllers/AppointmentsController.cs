@@ -17,9 +17,9 @@ namespace AngularApi.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly MedicalCenterDbContext _context;
-        private readonly UserManager<Patient> userManager;
+        private readonly UserManager<AppUser> userManager;
 
-        public AppointmentsController(MedicalCenterDbContext context , UserManager<Patient> _userManager)
+        public AppointmentsController(MedicalCenterDbContext context , UserManager<AppUser> _userManager)
         {
             userManager = _userManager;
             _context = context;

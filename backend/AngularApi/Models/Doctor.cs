@@ -1,8 +1,7 @@
 ﻿namespace AngularApi.Models
 {
-    public class Doctor
+    public class Doctor : AppUser
     {
-        public int Id { get; set; }
         public string? Name { get; set; } = string.Empty;
         public string? Image { get; set; } = string.Empty;
         public string ?ProfessionalStatement { get; set; } = string.Empty;

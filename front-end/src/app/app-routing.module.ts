@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/general/Home/Home.component';
 import { ErrorPageComponent } from './pages/general/errorPage/errorPage.component';
+import { AdminGuard } from './admin/admin/guard/admin.guard';
 
 
 const routes: Routes = [
@@ -12,8 +13,12 @@ const routes: Routes = [
     path: 'home', component: HomeComponent // title: 'resolvedChildATitle'
   },
   { 
-    path: 'admin',  
+    path: 'admin', canActivate: [AdminGuard],
     loadChildren: () => import('./admin/admin/admin.module').then(m => m.AdminModule)
+  },
+  {  
+    path: 'doctor',
+    loadChildren: () => import('./doctor/doctor.module').then(m => m.DoctorModule)
   },
   {
     path: 'pages',

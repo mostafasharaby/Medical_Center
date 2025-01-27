@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AngularApi.Models;
 using AngularApi.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngularApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+  //  [Authorize(Roles = "doctor")]
     public class DoctorsController : ControllerBase
     {
         private readonly MedicalCenterDbContext _context;
@@ -73,13 +75,16 @@ namespace AngularApi.Controllers
             return CreatedAtAction("GetDoctor", new { id = doctor.Id }, doctor);
         }
 
-        
+
         [HttpGet("{doctorId}/bookings")]
-        public async Task<IActionResult> GetBookings(int doctorId)
+        public async Task<IActionResult> GetBookings(string doctorId)
         {
             var bookings = await _context.Appointments
-                .Where(a => a.DoctorId == doctorId)
+                .Include(a => a.Patient)  
+                .Where(a => a.DoctorId == doctorId &&
+                            a.AppointmentStatus!.Status != AppointmentStatusEnum.Canceled) 
                 .ToListAsync();
+
             return Ok(bookings);
         }
 
@@ -97,14 +102,14 @@ namespace AngularApi.Controllers
         {
             var today = DateTime.Today;
             var bookings = await _context.Appointments
-                .Where(a => a.Id == doctorId && a.AppointmentTakenDate == today)
+                .Where(a => a.Id == doctorId && a.AppointmentTakenDate == today && a.AppointmentStatus!.Status != AppointmentStatusEnum.Canceled)
                 .ToListAsync();
             return Ok(bookings);
         }
 
 
         [HttpGet("{doctorId}/reviews")]
-        public async Task<IActionResult> GetReviews(int doctorId)
+        public async Task<IActionResult> GetReviews(string doctorId)
         {
             var reviews = await _context.PatientReviews
                 .Where(r => r.DoctorId == doctorId)
@@ -114,7 +119,7 @@ namespace AngularApi.Controllers
 
         
         [HttpGet("{doctorId}/rating")]
-        public async Task<IActionResult> GetRating(int doctorId)
+        public async Task<IActionResult> GetRating(string doctorId)
         {
             var rating = await _context.PatientReviews
                 .Where(r => r.DoctorId == doctorId)
@@ -124,7 +129,7 @@ namespace AngularApi.Controllers
 
         
         [HttpGet("{doctorId}/qualifications")]
-        public async Task<IActionResult> GetQualifications(int doctorId)
+        public async Task<IActionResult> GetQualifications(string doctorId)
         {
             var qualifications = await _context.DoctorQualifications
                 .Where(q => q.DoctorId == doctorId)
@@ -134,7 +139,7 @@ namespace AngularApi.Controllers
 
 
         [HttpGet("{doctorId}/specializations")]
-        public async Task<IActionResult> GetSpecializations(int doctorId)
+        public async Task<IActionResult> GetSpecializations(string doctorId)
         {
             var specializations = await _context.DoctorSpecialization.Include(i=>i.Specialization)
                 .Where(s => s.DoctorId == doctorId)
@@ -153,7 +158,7 @@ namespace AngularApi.Controllers
         //}
 
         [HttpPut("{doctorId}")]
-        public async Task<IActionResult> PutDoctor(int id, Doctor doctor)
+        public async Task<IActionResult> PutDoctor(string id, Doctor doctor)
         {
             if (id != doctor.Id)
             {
@@ -212,7 +217,26 @@ namespace AngularApi.Controllers
             return NoContent();
         }
 
-        private bool DoctorExists(int id)
+        [HttpDelete("{doctorId}/appointments/{appointmentId}")]
+        public async Task<IActionResult> DeleteAppointment(string doctorId, int appointmentId)
+        {
+            var appointment = await _context.Appointments
+                                             .Where(a => a.DoctorId == doctorId && a.Id == appointmentId)
+                                             .FirstOrDefaultAsync();
+
+            if (appointment == null)
+            {
+                return NotFound(new { message = "Appointment not found" });
+            }
+
+            //_context.Appointments.Remove(appointment);
+            _context.AppointmentStatus.Where(i=>i.Status == AppointmentStatusEnum.Canceled) ;
+            await _context.SaveChangesAsync();           
+            return NoContent(); 
+        }
+
+
+        private bool DoctorExists(string id)
         {
             return _context.Doctors.Any(e => e.Id == id);
         }

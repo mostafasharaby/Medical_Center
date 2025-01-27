@@ -5,7 +5,7 @@
 
         public int Id { get; set; }
         public string? PatientId { get; set; }
-        public int? DoctorId { get; set; }
+        public string? DoctorId { get; set; }
         public int? MedicalCenterId { get; set; }
         public string? Name { get; set; } 
         public string? Email { get; set; } 

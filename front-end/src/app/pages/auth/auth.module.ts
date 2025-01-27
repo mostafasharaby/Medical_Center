@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { LoginSuccessComponent } from './LoginSuccess/LoginSuccess.component';
+import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'reset-password/:token/:email', component: ForgetPasswordComponent },
   { path: 'login-success', component: LoginSuccessComponent },
+  { path: 'confirm-email', component: ConfirmEmailComponent },
 ] 
 
 @NgModule({
@@ -36,7 +38,8 @@ const routes: Routes = [
     LogoutComponent,
     ResetPasswordComponent,
     ForgetPasswordComponent,
-    LoginSuccessComponent
+    LoginSuccessComponent,
+    ConfirmEmailComponent
   ],
   exports: [LogoutComponent]
 })

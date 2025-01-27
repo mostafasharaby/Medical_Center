@@ -41,6 +41,7 @@ const routes: Routes = [
     TempAppointmentComponent
     
   ],
+  exports:[SideBarComponent],
   bootstrap: [AdminComponent] 
 })
 export class AdminModule { }

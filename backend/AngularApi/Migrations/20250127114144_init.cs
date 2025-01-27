@@ -70,7 +70,10 @@ namespace AngularApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SpecializationName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    SpecializationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecializationImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -184,18 +187,61 @@ namespace AngularApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Patients",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Patients_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecializationId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_Specializations_SpecializationId",
+                        column: x => x.SpecializationId,
+                        principalTable: "Specializations",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     MedicalCenterId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProbableStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ActualEndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AppointmentStatusId = table.Column<int>(type: "int", nullable: true),
-                    AppointmentTakenDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AppBookingChannelId = table.Column<int>(type: "int", nullable: true)
+                    AppointmentTakenDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -206,35 +252,9 @@ namespace AngularApi.Migrations
                         principalTable: "AppointmentStatus",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_PatientId",
+                        name: "FK_Appointments_Patients_PatientId",
                         column: x => x.PatientId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ClientReviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DoctorId = table.Column<int>(type: "int", nullable: true),
-                    IsReviewAnonymous = table.Column<bool>(type: "bit", nullable: true),
-                    WaitTimeRating = table.Column<int>(type: "int", nullable: true),
-                    BedsideMannerRating = table.Column<int>(type: "int", nullable: true),
-                    OverallRating = table.Column<int>(type: "int", nullable: true),
-                    Review = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDoctorRecommended = table.Column<bool>(type: "bit", nullable: true),
-                    ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ClientReviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ClientReviews_AspNetUsers_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "Patients",
                         principalColumn: "Id");
                 });
 
@@ -244,7 +264,7 @@ namespace AngularApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     QualificationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstituteName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProcurementYear = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -258,9 +278,9 @@ namespace AngularApi.Migrations
                 name: "Doctors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfessionalStatement = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PracticingFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
                     MedicalCenterId = table.Column<int>(type: "int", nullable: true)
@@ -268,6 +288,12 @@ namespace AngularApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doctors_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -276,7 +302,7 @@ namespace AngularApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     SpecializationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -300,7 +326,7 @@ namespace AngularApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DoctorId = table.Column<int>(type: "int", nullable: true),
+                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     HospitalName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -314,6 +340,37 @@ namespace AngularApi.Migrations
                         name: "FK_HospitalAffiliation_Doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "Doctors",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PatientReviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsReviewAnonymous = table.Column<bool>(type: "bit", nullable: true),
+                    WaitTimeRating = table.Column<int>(type: "int", nullable: true),
+                    BedsideMannerRating = table.Column<int>(type: "int", nullable: true),
+                    OverallRating = table.Column<int>(type: "int", nullable: true),
+                    Review = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDoctorRecommended = table.Column<bool>(type: "bit", nullable: true),
+                    ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PatientReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PatientReviews_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PatientReviews_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
                         principalColumn: "Id");
                 });
 
@@ -371,6 +428,11 @@ namespace AngularApi.Migrations
                 column: "AppointmentStatusId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DoctorId",
+                table: "Appointments",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Appointments_MedicalCenterId",
                 table: "Appointments",
                 column: "MedicalCenterId");
@@ -420,16 +482,6 @@ namespace AngularApi.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientReviews_DoctorId",
-                table: "ClientReviews",
-                column: "DoctorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientReviews_PatientId",
-                table: "ClientReviews",
-                column: "PatientId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DoctorQualifications_DoctorId",
                 table: "DoctorQualifications",
                 column: "DoctorId");
@@ -464,18 +516,33 @@ namespace AngularApi.Migrations
                 table: "MedicalCenterDoctorAvailability",
                 column: "MedicalCenterId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_PatientReviews_DoctorId",
+                table: "PatientReviews",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PatientReviews_PatientId",
+                table: "PatientReviews",
+                column: "PatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_SpecializationId",
+                table: "Services",
+                column: "SpecializationId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Appointments_Doctors_DoctorId",
+                table: "Appointments",
+                column: "DoctorId",
+                principalTable: "Doctors",
+                principalColumn: "Id");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Appointments_MedicalCenter_MedicalCenterId",
                 table: "Appointments",
                 column: "MedicalCenterId",
                 principalTable: "MedicalCenter",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_ClientReviews_Doctors_DoctorId",
-                table: "ClientReviews",
-                column: "DoctorId",
-                principalTable: "Doctors",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
@@ -497,8 +564,8 @@ namespace AngularApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Doctors_MedicalCenter_MedicalCenterId",
-                table: "Doctors");
+                name: "FK_HospitalAffiliation_Doctors_DoctorId",
+                table: "HospitalAffiliation");
 
             migrationBuilder.DropTable(
                 name: "Appointments");
@@ -519,9 +586,6 @@ namespace AngularApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ClientReviews");
-
-            migrationBuilder.DropTable(
                 name: "DoctorQualifications");
 
             migrationBuilder.DropTable(
@@ -531,25 +595,34 @@ namespace AngularApi.Migrations
                 name: "MedicalCenterDoctorAvailability");
 
             migrationBuilder.DropTable(
+                name: "PatientReviews");
+
+            migrationBuilder.DropTable(
+                name: "Services");
+
+            migrationBuilder.DropTable(
                 name: "AppointmentStatus");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Patients");
 
             migrationBuilder.DropTable(
                 name: "Specializations");
+
+            migrationBuilder.DropTable(
+                name: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "MedicalCenter");
 
             migrationBuilder.DropTable(
                 name: "HospitalAffiliation");
-
-            migrationBuilder.DropTable(
-                name: "Doctors");
         }
     }
 }
