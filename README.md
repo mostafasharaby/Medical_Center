@@ -35,20 +35,20 @@ The  **Medical Center** full-stack web application is an innovative platform des
 - **Notifications System**: Automated reminders for upcoming appointments via email and in-app notifications.
 - **Mobile-Responsive Design**: Optimized for desktops, tablets, and smartphones.
 
-## Admin Dashboard
-### The Admin Dashboard is a powerful control center designed for administrators to efficiently manage the platform:
+### Admin Dashboard
+#### The Admin Dashboard is a powerful control center designed for administrators to efficiently manage the platform:
 - **User Role Managemen**: Create, edit, and assign roles (e.g., Administrator, Doctor, Patient).
 - **System Analytics**:  Gain insights into appointments, user activity, and system performance through visually appealing charts.
 - **Appointment Oversight**:  View, edit, or cancel appointments for seamless administrative control.
 
-## Doctor Role and Appointments
-### Doctors have access to a personalized dashboard that enhances their workflow:
+### Doctor Role and Appointments
+#### Doctors have access to a personalized dashboard that enhances their workflow:
 - **Appointments Overview**: View upcoming and past appointments with detailed patient information.
 - **Appointment Status Updates:**: Update appointment statuses (e.g., Completed, Cancelled, Pending).
 - **Medical Records Access**: View patients’ medical histories for informed consultations.
 
 
-## Security
+### Security
 - **Data Protection**: End-to-end encryption for sensitive data.
 - **JWT Authentication**: Secure token-based authentication for API communication.
 - **OAuth 2.0**: Google login integration with secure token exchange.
