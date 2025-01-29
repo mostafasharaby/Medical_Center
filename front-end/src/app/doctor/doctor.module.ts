@@ -6,10 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { RelatedAppointmentsComponent } from './pages/related-appointments/related-appointments.component';
 import { AdminModule } from '../admin/admin/admin.module';
+import { DoctorProfileComponent } from './pages/doctor-profile/doctor-profile.component';
+import { PatientReviewsComponent } from './pages/patient-reviews/patient-reviews.component';
 
 const routes: Routes = [
   { path: 'doctor-appointments', component: RelatedAppointmentsComponent },
- 
+  { path: 'doctor-profile', component: DoctorProfileComponent },
+  { path: 'patient-reviews', component: PatientReviewsComponent },
 ]
 
 @NgModule({
@@ -25,7 +28,10 @@ const routes: Routes = [
   ],
   declarations: [
     DoctorComponent,
-    RelatedAppointmentsComponent
+    RelatedAppointmentsComponent,
+    DoctorProfileComponent,
+    PatientReviewsComponent
+    
   ]
 })
 export class DoctorModule { }

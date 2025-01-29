@@ -22,19 +22,18 @@ namespace AngularApi.Controllers
         {
             _context = context;
         }
-
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctors()
         {
-            return await _context.Doctors.Include(i => i.DoctorSpecializations).ThenInclude(i => i.Specialization).ToListAsync();
+            return await _context.Doctors.Include(i => i.DoctorSpecializations)!.ThenInclude(i => i.Specialization).ToListAsync();
         }
 
         [HttpGet("/api/DoctorsWithSpectialization")]
         public async Task<IActionResult> GetDoctorsWithSpectialization()
         {
             var doctors = await _context.Doctors
-                .Include(d => d.DoctorSpecializations)
+                .Include(d => d.DoctorSpecializations)!
                 .ThenInclude(ds => ds.Specialization)
                 .ToListAsync();
 
@@ -45,7 +44,7 @@ namespace AngularApi.Controllers
                 Image = d.Image,
                 ProfessionalStatement = d.ProfessionalStatement,
                 PracticingFrom = d.PracticingFrom,
-                Specializations = d.DoctorSpecializations.Select(ds => ds.Specialization.SpecializationName).ToList()
+                Specializations = d.DoctorSpecializations!.Select(ds => ds.Specialization!.SpecializationName).ToList()!
             }).ToList();
 
             return Ok(doctorDTOs);
@@ -53,7 +52,7 @@ namespace AngularApi.Controllers
 
         
         [HttpGet("{doctorId}")]
-        public async Task<ActionResult<Doctor>> GetDoctor(int doctorId)
+        public async Task<ActionResult<Doctor>> GetDoctor(string doctorId)
         {
             var doctor = await _context.Doctors.FindAsync(doctorId);
 
@@ -82,28 +81,59 @@ namespace AngularApi.Controllers
             var bookings = await _context.Appointments
                 .Include(a => a.Patient)  
                 .Where(a => a.DoctorId == doctorId &&
-                            a.AppointmentStatus!.Status != AppointmentStatusEnum.Canceled) 
+                            a.AppointmentStatus!.Status == AppointmentStatusEnum.Active) 
                 .ToListAsync();
 
             return Ok(bookings);
         }
 
         [HttpGet("{doctorId}/bookings/status/{status}")]
-        public async Task<IActionResult> GetBookingsByStatus(int doctorId, AppointmentStatusEnum status)
+        public async Task<IActionResult> GetBookingsByStatus(string doctorId, AppointmentStatusEnum status)
         {
-            var bookings = await _context.AppointmentStatus
-                .Where(a => a.Id == doctorId && a.Status == status)
+            var bookings = await _context.Appointments
+                .Include(i=>i.AppointmentStatus)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentStatus!.Status == status)
                 .ToListAsync();
             return Ok(bookings);
         }    
 
         [HttpGet("{doctorId}/bookings/today")]
-        public async Task<IActionResult> GetTodaysBookings(int doctorId)
+        public async Task<IActionResult> GetTodaysBookings(string doctorId)
         {
             var today = DateTime.Today;
             var bookings = await _context.Appointments
-                .Where(a => a.Id == doctorId && a.AppointmentTakenDate == today && a.AppointmentStatus!.Status != AppointmentStatusEnum.Canceled)
+                .Include(a => a.Patient)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentTakenDate == today && a.AppointmentStatus!.Status == AppointmentStatusEnum.Active)
                 .ToListAsync();
+            return Ok(bookings);
+        }
+
+
+        [HttpGet("{doctorId}/bookings/UpComing")]
+        public async Task<IActionResult> GetUpComingBookings(string doctorId)
+        {
+            var today = DateTime.Today;
+            var bookings = await _context.Appointments
+                .Include(a => a.Patient)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentTakenDate >= today && a.AppointmentStatus!.Status == AppointmentStatusEnum.Active)
+                .ToListAsync();
+            return Ok(bookings);
+        }
+
+        [HttpGet("{doctorId}/bookings/Last30Days")]
+        public async Task<IActionResult> GetLast30DaysBookings(string doctorId)
+        {
+            var today = DateTime.Today;
+            var thirtyDaysAgo = today.AddDays(-30);
+
+            var bookings = await _context.Appointments
+                 .Include(a => a.Patient)
+                .Where(a => a.DoctorId == doctorId
+                    && a.AppointmentTakenDate >= thirtyDaysAgo
+                    && a.AppointmentTakenDate <= today
+                    && a.AppointmentStatus!.Status == AppointmentStatusEnum.Active)
+                .ToListAsync();
+
             return Ok(bookings);
         }
 
@@ -112,6 +142,7 @@ namespace AngularApi.Controllers
         public async Task<IActionResult> GetReviews(string doctorId)
         {
             var reviews = await _context.PatientReviews
+                .Include(i=>i.Patient)
                 .Where(r => r.DoctorId == doctorId)
                 .ToListAsync();
             return Ok(reviews);
@@ -221,6 +252,7 @@ namespace AngularApi.Controllers
         public async Task<IActionResult> DeleteAppointment(string doctorId, int appointmentId)
         {
             var appointment = await _context.Appointments
+                                             .Include(a => a.AppointmentStatus)
                                              .Where(a => a.DoctorId == doctorId && a.Id == appointmentId)
                                              .FirstOrDefaultAsync();
 
@@ -228,9 +260,8 @@ namespace AngularApi.Controllers
             {
                 return NotFound(new { message = "Appointment not found" });
             }
-
+            appointment.AppointmentStatusId = (int)AppointmentStatusEnum.Canceled;
             //_context.Appointments.Remove(appointment);
-            _context.AppointmentStatus.Where(i=>i.Status == AppointmentStatusEnum.Canceled) ;
             await _context.SaveChangesAsync();           
             return NoContent(); 
         }

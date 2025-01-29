@@ -28,7 +28,7 @@ namespace AngularApi.Controllers
 
         /// <summary>
         ///    { "email": "mustafasharaby18@gmail.com", "password": "0133asdASD*"}      
-        ///   { "email": "ramyy@gmail.com", "password": "0133asdASD*"}   
+        ///   { "email": "dodo@gmail.com", "password": "0133asdASD*"}   
         ///   {"email": "admin@gmail.com", "password": "0133asdASD*"}
         ///   works
         /// </summary>
@@ -207,7 +207,6 @@ namespace AngularApi.Controllers
 
         private string GenerateJwtToken(AppUser user)
         {
-
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
             if (string.IsNullOrEmpty(user.Id))
@@ -216,7 +215,6 @@ namespace AngularApi.Controllers
                 throw new ArgumentNullException(nameof(user.Email), "User Email cannot be null or empty");
             if (string.IsNullOrEmpty(user.UserName))
                 throw new ArgumentNullException(nameof(user.UserName), "User Name cannot be null or empty");
-
 
             var claims = new List<Claim>
             {
@@ -233,8 +231,6 @@ namespace AngularApi.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role)); // Add roles dynamically
             }
       
-
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -247,7 +243,6 @@ namespace AngularApi.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
 
         //[HttpPost("LoginWith2FA")]
         //public async Task<IActionResult> LoginWith2FA(LoginWith2FADTO model)
@@ -262,7 +257,6 @@ namespace AngularApi.Controllers
         //    {
         //        return Unauthorized("User not found.");
         //    }
-
         //    // Verify 2FA code
         //    var result = await _signInManager.TwoFactorSignInAsync(
         //        "Email", // Provider ("Email" or "Authenticator" for apps like Google Authenticator)
@@ -279,7 +273,6 @@ namespace AngularApi.Controllers
         //    {
         //        return StatusCode(403, "Account locked out.");
         //    }
-
         //    return Unauthorized("Invalid 2FA code.");
         //}
 
@@ -305,8 +298,6 @@ namespace AngularApi.Controllers
                     Request.Scheme);
 
                 // var resetLink = $"http://localhost:4200/auth/reset-password?token={resetToken}&email={user.Email}";
-
-
                 var message = new Message(new[] { user.Email }, "Forgot Password Link", resetLink);
 
                 try

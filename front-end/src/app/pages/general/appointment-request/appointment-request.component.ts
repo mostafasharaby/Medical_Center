@@ -138,9 +138,9 @@ export class AppointmentRequestComponent implements OnInit {
           phone: this.phone?.value,
           doctorName: this.doctor?.value,
           probableStartTime: this.date?.value,
-          appointmentStatusId: 3,
+          appointmentTakenDate:this.date?.value        
         };
-
+        console.log('appointmentData:', appointmentData);
         this.postAppointment(appointmentData);
       } else {
         alert('Please fill all required fields.');

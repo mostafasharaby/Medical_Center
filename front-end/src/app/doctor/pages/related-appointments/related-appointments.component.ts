@@ -5,46 +5,51 @@ import { DoctorAppointmentsService } from '../../services/doctor-appointments.se
 import { AuthServiceService } from '../../../pages/auth/auth-services/auth-service.service';
 import { FlowbiteService } from '../../../shared/service/Flowbite.service';
 import * as Flowbite from 'flowbite';
+import { SearchService } from '../../services/search.service';
 @Component({
   selector: 'app-related-appointments',
   templateUrl: './related-appointments.component.html',
   styleUrls: ['./related-appointments.component.css']
 })
 export class RelatedAppointmentsComponent implements OnInit {
+
   constructor(private reload: ReloadService,
     private doctorService: DoctorAppointmentsService,
     private authService: AuthServiceService,
-    private flowbiteService: FlowbiteService) { }
+    private flowbiteService: FlowbiteService,
+    private searchService: SearchService) { }
 
 
   doctorId: string = '';
-  bookings: any[] = [];
+  allBookings: any[] = [];
+  todayBookings: any[] = [];
+  upComingBookings: any[] = [];
+  last30DaysBookings: any[] = [];
+  tempBookings: any[] = [];
   errorMessage: string = '';
 
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
-    //this.loadFlowbite();
   }
 
   ngOnInit(): void {
-    this.setDoctorId();  // the arrangement is important 
-    this.getBookings();
-  //  this.onDelete();
-  this.loadFlowbite();
+    this.setDoctorId();
+    this.getAllBookings();
+    this.getTodayBookings();
+    this.getUpComingBookings();
+    this.getLast30DaysBookings();
+    this.loadFlowbite();
+    
   }
 
 
   loadFlowbite(): void {
-    // Ensure Flowbite is loaded and then initialize the dropdown
     if (typeof Flowbite !== 'undefined') {
-      // Dropdown will be automatically initialized by Flowbite
       const dropdownButton = document.getElementById('dropdownRadioButton');
       const dropdownMenu = document.getElementById('dropdownRadio');
-      
-      // If you need to manually control it, you can add event listeners
+
       if (dropdownButton && dropdownMenu) {
         dropdownButton.addEventListener('click', () => {
-          // Flowbite's built-in functionality will handle this toggle
           dropdownMenu.classList.toggle('hidden');
         });
       }
@@ -56,27 +61,56 @@ export class RelatedAppointmentsComponent implements OnInit {
     console.log("id", id);
     if (id) {
       this.doctorId = id;
-      console.log("doctorId", this.doctorId);
     } else {
-      this.errorMessage = 'Failed to fetch doctor ID. Please log in again.';
       console.error(this.errorMessage);
     }
   }
-  getBookings(): void {
 
-    console.log("in progress", this.doctorId);
-    if (!this.doctorId) {
-      console.error('Doctor ID is not set.');
-      return;
-    }
-
-    this.doctorService.getDoctorBookings(this.doctorId).subscribe({
+  getAllBookings(): void {
+    this.doctorService.getAllDoctorBookings(this.doctorId).subscribe({
       next: (data) => {
-        this.bookings = data;
-        console.log("Bookings", this.bookings);
+        this.allBookings = data;
+        console.log("allBookings", this.allBookings);
+         this.filterBookingsByDropDownList();
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load bookings. Please try again later.';
+        console.error(error);
+      },
+    });
+  }
+  getTodayBookings(): void {
+    this.doctorService.getTodayDoctorBookings(this.doctorId).subscribe({
+      next: (data) => {
+        this.todayBookings = data;
+        console.log("todayBookings", this.todayBookings);
+          this.filterBookingsByDropDownList();
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+  getUpComingBookings(): void {
+    this.doctorService.getUpCommingDoctorBookings(this.doctorId).subscribe({
+      next: (data) => {
+        this.upComingBookings = data;
+        console.log("upComingBookings", this.upComingBookings);
+         this.filterBookingsByDropDownList();
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
+  getLast30DaysBookings(): void {
+    this.doctorService.getLast30DaysDoctorBookings(this.doctorId).subscribe({
+      next: (data) => {
+        this.last30DaysBookings = data;
+        console.log("last30DaysBookings", this.last30DaysBookings);
+         this.filterBookingsByDropDownList();
+      },
+      error: (error) => {
         console.error(error);
       },
     });
@@ -86,43 +120,94 @@ export class RelatedAppointmentsComponent implements OnInit {
     if (confirm('Are you sure you want to delete this appointment?')) {
       this.doctorService.deleteBooking(this.doctorId, appointmentId).subscribe(
         (response) => {
-          //this.toastr.success('Appointment deleted successfully!');
-          this.getBookings();
+          console.log("Appointment deleted successfully")
+          this.getAllBookings();
         },
         (error) => {
           console.error('Error deleting appointment', error);
-          //  this.toastr.error('Failed to delete appointment.');
         }
       );
     }
   }
 
-
-  onDelete() {
-    console.log("delete");
-    const modal = document.getElementById('deleteModal');
-    if (modal) {
-      const modalInstance = new Flowbite.Modal(modal);
-      modalInstance.show(); // Show the modal
-    }
+  @ViewChild('deleteModal') deleteModal!: ElementRef;
+  @ViewChild('cancelDelete') cancelDelete!: ElementRef;
+  @ViewChild('confirmDelete') confirmDelete!: ElementRef;
+  onDelete(appointmentId: string): void {
+    const modalElement = this.deleteModal.nativeElement;
+    const modalInstance = new Flowbite.Modal(modalElement);
+    modalInstance.show();
+    this.cancelDelete.nativeElement.onclick = () => {
+      console.log('Cancel delete');
+      modalInstance.hide();
+    };
+    this.confirmDelete.nativeElement.onclick = () => {
+      console.log('Confirm delete');
+      modalInstance.hide();
+      this.deleteAppointment(appointmentId);
+    };
   }
 
 
 
-  
-
-  selectedFilter: string = '7';
+  selectedFilter: string = '1';
   filters = [
-    { id: '1', label: 'Last day' },
-    { id: '7', label: 'Last 7 days' },
-    { id: '30', label: 'Last 30 days' },
-    { id: 'custom', label: 'Custom range' }
+    { id: '1', label: 'All days' },
+    { id: '2', label: 'Todday' },
+    { id: '3', label: 'Up Coming' },
+    { id: '4', label: 'Last 30 days' }
+
   ];
 
   onFilterChange(selected: string): void {
     this.selectedFilter = selected;
     console.log('Selected filter:', this.selectedFilter);
-    // Add your logic to handle the selected filter here
+    this.filterBookingsByDropDownList();
   }
+
+  getSelectedLabel(): string {
+    const selectedFilterObject = this.filters.find(filter => filter.id === this.selectedFilter);
+    return selectedFilterObject ? selectedFilterObject.label : 'Select Filter';  // Default label if no match
+  }
+
+  filterBookingsByDropDownList(): void {
+    switch (this.selectedFilter) {
+      case '2':
+        this.tempBookings = this.todayBookings
+        break;
+      case '3':
+        this.tempBookings = this.upComingBookings
+        break;
+      case '4':
+        this.tempBookings = this.last30DaysBookings
+        break;
+      case '1':
+        this.tempBookings = this.allBookings;
+        break;
+      default:
+        break;
+    }
+    console.log('Filtered Bookings:', this.tempBookings,this.selectedFilter); // Debug the bookings
+  }
+
+
+  public searchItem !: string;
+  search(event: any) {
+    const query = this.searchItem.toLowerCase().trim();
+    console.log('Searching ', this.searchItem);
+    this.searchService.setSearchTerm(query);
+    this.filterBookingsBySearch(query);
+  }
+
+  filterBookingsBySearch(query: string) {
+    if (!query) {
+      this.getAllBookings();
+    } else {
+      this.tempBookings = this.tempBookings.filter(booking =>
+        booking.patient.name.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+  }
+
 
 }

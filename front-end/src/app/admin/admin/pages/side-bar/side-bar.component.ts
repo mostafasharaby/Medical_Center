@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MENU } from '../../menu';
+import { DoctorMENU, MENU } from '../../menu';
 import * as Flowbite from 'flowbite';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar',
@@ -9,23 +10,27 @@ import * as Flowbite from 'flowbite';
 })
 export class SideBarComponent implements OnInit {
   
-  menuItems = MENU;
-
-  constructor() { }
-
+  constructor(private router: Router) { }
   ngOnInit() {
     this.loadFlowbite();
+    this.checkIfDoctorRoute();
+
   }
+  menuItems:any;
+  checkIfDoctorRoute(): void {
+    if (this.router.url.includes('doctor')) {
+      this.menuItems = DoctorMENU; 
+    } else {
+      this.menuItems = MENU; 
+    }
+  }
+
   loadFlowbite(): void {
-    // Ensure Flowbite is loaded and then initialize the dropdown
     if (typeof Flowbite !== 'undefined') {
-      // Dropdown will be automatically initialized by Flowbite
       const dropdownMenu = document.getElementById('dropdown-user');
       
-      // If you need to manually control it, you can add event listeners
       if (dropdownMenu) {
         dropdownMenu.addEventListener('click', () => {
-          // Flowbite's built-in functionality will handle this toggle
           dropdownMenu.classList.toggle('hidden');
         });
       }

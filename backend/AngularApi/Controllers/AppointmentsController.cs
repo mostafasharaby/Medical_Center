@@ -36,7 +36,7 @@ namespace AngularApi.Controllers
         {
             var appointments = await _context.Appointments
                 .Include(a => a.Doctor)
-                    .ThenInclude(d => d.DoctorSpecializations)
+                    .ThenInclude(d => d.DoctorSpecializations)!
                         .ThenInclude(ds => ds.Specialization)
                 .Include(a => a.Patient)
                 .ToListAsync();
@@ -49,8 +49,8 @@ namespace AngularApi.Controllers
                 {
                     Name = appointment.DoctorName,
                     Specializations = appointment.Doctor?.DoctorSpecializations
-                        .Select(ds => ds.Specialization?.SpecializationName) 
-                        .ToList() ?? new List<string>() 
+                        .Select(ds => ds.Specialization?.SpecializationName)
+                        .ToList() ?? new List<string>()
                 },
                 Patient = new PatientDTO
                 {
@@ -134,8 +134,9 @@ namespace AngularApi.Controllers
 
             appointment.PatientId = user.Id;
             appointment.MedicalCenterId = 2;
-            appointment.AppointmentTakenDate = DateTime.Now;
-           
+            appointment.AppointmentStatusId = (int)AppointmentStatusEnum.Active +(int)1;
+
+
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 

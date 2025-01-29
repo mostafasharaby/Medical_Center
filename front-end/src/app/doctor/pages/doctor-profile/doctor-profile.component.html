@@ -1,0 +1,33 @@
+<div id="preloader">
+  <div class="loader"></div>
+</div>
+<app-side-bar></app-side-bar>
+<div class="p-4 sm:ml-64 mt-[100px]">
+
+  <div class="bg-gray mx-auto p-5 border rounded text-center text-gray-500 max-w-sm ">
+    <img class="w-32 h-32 rounded-full mx-auto" [src]="profile?.image" alt="">
+    <div class="text-sm mt-5">
+      <a href="#"
+        class="font-medium leading-none text-gray-900 hover:text-indigo-600 transition duration-500 ease-in-out">{{profile?.name}}
+      </a>
+      <p>{{profile?.professionalStatement}}</p>
+    </div>
+
+    <p class="mt-2 text-sm text-gray-900">{{profile?.email}}
+
+    <div class="flex mt-4 justify-center">
+      <a href="#" class="w-6 mx-1">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="#" class="w-6 mx-1">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="#" class="w-6 mx-1">
+        <i class="fas fa-envelope"></i>
+      </a>
+      <a href="#" class="w-6 mx-1">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+  </div>
+</div>
