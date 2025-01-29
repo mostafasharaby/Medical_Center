@@ -8,7 +8,6 @@ import { AuthServiceService } from '../../auth/auth-services/auth-service.servic
   providedIn: 'root'
 })
 export class AppointmentService {
-
   private apiUrl =  `${environment.api}/Appointments`;
   private getAppointmentsUrl = `${environment.api}/Appointments/GetAllAppointments`;
 
@@ -17,11 +16,17 @@ export class AppointmentService {
     const headers = this.authService.getHeaders();   
     return this.http.post(this.apiUrl, JSON.stringify(data), { headers });
   }
-
   getAppointments(): Observable<any[]> {
     const headers = this.authService.getHeaders();  
     return this.http.get<any[]>(this.getAppointmentsUrl,{ headers });
   }
-  
+  deleteBookingById(Id: number): Observable<any> {
+    const headers = this.authService.getHeaders();
+    return this.http.delete(`${this.apiUrl}/${Id}`, { headers });
+  }
+  editeBooking(Id: number, updatedAppointment: any): Observable<any> {
+    const headers = this.authService.getHeaders();
+    return this.http.put(`${this.apiUrl}/${Id}`,updatedAppointment, { headers });
+  }
 
 }

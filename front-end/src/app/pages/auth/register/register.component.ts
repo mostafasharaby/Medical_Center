@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthServiceService } from '../auth-services/auth-service.service';
 import { User } from '../user-model/user';
 import { ReloadService } from '../../../shared/service/reload.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,8 @@ export class RegisterComponent implements OnInit,AfterViewInit {
   ngAfterViewInit(): void {   
     this.reload.initializeLoader();
   }
-  
+  ngOnInit() {
+  }
 
   user: User = {
     fullName: '',
@@ -24,22 +26,20 @@ export class RegisterComponent implements OnInit,AfterViewInit {
     password: '',
     confirmPassword: ''
   };
+  
   register: FormGroup;
   usernameTakenError: boolean = false;
   constructor(private fb: FormBuilder,
-    private snakebar: MatSnackBar,
     private router: Router,
     private reload : ReloadService,
+    private toastr: ToastrService,
     private userAuth: AuthServiceService
   ) {
     this.register = this.fb.group({
       fullName: ['', [Validators.minLength(3), Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]],
-      phoneNumber: fb.array([this.fb.control('')]),
-      referral: [''],
-      referralOther: ['']
+      confirmPassword: ['', [Validators.required]]
     },
       {
         validators: this.passwordMatch(true, true) //function is invoked when the form group is created to return the actual validator function (Cross-Field Validation)
@@ -76,7 +76,7 @@ export class RegisterComponent implements OnInit,AfterViewInit {
     return (control: AbstractControl): ValidationErrors | null => { //This is the base class for FormControl, FormGroup, and FormArray
       let emailValue: string = control.value;
       let validationErrors = { 'emailNotValid': { 'value': emailValue } }
-      return (arr.includes(emailValue)) ? validationErrors : null; // ex1 
+      return (arr.includes(emailValue)) ? validationErrors : null;
     }
   }
   get fullName() {
@@ -91,41 +91,14 @@ export class RegisterComponent implements OnInit,AfterViewInit {
   get confirmPassword() {
     return this.register.get('confirmPassword');
   }
-  get phoneNumber() {
-    return this.register.get('phoneNumber') as FormArray;
-  }
-  get referral() {
-    return this.register.get('referral');
-  }
-  get referralOther() {
-    return this.register.get('referralOther');
-  }
 
-
-  AddNewNumber(event: any, idx: number) {
-    this.phoneNumber.push(this.fb.control(''));
-    if (idx > 0) event.target?.classList.add('d-none');
-  }
-
-
-  updateReferralValidators() {
-    if (this.referral?.value === 'Other') {
-      this.referralOther?.addValidators(Validators.required); // add validators at runtime
-    } else {
-      // this.referralOther?.clearAsyncValidators();  not correct 
-      this.referralOther?.clearValidators();
-    }
-    this.referralOther?.updateValueAndValidity();  // -> re-bind validation (update state)
-  }
-
+ 
 
   onRegister() {
     if (this.password?.value !== this.confirmPassword?.value) {
-      alert('Passwords do not match!');
+      this.toastr.error('Passwords do not match!');
       return;
     }
-
-    // Ensure that the form is valid before proceeding with registration
     if (this.register.valid) {
       this.userAuth.register(
         this.fullName?.value, 
@@ -136,23 +109,26 @@ export class RegisterComponent implements OnInit,AfterViewInit {
         next: (response: any) => {
           console.log('User registered:', this.fullName?.value);
           this.router.navigate(['/auth/login']);  // Redirect to Login on success
+          this.toastr.success('Registration successful');
+          this.toastr.info('Please check your google account for verification');
+
         },
         error: (error: any) => {
           console.log('Registration failed:', error);  
-          // Check how the error is returned from the backend         
-            this.usernameTakenError = true;  // Set flag for the error         
+            this.usernameTakenError = true;  // Set flag for the error   
+                  
         }
       });
     } else {
-      alert('Please fill out all fields correctly!');
+      this.toastr.error('Please fill out all fields correctly!');
+
     }
   }
 
 
 
 
-  ngOnInit() {
-  }
+  
 
 
 }

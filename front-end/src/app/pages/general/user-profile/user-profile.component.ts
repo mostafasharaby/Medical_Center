@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ProfileService } from './profile-service/Profile.service';
 import { AuthServiceService } from '../../auth/auth-services/auth-service.service';
 import { ChangePasswordService } from './profile-service/change-password.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,6 +21,7 @@ export class UserProfileComponent implements OnInit {
     private reload: ReloadService,
     private snakebar: SnakebarService,
     private router: Router,
+    private toastr : ToastrService,
     private changePasswordService :ChangePasswordService,
     private snakebarService :SnakebarService) { }
 
@@ -132,7 +134,6 @@ this.reload.initializeLoader();
       },
       error: (error) => {
         console.error('Error fetching profile:', error);
-        this.snakebar.showSnakeBar('Error fetching profile details.');
       }
     });
   }
@@ -144,11 +145,13 @@ this.reload.initializeLoader();
     this.profileService.updateProfileDetails(profileInfo).subscribe({
       next: (response) => {
         console.log('Profile updated successfully:', response);
-        this.snakebar.showSnakeBar('Profile updated successfully!');
+        this.toastr.success('Error fetching profile details.');
+
       },
       error: (error) => {
         console.error('Error updating profile:', error);
-        this.snakebar.showSnakeBar('Error updating profile.');
+        this.toastr.error('Error updating profile.');
+
       }
     });
   }
@@ -184,14 +187,15 @@ this.reload.initializeLoader();
           this.errorMessage = '';
           this.passwordForm.reset();
           console.log("success",this.successMessage);
-          this.snakebarService.showSnakeBar("Password updated successfully");
+          this.toastr.success('Password updated successfully');
+
         },
         error: (error) => {
           this.errorMessage = error.error?.description || 'An unexpected error occurred.';
           this.successMessage = '';
           console.error("Error:", this.errorMessage);
-          this.snakebarService.showSnakeBar(`Error updating password: ${this.errorMessage}`);
-          
+          this.toastr.success(`Error updating password: ${this.errorMessage}`);
+
         },
       });
     }

@@ -2,14 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ForgotServiceService } from '../auth-services/forgot-service.service';
 import { ModelService } from '../auth-services/model.service';
-
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-forgetPassword',
   templateUrl: './forgetPassword.component.html'
 })
 export class ForgetPasswordComponent implements OnInit {
 
-  constructor(private forgetpasswordService: ForgotServiceService , private modalService :ModelService) { }
+  constructor(private forgetpasswordService: ForgotServiceService ,
+     private modalService :ModelService,
+     private toaster :ToastrService
+    ) { }
 
   ngOnInit() {
     this.modalService.dialogState$.subscribe((state) => {
@@ -30,33 +33,24 @@ export class ForgetPasswordComponent implements OnInit {
   }
 
   closeDialog(): void {
-    // this.isDialogMounted = false;
-    // setTimeout(() => {
-    //   this.isDialogOpen = false;
-    // }, 200);
     this.modalService.closeDialog();
   }
-
-
 
   forgetForm !: FormGroup;
   get Forgotemail() {
     return this.forgetForm.get('emailForgot');
   }
 
-
   onForgotSubmit() {
     const emailForgetVal = this.forgetForm.value.emailForgot;
     console.log("emailForgot", emailForgetVal);
     this.forgetpasswordService.forgetPassword(emailForgetVal).subscribe({
       next: (res) => {
-        alert(`Success: ${res.message}`)
+        this.toaster.success(`Success: ${res.message}`);
       },
-      error: (err) => alert(`Errorrrr: ${err.error.message}`)
+      error: (err) => this.toaster.error(`Error: ${err.message}`)
     });
-
   }
-
 
 }
 

@@ -143,20 +143,19 @@
 														</button>
 														<ul class="dropdown-menu pull-left" role="menu">
 															<li>
-																<a href="javascript:;"><i class="fa fa-trash-o"></i>
+																<a (click)="openDeleteModal(appointment.appointmentId)"><i
+																		class="fa fa-trash-o"></i>
 																	Delete </a>
 															</li>
 															<li>
-																<a href="javascript:;"><i class="fa fa-ban"></i>
-																	Cancel </a>
-															</li>
-															<li>
-																<a href="javascript:;"><i class="fa fa-clock-o"></i>
-																	Postpone </a>
+																<a (click)="onEditeAppointment(appointment.appointmentId ,appointment.appointmentDate)" href="javascript:;"><i
+																		class="fa fa-ban"></i>
+																	Edite </a>
 															</li>
 														</ul>
 													</div>
 												</td>
+
 											</tr>
 										</tbody>
 									</table>
@@ -262,4 +261,33 @@
 		<!-- end page content -->
 	</div>
 
+
+
+
+</div>
+
+<app-delete-modal [itemId]="selectedAppointmentId" (confirm)="onDeleteAppointment($event)"></app-delete-modal>
+
+
+
+<div id="editModal" class=" hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+	<div class="bg-white rounded-lg shadow-lg p-6 w-96">
+		<h2 class="text-xl text-dark mb-4">Edit Appointment</h2>
+
+		<!-- Date Input -->
+		<label class="block text-sm font-medium text-dark mb-2">Appointment
+			Date</label>
+		<input type="date" [(ngModel)]="appointmentDate" class="w-full px-3 py-2 border  text-dark rounded-lg">
+
+		<label class="block text-sm font-medium text-dark my-2">Appointment
+			Time</label>
+		<input type="time" [(ngModel)]="appointmentTime" class="w-full px-3 py-2 border  text-dark rounded-lg">
+
+		<!-- Modal Actions -->
+		<div class="flex justify-end mt-4">
+			<button (click)="closeModal()" class="bg-gray-400 px-4 py-2 rounded-lg mr-2">Cancel</button>
+			<button (click)="saveAppointment()"
+				class="bg-blue-600 text-white px-4 py-2 rounded-lg">Save</button>
+		</div>
+	</div>
 </div>

@@ -6,17 +6,23 @@ import { AuthServiceService } from '../../../pages/auth/auth-services/auth-servi
 import { FlowbiteService } from '../../../shared/service/Flowbite.service';
 import * as Flowbite from 'flowbite';
 import { SearchService } from '../../services/search.service';
+import { ToastrService } from 'ngx-toastr';
+import { DeleteModalComponent } from '../../../pages/general/delete-modal/delete-modal.component';
+
+
 @Component({
   selector: 'app-related-appointments',
-  templateUrl: './related-appointments.component.html',
-  styleUrls: ['./related-appointments.component.css']
+  templateUrl: './related-appointments.component.html'
 })
 export class RelatedAppointmentsComponent implements OnInit {
 
+  @ViewChild(DeleteModalComponent) deleteModal!: DeleteModalComponent;
+  
   constructor(private reload: ReloadService,
     private doctorService: DoctorAppointmentsService,
     private authService: AuthServiceService,
     private flowbiteService: FlowbiteService,
+    private toaster: ToastrService,
     private searchService: SearchService) { }
 
 
@@ -27,6 +33,7 @@ export class RelatedAppointmentsComponent implements OnInit {
   last30DaysBookings: any[] = [];
   tempBookings: any[] = [];
   errorMessage: string = '';
+  selectedAppointmentId!: number;
 
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
@@ -39,7 +46,7 @@ export class RelatedAppointmentsComponent implements OnInit {
     this.getUpComingBookings();
     this.getLast30DaysBookings();
     this.loadFlowbite();
-    
+
   }
 
 
@@ -71,7 +78,7 @@ export class RelatedAppointmentsComponent implements OnInit {
       next: (data) => {
         this.allBookings = data;
         console.log("allBookings", this.allBookings);
-         this.filterBookingsByDropDownList();
+        this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
@@ -83,7 +90,7 @@ export class RelatedAppointmentsComponent implements OnInit {
       next: (data) => {
         this.todayBookings = data;
         console.log("todayBookings", this.todayBookings);
-          this.filterBookingsByDropDownList();
+        this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
@@ -95,7 +102,7 @@ export class RelatedAppointmentsComponent implements OnInit {
       next: (data) => {
         this.upComingBookings = data;
         console.log("upComingBookings", this.upComingBookings);
-         this.filterBookingsByDropDownList();
+        this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
@@ -108,7 +115,7 @@ export class RelatedAppointmentsComponent implements OnInit {
       next: (data) => {
         this.last30DaysBookings = data;
         console.log("last30DaysBookings", this.last30DaysBookings);
-         this.filterBookingsByDropDownList();
+        this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
@@ -116,39 +123,25 @@ export class RelatedAppointmentsComponent implements OnInit {
     });
   }
 
-  deleteAppointment(appointmentId: string): void {
-    if (confirm('Are you sure you want to delete this appointment?')) {
-      this.doctorService.deleteBooking(this.doctorId, appointmentId).subscribe(
-        (response) => {
-          console.log("Appointment deleted successfully")
-          this.getAllBookings();
-        },
-        (error) => {
-          console.error('Error deleting appointment', error);
-        }
-      );
-    }
+  deleteAppointment(appointmentId: number): void {
+    this.doctorService.deleteBooking(this.doctorId, appointmentId).subscribe(
+      (response) => {
+        console.log("Appointment deleted successfully");
+        this.toaster.success("Appointment deleted successfully");
+        this.getAllBookings();
+      },
+      (error) => {
+        console.error('Error deleting appointment', error);
+        this.toaster.error("Error deleting appointment");
+      }
+    );
+
   }
-
-  @ViewChild('deleteModal') deleteModal!: ElementRef;
-  @ViewChild('cancelDelete') cancelDelete!: ElementRef;
-  @ViewChild('confirmDelete') confirmDelete!: ElementRef;
-  onDelete(appointmentId: string): void {
-    const modalElement = this.deleteModal.nativeElement;
-    const modalInstance = new Flowbite.Modal(modalElement);
-    modalInstance.show();
-    this.cancelDelete.nativeElement.onclick = () => {
-      console.log('Cancel delete');
-      modalInstance.hide();
-    };
-    this.confirmDelete.nativeElement.onclick = () => {
-      console.log('Confirm delete');
-      modalInstance.hide();
-      this.deleteAppointment(appointmentId);
-    };
+  openDeleteModal(id: number) {
+    this.selectedAppointmentId = id;
+    this.deleteModal.showModal();
   }
-
-
+ 
 
   selectedFilter: string = '1';
   filters = [
@@ -167,7 +160,7 @@ export class RelatedAppointmentsComponent implements OnInit {
 
   getSelectedLabel(): string {
     const selectedFilterObject = this.filters.find(filter => filter.id === this.selectedFilter);
-    return selectedFilterObject ? selectedFilterObject.label : 'Select Filter';  // Default label if no match
+    return selectedFilterObject ? selectedFilterObject.label : 'Select Filter';
   }
 
   filterBookingsByDropDownList(): void {
@@ -187,7 +180,7 @@ export class RelatedAppointmentsComponent implements OnInit {
       default:
         break;
     }
-    console.log('Filtered Bookings:', this.tempBookings,this.selectedFilter); // Debug the bookings
+    console.log('Filtered Bookings:', this.tempBookings, this.selectedFilter); // Debug the bookings
   }
 
 

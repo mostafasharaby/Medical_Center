@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnakebarService } from '../../../shared/service/SnakebarService.service';
 import { ResetPasswordService } from '../auth-services/resetPassword.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reset-password',
@@ -19,6 +20,7 @@ export class ResetPasswordComponent implements OnInit {
     private route: ActivatedRoute,
     private resetPassordService: ResetPasswordService,
     private router: Router,
+    private toastr : ToastrService,
     private snakeBarService: SnakebarService
   ) {
     this.resetForm = this.fb.group({
@@ -38,7 +40,8 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.resetForm.invalid) {
-      this.snakeBarService.showSnakeBar('Please fill out the form correctly.');
+      this.toastr.error('Please fill out the form correctly.');
+
       return;
     }
 
@@ -46,18 +49,21 @@ export class ResetPasswordComponent implements OnInit {
 
     console.log(this.email, this.token,newPassword, confirmPassword)
     if (newPassword !== confirmPassword) {
-      this.snakeBarService.showSnakeBar('Passwords do not match!');
+      this.toastr.error('Passwords do not match!');
+
       return;
     }
 
     this.resetPassordService.resetPassword(this.email, this.token, newPassword)
       .subscribe({
         next: () => {
-          this.snakeBarService.showSnakeBar('Password reset successful!');
+          this.toastr.success('Password reset successful!');
+
           this.router.navigate(['/auth/login']);
         },
         error: (err) => {
-          this.snakeBarService.showSnakeBar(`Error: ${err.error.message}`);
+          this.toastr.error(`Error: ${err.error.message}`);
+
           console.error(err);
         }
       });

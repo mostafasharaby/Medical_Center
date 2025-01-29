@@ -8,19 +8,14 @@ import { HeaderComponent } from './layout/header/header.component';
 import { RouterModule } from '@angular/router';
 import { GeneralModule } from './pages/general/general.module';
 import { AuthModule } from './pages/auth/auth.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AdminModule } from './admin/admin/admin.module';
 import { DoctorModule } from './doctor/doctor.module';
+import { provideToastr, ToastrModule } from 'ngx-toastr'; 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,17 +35,12 @@ import { DoctorModule } from './doctor/doctor.module';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,      
-    MatSidenavModule,
-    MatToolbarModule,  
-    MatIconModule,      
-    MatCardModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatDatepickerModule
+    ToastrModule.forRoot(),
   ],
   providers: [
     provideClientHydration(),  
     provideAnimationsAsync(), 
+    provideToastr(),
     provideHttpClient(withFetch()),
   ],
   bootstrap: [AppComponent]

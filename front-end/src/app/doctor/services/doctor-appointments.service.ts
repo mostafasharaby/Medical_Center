@@ -38,7 +38,7 @@ export class DoctorAppointmentsService {
     return this.http.get<any>(`${this.apiUrl}/${doctorId}` , {headers});   
   }
 
-  deleteBooking(doctorId: string, bookingId: string): Observable<any> {
+  deleteBooking(doctorId: string, bookingId: number): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.delete(`${this.apiUrl}/${doctorId}/appointments/${bookingId}`, { headers });
   }

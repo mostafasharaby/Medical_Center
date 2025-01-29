@@ -8,6 +8,7 @@ import { RelatedAppointmentsComponent } from './pages/related-appointments/relat
 import { AdminModule } from '../admin/admin/admin.module';
 import { DoctorProfileComponent } from './pages/doctor-profile/doctor-profile.component';
 import { PatientReviewsComponent } from './pages/patient-reviews/patient-reviews.component';
+import { GeneralModule } from '../pages/general/general.module';
 
 const routes: Routes = [
   { path: 'doctor-appointments', component: RelatedAppointmentsComponent },
@@ -22,16 +23,18 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule,
     FormsModule ,
-    AuthModule,
-    AdminModule
+    AuthModule ,
+    AdminModule,
+    GeneralModule
 
   ],
   declarations: [
     DoctorComponent,
     RelatedAppointmentsComponent,
     DoctorProfileComponent,
-    PatientReviewsComponent
+    PatientReviewsComponent,
     
   ]
+
 })
 export class DoctorModule { }

@@ -11,6 +11,8 @@ import { SideBarComponent } from './pages/side-bar/side-bar.component';
 import { AppointmentsComponent } from './pages/appointments/appointments.component';
 import { TempAppointmentComponent } from './pages/temp-appointment/temp-appointment.component';
 import { AuthModule } from '../../pages/auth/auth.module';
+import { DoctorModule } from '../../doctor/doctor.module';
+import { GeneralModule } from '../../pages/general/general.module';
 
 const routes: Routes = [
   { path: 'doctors', component: DoctorsComponent },
@@ -24,11 +26,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-       RouterModule.forChild(routes),
-       ReactiveFormsModule,
-       RouterModule,
-       FormsModule ,
-       AuthModule
+    RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    RouterModule,
+    FormsModule,
+    AuthModule,
+    GeneralModule
   ],
   declarations: [
     AdminComponent,
@@ -39,9 +42,9 @@ const routes: Routes = [
     SideBarComponent,
     AppointmentsComponent,
     TempAppointmentComponent
-    
+
   ],
-  exports:[SideBarComponent],
-  bootstrap: [AdminComponent] 
+  exports: [SideBarComponent],
+  bootstrap: [AdminComponent]
 })
 export class AdminModule { }

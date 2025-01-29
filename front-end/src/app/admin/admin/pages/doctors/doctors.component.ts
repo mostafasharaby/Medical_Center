@@ -5,8 +5,7 @@ import { ReloadService } from '../../../../shared/service/reload.service';
 
 @Component({
   selector: 'app-doctors',
-  templateUrl: './doctors.component.html',
-  styleUrls: ['./doctors.component.css']
+  templateUrl: './doctors.component.html'
 })
 export class DoctorsComponent implements OnInit {
 

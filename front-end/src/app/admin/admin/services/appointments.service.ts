@@ -17,4 +17,5 @@ private apiUrl = `${environment}/Appointments`;
     const headers = this.authService.getHeaders();  
     return this.http.get<any[]>(this.apiUrl,{ headers });
   }
+
 }

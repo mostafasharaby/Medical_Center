@@ -15,6 +15,7 @@ import { TeamComponent } from './team/team.component';
 import { FaqComponent } from './faq/faq.component';
 import { AppointmentRequestComponent } from './appointment-request/appointment-request.component';
 import { DoctorcsComponent } from './doctorcs/doctorcs.component';
+import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 
 
 const routes: Routes = [
@@ -52,7 +53,8 @@ const routes: Routes = [
     DoctorcsComponent,
     FaqComponent,
     AppointmentRequestComponent,
-    
-  ]
+    DeleteModalComponent
+  ],
+  exports: [DeleteModalComponent]
 })
 export class GeneralModule { }

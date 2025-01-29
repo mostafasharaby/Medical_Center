@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/general/Home/Home.component';
 import { ErrorPageComponent } from './pages/general/errorPage/errorPage.component';
 import { AdminGuard } from './admin/admin/guard/admin.guard';
+import { DoctorGuard } from './doctor/guard/doctor.guard';
 
 
 const routes: Routes = [
@@ -17,7 +18,7 @@ const routes: Routes = [
     loadChildren: () => import('./admin/admin/admin.module').then(m => m.AdminModule)
   },
   {  
-    path: 'doctor',
+    path: 'doctor',canActivate: [DoctorGuard],
     loadChildren: () => import('./doctor/doctor.module').then(m => m.DoctorModule)
   },
   {

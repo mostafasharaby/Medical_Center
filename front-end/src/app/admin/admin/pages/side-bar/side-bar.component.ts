@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar',
-  templateUrl: './side-bar.component.html',
-  styleUrls: ['./side-bar.component.css']
+  templateUrl: './side-bar.component.html'
 })
 export class SideBarComponent implements OnInit {
   
@@ -18,7 +17,7 @@ export class SideBarComponent implements OnInit {
   }
   menuItems:any;
   checkIfDoctorRoute(): void {
-    if (this.router.url.includes('doctor')) {
+    if (this.router.url.includes('doctor/')) {
       this.menuItems = DoctorMENU; 
     } else {
       this.menuItems = MENU; 

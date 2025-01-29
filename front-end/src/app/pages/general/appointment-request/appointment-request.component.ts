@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppointmentService } from '../services/appointment.service';
 import { AuthServiceService } from '../../auth/auth-services/auth-service.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-appointment-request',
@@ -18,7 +19,8 @@ export class AppointmentRequestComponent implements OnInit {
     private fb: FormBuilder,
     private appointmentsService: AppointmentService,
     private authService: AuthServiceService,
-    private router : Router
+    private router : Router,
+    private toastr:ToastrService
   ) { }
 
   specializations: any[] = [];
@@ -120,11 +122,11 @@ export class AppointmentRequestComponent implements OnInit {
     this.appointmentsService.postAppointment(appointmentData).subscribe(
       (response) => {
         console.log('Appointment posted successfully:', response);
-        alert('Appointment saved!');
+        this.toastr.success('Appointment saved!');   
       },
       (error) => {
         console.error('Error posting appointment:', error);
-        alert('Failed to save the appointment.');
+        this.toastr.info('Please fill all required fields.');       
       }
     );
   }
@@ -143,10 +145,11 @@ export class AppointmentRequestComponent implements OnInit {
         console.log('appointmentData:', appointmentData);
         this.postAppointment(appointmentData);
       } else {
-        alert('Please fill all required fields.');
+        this.toastr.info('Please fill all required fields.');   
+
       }
     } else {
-      alert('Please login to book an appointment');
+      this.toastr.warning('Please login to book an appointment');   
       this.router.navigate(['/auth/login']);  
     }
   }

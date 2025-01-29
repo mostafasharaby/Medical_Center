@@ -44,7 +44,7 @@ namespace AngularApi.Controllers
             var appointmentDtos = appointments.Select(appointment => new AppointmentDTO
             {
                 AppointmentId = appointment.Id,
-                AppointmentDate = appointment.ProbableStartTime,
+                AppointmentDate = appointment.AppointmentTakenDate,
                 Doctor = new DoctorDTO
                 {
                     Name = appointment.DoctorName,
@@ -79,13 +79,49 @@ namespace AngularApi.Controllers
         }
 
        
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutAppointment(int id, Appointment appointment)
+        //{
+        //    if (id != appointment.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(appointment).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!AppointmentExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAppointment(int id, Appointment appointment)
+        public async Task<IActionResult> UpdateAppointment(int id, [FromBody] UpdateAppointmentDTO appointmentDto)
         {
-            if (id != appointment.Id)
+            if (id != appointmentDto.Id)
             {
-                return BadRequest();
+                return BadRequest("Appointment ID mismatch.");
             }
+
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }                     
+            appointment.AppointmentTakenDate = appointmentDto.AppointmentTakenDate;
 
             _context.Entry(appointment).State = EntityState.Modified;
 
@@ -95,19 +131,13 @@ namespace AngularApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AppointmentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode(500, "An error occurred while updating the appointment.");
             }
 
             return NoContent();
         }
-       
+
+
         [HttpPost]
         public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
         {

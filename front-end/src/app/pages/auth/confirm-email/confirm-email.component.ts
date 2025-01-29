@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmailConfirmationService } from '../auth-services/email-confirmation.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-confirm-email',
@@ -15,6 +16,7 @@ export class ConfirmEmailComponent implements OnInit {
   constructor(private route: ActivatedRoute,
      private http: HttpClient, 
      private router: Router,
+     private toaster :ToastrService,
      private emailConfirmationService: EmailConfirmationService) {}
 
   ngOnInit() {
@@ -35,6 +37,7 @@ export class ConfirmEmailComponent implements OnInit {
     this.emailConfirmationService.confirmEmail(userId, token).subscribe(
       (response: any) => {
         this.confirmationMessage = response.message || 'Email confirmed successfully.';
+        this.toaster.success('Email confirmed successfully.');
         console.log("confirmationMessage", this.confirmationMessage);
         this.errorMessage = null;         
          this.router.navigate(['/auth/login']);
@@ -42,6 +45,7 @@ export class ConfirmEmailComponent implements OnInit {
       (error: any) => {
         this.errorMessage = error.error || 'An error occurred while confirming your email.';
         this.confirmationMessage = null;
+        this.toaster.success('An error occurred while confirming your email.');
       }
     );
   }

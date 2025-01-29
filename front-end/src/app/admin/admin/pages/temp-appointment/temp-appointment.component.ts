@@ -4,8 +4,7 @@ import { ReloadService } from '../../../../shared/service/reload.service';
 
 @Component({
   selector: 'app-temp-appointment',
-  templateUrl: './temp-appointment.component.html',
-  styleUrls: ['./temp-appointment.component.css']
+  templateUrl: './temp-appointment.component.html'
 })
 export class TempAppointmentComponent implements OnInit {
 

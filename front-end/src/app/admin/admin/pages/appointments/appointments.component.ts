@@ -4,8 +4,7 @@ import { AppointmentService } from '../../../../pages/general/services/appointme
 
 @Component({
   selector: 'app-appointments',
-  templateUrl: './appointments.component.html',
-  styleUrls: ['./appointments.component.css']
+  templateUrl: './appointments.component.html'
 })
 export class AppointmentsComponent implements OnInit {
   appointments: any[] = [];  

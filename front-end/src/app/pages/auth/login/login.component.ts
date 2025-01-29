@@ -8,14 +8,13 @@ import { ForgotServiceService } from '../auth-services/forgot-service.service';
 import { BehaviorSubject } from 'rxjs';
 import { ResetPasswordService } from '../auth-services/resetPassword.service';
 import { ModelService } from '../auth-services/model.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit, AfterViewInit{
-
-  
   ngOnInit() {
   }
   ngAfterViewInit(): void {   
@@ -24,10 +23,10 @@ export class LoginComponent implements OnInit, AfterViewInit{
 
    loginForm: FormGroup;
   constructor(private fb: FormBuilder,
+    private toastr: ToastrService,
     private reload : ReloadService,
     private authService: AuthServiceService,
     private router: Router,
-    private snackBar: SnakebarService,
     private forgetpasswordService :ForgotServiceService, 
     private resetPasswordService :ResetPasswordService,
     private modalService: ModelService
@@ -91,10 +90,10 @@ export class LoginComponent implements OnInit, AfterViewInit{
   }
 
   onLoginSuccess() {
-    this.snackBar.showSnakeBar(`Welcome ${this.authService.getUsernameFromToken()?.toUpperCase()}`);
+    this.toastr.success(`Welcome ${this.authService.getUsernameFromToken()?.toUpperCase()}`);
   }
   onLoginFailed() {
-    this.snackBar.showSnakeBar('Login Failed');
+    this.toastr.error(`Login Failed`);
   }
 
   errorMessage: string | null = null;
@@ -144,9 +143,9 @@ onForgotSubmit() {
   console.log("emailForgot",emailForgetVal);
   this.forgetpasswordService.forgetPassword(emailForgetVal).subscribe({
     next: (res) => {
-      alert(`Success: ${res.message}`)      
+      this.toastr.success(`Success: ${res.message}`);   
     },
-    error: (err) => alert(`Errorrrr: ${err.error.message}`)
+    error: (err) =>  this.toastr.error(`Error: ${err.message}`)
   });
   
 }
