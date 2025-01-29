@@ -1,10 +1,12 @@
 # Medical Center - Full Stack Web Application 
 
-The **Medical Center** full-stack web application is a comprehensive platform for managing healthcare services. It is built with **.NET 8** for a robust and scalable backend and **Angular 18** for a dynamic and responsive frontend. This application offers seamless functionality for patients, doctors, and administrators, including appointment management and medical records.
+The  **Medical Center** full-stack web application is an innovative platform designed to streamline healthcare services. Built with .NET 8 for a powerful backend and Angular 18 for an intuitive and responsive frontend, this application ensures seamless experiences for patients, doctors, and administrators. With advanced features like appointment scheduling, medical record access, and role-based dashboards, this platform sets a new standard in healthcare management.
 
 ## Table of Contents
 - [Technologies Used](#technologies-used)
-- [Features](#features)
+- [Features](#features) 
+- [Admin Dashboard](#Admin-Dashboard)
+- [Doctor Role and Appointments](#Doctor-Role-and-Appointments)
 - [Security](#security)
 - [Getting Started](#getting-started)
 - [Installation](#installation)
@@ -33,8 +35,20 @@ The **Medical Center** full-stack web application is a comprehensive platform fo
 - **Notifications System**: Automated reminders for upcoming appointments via email and in-app notifications.
 - **Mobile-Responsive Design**: Optimized for desktops, tablets, and smartphones.
 
+### Admin Dashboard
+#### The Admin Dashboard is a powerful control center designed for administrators to efficiently manage the platform:
+- **User Role Managemen**: Create, edit, and assign roles (e.g., Administrator, Doctor, Patient).
+- **System Analytics**:  Gain insights into appointments, user activity, and system performance through visually appealing charts.
+- **Appointment Oversight**:  View, edit, or cancel appointments for seamless administrative control.
 
-## Security
+### Doctor Role and Appointments
+#### Doctors have access to a personalized dashboard that enhances their workflow:
+- **Appointments Overview**: View upcoming and past appointments with detailed patient information.
+- **Appointment Status Updates:**: Update appointment statuses (e.g., Completed, Cancelled, Pending).
+- **Medical Records Access**: View patients’ medical histories for informed consultations.
+
+
+### Security
 - **Data Protection**: End-to-end encryption for sensitive data.
 - **JWT Authentication**: Secure token-based authentication for API communication.
 - **OAuth 2.0**: Google login integration with secure token exchange.
