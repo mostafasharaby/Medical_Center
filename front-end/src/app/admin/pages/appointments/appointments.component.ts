@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ReloadService } from '../../../../shared/service/reload.service';
-import { AppointmentService } from '../../../../pages/general/services/appointment.service';
+import { AppointmentService } from '../../../pages/general/services/appointment.service';
+import { ReloadService } from '../../../shared/service/reload.service';
 
 @Component({
   selector: 'app-appointments',

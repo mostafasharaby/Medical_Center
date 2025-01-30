@@ -42,7 +42,8 @@ const routes: Routes = [
     
   ],
   declarations: [
-    GeneralComponent,HomeComponent,
+    GeneralComponent,
+    HomeComponent,
     AboutUsComponent,
     ContactUsComponent,
     BlogComponent,

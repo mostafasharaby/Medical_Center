@@ -9,10 +9,9 @@ import { PatientsComponent } from './pages/patients/patients.component';
 import { SideBarComponent } from './pages/side-bar/side-bar.component';
 import { AppointmentsComponent } from './pages/appointments/appointments.component';
 import { TempAppointmentComponent } from './pages/temp-appointment/temp-appointment.component';
-import { AuthModule } from '../../pages/auth/auth.module';
-import { DoctorModule } from '../../doctor/doctor.module';
-import { GeneralModule } from '../../pages/general/general.module';
 import { ChartComponent } from './pages/chart/chart.component';
+import { AuthModule } from '../pages/auth/auth.module';
+import { GeneralModule } from '../pages/general/general.module';
 
 const routes: Routes = [
   { path: 'doctors', component: DoctorsComponent },

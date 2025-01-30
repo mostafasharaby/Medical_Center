@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/general/Home/Home.component';
 import { ErrorPageComponent } from './pages/general/errorPage/errorPage.component';
-import { AdminGuard } from './admin/admin/guard/admin.guard';
 import { DoctorGuard } from './doctor/guard/doctor.guard';
+import { AdminGuard } from './admin/guard/admin.guard';
 
 
 const routes: Routes = [
@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   { 
     path: 'admin', canActivate: [AdminGuard],
-    loadChildren: () => import('./admin/admin/admin.module').then(m => m.AdminModule)
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
   {  
     path: 'doctor',canActivate: [DoctorGuard],
@@ -24,10 +24,6 @@ const routes: Routes = [
   {
     path: 'pages',
     loadChildren: () => import('./pages/general/general.module').then(m => m.GeneralModule)
-  },
-  {
-    path: 'booking',
-    loadChildren: () => import('./pages/appointment/appointment.module').then(m => m.AppointmentModule)
   },
   {
     path: 'auth',

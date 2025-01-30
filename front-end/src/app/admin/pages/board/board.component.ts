@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DoctorService } from '../../../../pages/general/services/doctor.service';
-import { Doctor } from '../../../../pages/models/doctor';
-import { AppointmentService } from '../../../../pages/general/services/appointment.service';
 import { MENU } from '../../menu';
-import { ReloadService } from '../../../../shared/service/reload.service';
 import { PatientService } from '../../services/patient.service';
 import { ToastrService } from 'ngx-toastr';
-import { DeleteModalComponent } from '../../../../doctor/pages/delete-modal/delete-modal.component';
+import { Doctor } from '../../../pages/models/doctor';
+import { AppointmentService } from '../../../pages/general/services/appointment.service';
+import { DoctorService } from '../../../pages/general/services/doctor.service';
+import { ReloadService } from '../../../shared/service/reload.service';
+import { DeleteModalComponent } from '../../../doctor/pages/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-board',

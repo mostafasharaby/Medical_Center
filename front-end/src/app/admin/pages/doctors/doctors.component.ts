@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Doctor } from '../../../../pages/models/doctor';
-import { DoctorService } from '../../../../pages/general/services/doctor.service';
-import { ReloadService } from '../../../../shared/service/reload.service';
+import { Doctor } from '../../../pages/models/doctor';
+import { DoctorService } from '../../../pages/general/services/doctor.service';
+import { ReloadService } from '../../../shared/service/reload.service';
 
 @Component({
   selector: 'app-doctors',

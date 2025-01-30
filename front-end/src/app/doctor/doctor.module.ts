@@ -5,10 +5,10 @@ import { AuthModule } from '../pages/auth/auth.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { RelatedAppointmentsComponent } from './pages/related-appointments/related-appointments.component';
-import { AdminModule } from '../admin/admin/admin.module';
 import { DoctorProfileComponent } from './pages/doctor-profile/doctor-profile.component';
 import { PatientReviewsComponent } from './pages/patient-reviews/patient-reviews.component';
 import { GeneralModule } from '../pages/general/general.module';
+import { AdminModule } from '../admin/admin.module';
 
 const routes: Routes = [
   { path: 'doctor-appointments', component: RelatedAppointmentsComponent },

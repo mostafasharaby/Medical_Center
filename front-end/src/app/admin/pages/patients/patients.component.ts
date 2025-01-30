@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientService } from '../../services/patient.service';
-import { ReloadService } from '../../../../shared/service/reload.service';
-
+import { ReloadService } from '../../../shared/service/reload.service';
 @Component({
   selector: 'app-patients',
   templateUrl: './patients.component.html'
