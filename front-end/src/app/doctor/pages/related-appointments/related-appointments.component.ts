@@ -7,7 +7,7 @@ import { FlowbiteService } from '../../../shared/service/Flowbite.service';
 import * as Flowbite from 'flowbite';
 import { SearchService } from '../../services/search.service';
 import { ToastrService } from 'ngx-toastr';
-import { DeleteModalComponent } from '../../../pages/general/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 
 
 @Component({

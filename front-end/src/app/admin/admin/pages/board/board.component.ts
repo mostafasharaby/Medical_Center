@@ -6,7 +6,7 @@ import { MENU } from '../../menu';
 import { ReloadService } from '../../../../shared/service/reload.service';
 import { PatientService } from '../../services/patient.service';
 import { ToastrService } from 'ngx-toastr';
-import { DeleteModalComponent } from '../../../../pages/general/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../../../../doctor/pages/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-board',

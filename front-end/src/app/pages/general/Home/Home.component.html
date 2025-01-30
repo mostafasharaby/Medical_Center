@@ -1,7 +1,7 @@
 <div id="preloader">
     <div class="loader"></div>
-  </div>
-  
+</div>
+
 <div id="default-carousel" class="relative w-full " data-carousel="slide">
     <!-- Carousel wrapper -->
     <div class="relative   h-56 overflow-hidden  md:h-96">
@@ -72,7 +72,7 @@
                         <i class="fa fa-stethoscope"></i>
                         <h2>24 Hour Service</h2>
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore dignissimos
-                            officia dicta suscipit vel eum</p>                        
+                            officia dicta suscipit vel eum</p>
                     </div>
                     <div class="working-time item">
                         <i class="fa fa-hourglass-o"></i>
@@ -90,8 +90,8 @@
 </section>
 
 <!--about section-->
-<section class="feature-section section bg-gray">
-    <div class="container">
+<section class="feature-section section bg-gray ">
+    <div class="container max-w-screen-xl px-4 mx-auto">
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="image-content">
@@ -105,68 +105,17 @@
                         </p>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" *ngFor="let service of services">
                             <div class="item">
                                 <div class="icon-box">
                                     <figure>
-                                        <a href="#">
-                                            <img src="images/resource/1.png" alt="">
+                                        <a [href]="service.link">
+                                            <img [src]="service.image" alt="Service Image" />
                                         </a>
                                     </figure>
                                 </div>
-                                <h6>Orthopedics</h6>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam
-                                    illo quibusdam pariatur ex sunt, est aspernatur
-                                    at debitis eius vitae vel nostrum dolorem labore autem corrupti odit
-                                    mollitia?</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="item">
-                                <div class="icon-box">
-                                    <figure>
-                                        <a href="#">
-                                            <img src="images/resource/2.png" alt="">
-                                        </a>
-                                    </figure>
-                                </div>
-                                <h6>Diaginostic</h6>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam
-                                    illo quibusdam pariatur ex sunt, est aspernatur
-                                    at debitis eius vitae vel nostrum dolorem labore autem corrupti odit
-                                    mollitia?</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="item">
-                                <div class="icon-box">
-                                    <figure>
-                                        <a href="#">
-                                            <img src="images/resource/3.png" alt="">
-                                        </a>
-                                    </figure>
-                                </div>
-                                <h6>Psycology</h6>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam
-                                    illo quibusdam pariatur ex sunt, est aspernatur
-                                    at debitis eius vitae vel nostrum dolorem labore autem corrupti odit
-                                    mollitia?</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="item">
-                                <div class="icon-box">
-                                    <figure>
-                                        <a href="#">
-                                            <img src="images/resource/4.png" alt="">
-                                        </a>
-                                    </figure>
-                                </div>
-                                <h6>General Treatment</h6>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam
-                                    illo quibusdam pariatur ex sunt, est aspernatur
-                                    at debitis eius vitae vel nostrum dolorem labore autem corrupti odit
-                                    mollitia?</p>
+                                <h6>{{ service.title }}</h6>
+                                <p>{{ service.description }}</p>
                             </div>
                         </div>
                     </div>
@@ -180,21 +129,25 @@
 
 <!--Start about us area-->
 <section class="service-tab-section section ">
-    <div class="outer-box clearfix">
+    <div class="outer-box clearfix max-w-screen-xl px-4 mx-auto">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <!-- Nav tabs -->
                     <div class="tabs flex justify-center ">
                         <ul class="nav nav-tabs " role="tablist">
-                            <li  *ngFor="let service of specializations" role="presentation"  [class.active]="service.id === 1">
-                                <a [href]="'#' + service.specializationName.toLowerCase()" data-toggle="tab">{{ service.specializationName }}</a>
-                            </li>                            
+                            <li *ngFor="let service of specializations" role="presentation"
+                                [class.active]="service.id === 1">
+                                <a [href]="'#' + service.specializationName.toLowerCase()" data-toggle="tab">{{
+                                    service.specializationName }}</a>
+                            </li>
                         </ul>
                     </div>
                     <!--Start single tab content-->
                     <div class="tab-content">
-                        <div  *ngFor="let specialize of specializations" class="service-box tab-pane"[class.active]="specialize.id === 1" [attr.id]="specialize.specializationName.toLowerCase()">
+                        <div *ngFor="let specialize of specializations" class="service-box tab-pane"
+                            [class.active]="specialize.id === 1"
+                            [attr.id]="specialize.specializationName.toLowerCase()">
                             <div class="row ">
                                 <div class="col-md-6">
                                     <img class="img-responsive" [src]="specialize.specializationImage"
@@ -211,13 +164,13 @@
                                         <ul class="content-list">
                                             <li *ngFor="let content of specialize.services">
                                                 <i class="fa fa-dot-circle-o"></i>{{content.description}}
-                                            </li>                                            
+                                            </li>
                                         </ul>
                                         <a href="#" class="btn btn-main">Read more</a>
                                     </div>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                         <!--End single tab content-->
                     </div>
                 </div>
@@ -229,15 +182,15 @@
 
 
 <!--team section-->
-<section class="team-section section  mx-auto max-w-5xl px-1 sm:px-4">
+<section class="team-section section  max-w-screen-xl px-4 mx-auto">
     <div class="container">
         <div class="section-title text-center">
             <h3>Our Expert
                 <span>Doctors</span>
             </h3>
-            <p>Our team of highly skilled and experienced doctors is dedicated to providing exceptional care 
-              <br>with compassion, expertise, and the latest medical advancements.
-          </p>
+            <p>Our team of highly skilled and experienced doctors is dedicated to providing exceptional care
+                <br>with compassion, expertise, and the latest medical advancements.
+            </p>
         </div>
         <app-doctorcs></app-doctorcs>
 
@@ -248,7 +201,7 @@
 
 <!--testimonial-section-->
 <section class="testimonial-section" style="background: url(images/testimonials/1.jpg);">
-    <div class="container">
+    <div class="container max-w-screen-xl px-4 mx-auto">
         <div class="section-title text-center">
             <h3>What Our
                 <span>Patients Says</span>
@@ -256,7 +209,7 @@
         </div>
         <div class="testimonial-carousel">
             <!--Slide Item-->
-            <div class="slide-item"*ngFor="let review of reviews">
+            <div class="slide-item" *ngFor="let review of reviews">
                 <div class="inner-box text-center">
                     <div class="image-box">
                         <figure>
@@ -286,7 +239,7 @@
 <!--End testimonial-section-->
 
 <!-- Contact Section -->
-<section class="appoinment-section section">
+<section class="appoinment-section section max-w-screen-xl px-4 mx-auto">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-sm-12 col-xs-12">

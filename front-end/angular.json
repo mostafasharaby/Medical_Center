@@ -47,7 +47,8 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "node_modules/flowbite/dist/flowbite.min.js"
+              "node_modules/flowbite/dist/flowbite.min.js",
+              "public/Admin/apexcharts.min.js"
             ],
             "server": "src/main.server.ts",
             "prerender": true,

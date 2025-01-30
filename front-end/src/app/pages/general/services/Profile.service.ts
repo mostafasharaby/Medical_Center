@@ -1,10 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthServiceService } from '../../../auth/auth-services/auth-service.service';
-import { HandleErrorsService } from '../../../../shared/service/handle-errors.service';
-import { Profile } from '../profile-model/profile';
 import { catchError, Observable } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
+import { AuthServiceService } from '../../auth/auth-services/auth-service.service';
+import { HandleErrorsService } from '../../../shared/service/handle-errors.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +18,12 @@ export class ProfileService {
   constructor(private http: HttpClient ,
               private authService :AuthServiceService ,
               private handeErrorService :HandleErrorsService) {}
-  
- 
+
   getProfileDetails2(): Observable<any> {   
     return this.http.get<any>(this.apiGetUrl, {
       headers: this.authService.getHeaders()
     })
   }
-
 
   updateProfileDetails(profile: any): Observable<any> {
     const headers = this.authService.getHeaders();  
@@ -35,7 +32,5 @@ export class ProfileService {
       
     );
   }
-
-
 
 }

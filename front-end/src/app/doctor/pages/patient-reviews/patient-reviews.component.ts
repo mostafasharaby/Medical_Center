@@ -6,8 +6,7 @@ import { RelatedPatientsReviewsService } from '../../services/related-patients-r
 
 @Component({
   selector: 'app-patient-reviews',
-  templateUrl: './patient-reviews.component.html',
-  styleUrls: ['./patient-reviews.component.css']
+  templateUrl: './patient-reviews.component.html'
 })
 export class PatientReviewsComponent implements OnInit {
 

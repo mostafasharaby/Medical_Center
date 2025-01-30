@@ -39,4 +39,35 @@ export class HomeComponent implements  OnInit , AfterViewInit {
 
   }
 
+  services = [
+    {
+      image: '/images/resource/1.png',
+      title: 'Orthopedics',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
+      link: '#',
+    },
+    {
+      image: '/images/resource/2.png',
+      title: 'Diaginostic',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
+      link: '#',
+    },
+    {
+      image: '/images/resource/3.png',
+      title: 'Psycology',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
+      link: '#',
+    },
+    {
+      image: '/images/resource/4.png',
+      title: 'General Treatment',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
+      link: '#',
+    },
+  ];
+
 }

@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DoctorsComponent } from './pages/doctors/doctors.component';
 import { BoardComponent } from './pages/board/board.component';
-import { ChartsComponent } from './pages/charts/charts.component';
 import { PatientsComponent } from './pages/patients/patients.component';
 import { SideBarComponent } from './pages/side-bar/side-bar.component';
 import { AppointmentsComponent } from './pages/appointments/appointments.component';
@@ -13,11 +12,12 @@ import { TempAppointmentComponent } from './pages/temp-appointment/temp-appointm
 import { AuthModule } from '../../pages/auth/auth.module';
 import { DoctorModule } from '../../doctor/doctor.module';
 import { GeneralModule } from '../../pages/general/general.module';
+import { ChartComponent } from './pages/chart/chart.component';
 
 const routes: Routes = [
   { path: 'doctors', component: DoctorsComponent },
   { path: 'dashboard', component: BoardComponent },
-  { path: 'chart', component: ChartsComponent },
+  { path: 'chart', component: ChartComponent },
   { path: 'patients', component: PatientsComponent },
   { path: 'side', component: SideBarComponent },
   { path: 'appointments', component: AppointmentsComponent }
@@ -37,7 +37,7 @@ const routes: Routes = [
     AdminComponent,
     DoctorsComponent,
     BoardComponent,
-    ChartsComponent,
+    ChartComponent,
     PatientsComponent,
     SideBarComponent,
     AppointmentsComponent,

@@ -1,29 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Profile } from './profile-model/profile';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnakebarService } from '../../../shared/service/SnakebarService.service';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { Router } from '@angular/router';
-import { ProfileService } from './profile-service/Profile.service';
 import { AuthServiceService } from '../../auth/auth-services/auth-service.service';
-import { ChangePasswordService } from './profile-service/change-password.service';
 import { ToastrService } from 'ngx-toastr';
+import { ChangePasswordService } from '../services/change-password.service';
+import { ProfileService } from '../services/Profile.service';
+import { Profile } from '../../models/profile';
 
 @Component({
   selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  templateUrl: './user-profile.component.html'
 })
 export class UserProfileComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private profileService: ProfileService,
     private reload: ReloadService,
-    private snakebar: SnakebarService,
     private router: Router,
     private toastr : ToastrService,
     private changePasswordService :ChangePasswordService,
-    private snakebarService :SnakebarService) { }
+    ) { }
 
   ngOnInit() {
     //this.cartSubscription =
