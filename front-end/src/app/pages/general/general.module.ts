@@ -16,6 +16,7 @@ import { FaqComponent } from './faq/faq.component';
 import { AppointmentRequestComponent } from './appointment-request/appointment-request.component';
 import { DoctorcsComponent } from './doctorcs/doctorcs.component';
 import { DeleteModalComponent } from '../../doctor/pages/delete-modal/delete-modal.component';
+import { CollectedShotsComponent } from './collected-shots/collected-shots.component';
 
 
 const routes: Routes = [
@@ -49,6 +50,7 @@ const routes: Routes = [
     RequestAppointmentComponent,
     MedicalServiceComponent,
     GalleryComponent,
+    CollectedShotsComponent,
     TeamComponent,
     DoctorcsComponent,
     FaqComponent,

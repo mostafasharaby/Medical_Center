@@ -198,7 +198,28 @@ export class ChartComponent  implements OnInit {
     chart.render();
   }
 
-
+  cards = [
+    {
+      id: 'chart1',
+      title: 'CENTER SURVEY',
+      size: 'col-md-8', 
+      tools: [
+        { icon: 'fa-repeat', action: 'refresh' },
+        { icon: 'fa-chevron-down', action: 'collapse' },
+        { icon: 'fa-times', action: 'close' }
+      ]
+    },
+    {
+      id: 'chart2',
+      title: 'CENTER SURVEY',
+      size: 'col-md-4',
+      tools: [
+        { icon: 'fa-repeat', action: 'refresh' },
+        { icon: 'fa-chevron-down', action: 'collapse' },
+        { icon: 'fa-times', action: 'close' }
+      ]
+    }
+  ];
 
 } 
 

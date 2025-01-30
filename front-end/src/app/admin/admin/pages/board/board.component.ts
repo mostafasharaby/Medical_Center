@@ -112,8 +112,8 @@ export class BoardComponent implements OnInit {
       {
         bgClass: 'bg-purple',
         iconClass: 'fas fa-syringe',
-        text: 'Operations',
-        number: 2,
+        text: 'Doctors',
+        number: this.numOfDoctors,
         progress: 85,
         description: '85% Increase in 28 Days',
       },

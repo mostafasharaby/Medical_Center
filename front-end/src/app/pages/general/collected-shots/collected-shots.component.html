@@ -1,0 +1,24 @@
+<section class="gallery bg-gray ">
+  <div class="container max-w-screen-xl px-4 mx-auto">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="section-title text-center">
+                  <h3>Collected Shots <span>of Our Hospital</span></h3>
+                  <p>
+                      Explore our world-class medical facilities, designed to provide top-notch healthcare services
+                      with advanced technology and expert care.
+                  </p>
+              </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6" *ngFor="let item of galleryItems">
+              <div class="gallery-item">
+                  <img [src]="item.image" class="img-responsive" alt="gallery-image" />
+                  <a data-fancybox="images" [href]="item.image"></a>
+                  <h3>{{ item.title }}</h3>
+                  <p>{{ item.description }}</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
