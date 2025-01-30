@@ -13,7 +13,7 @@
             </a>
           </li>
         </ul>
-      </div>      
+      </div>
     </div>
   </div>
   <!--header top-->
@@ -24,22 +24,12 @@
       <div class="logo">
         <figure>
           <a href="index.html">
-            <img src="images/logo.png" alt="" width="130">
+            <img src="images/loggggo-3.png" alt="" width="220px" height="100">
           </a>
         </figure>
       </div>
       <div class="right-side">
         <ul class="contact-info">
-          <!-- <li class="item">
-            <div class="icon-box">
-              <i class="fa fa-envelope-o"></i>
-            </div>
-            <strong>Email</strong>
-            <br>
-            <a href="#">
-              <span>infomedic.com</span>
-            </a>
-          </li> -->
           <li class="item">
             <div class="icon-box">
               <i class="fa fa-phone"></i>
@@ -51,22 +41,22 @@
           <li class="item" *ngIf="!isLoggedIn">
             <div class="icon-box">
               <a href="/auth/login">
-               <i class="fa-regular fa-user text-xl text-dark "></i>
+                <i class="fa-regular fa-user text-xl text-dark "></i>
               </a>
-            </div>             
-            <div class="my-auto"><strong>Log In </strong></div>     
-            <br>                     
-          </li>     
-          
-          <li class="item"  *ngIf="isLoggedIn" >
+            </div>
+            <div class="my-auto"><strong>Log In </strong></div>
+            <br>
+          </li>
+
+          <li class="item" *ngIf="isLoggedIn">
             <div class="icon-box">
-              <a data-bs-toggle="modal" data-bs-target="#logoutModal" routerLinkActive="active" >
-               <i  title="Logout" class=" fa-solid fa-arrow-right-from-bracket text-xl text-dark"></i>
+              <a data-bs-toggle="modal" data-bs-target="#logoutModal" routerLinkActive="active">
+                <i title="Logout" class=" fa-solid fa-arrow-right-from-bracket text-xl text-dark"></i>
               </a>
-            </div>                                
-            <div class="my-auto"><strong>Log Out </strong></div>   
-            <br>                              
-          </li>   
+            </div>
+            <div class="my-auto"><strong>Log Out </strong></div>
+            <br>
+          </li>
         </ul>
         <div class="link-btn">
           <a href="#" class="btn-style-one">Appoinment</a>
@@ -76,16 +66,17 @@
   </section>
   <!--Header Upper-->
   <nav class="bg-[#48bdc5] border-gray-200  ">
-    <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto " >
+    <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto ">
       <div class="flex items-center lg:order-2">
         <div class="hidden mt-2 mr-4 sm:inline-block">
           <span></span>
         </div>
         <button data-collapse-toggle="mobile-menu-2" type="button"
           class="inline-flex left-0 items-center  p-2 ml-1 text-sm text-white rounded-lg lg:hidden hover:bg-info-100"
-          aria-controls="mobile-menu-2" aria-expanded="false" (click)="toggleDrawer()" >
+          aria-controls="mobile-menu-2" aria-expanded="false" (click)="toggleDrawer()">
           <span class="sr-only">Open main menu</span>
-          <svg  *ngIf="!isDrawerOpen" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <svg *ngIf="!isDrawerOpen" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd"
               d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
               clip-rule="evenodd"></path>
@@ -102,19 +93,19 @@
       </div>
       <div class="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
         <ul class="flex flex-col my-3 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-            <li *ngFor="let item of menuItems">
-                <a [href]="item.href" 
-                   style="font-family: 'Source Sans Pro sans-serif'; font-size: 17px; text-transform: uppercase; padding: 25px 20px;" 
-                   class="block py-2 pl-3 pr-4 text-white border-b border-gray-100 lg:border-0">
-                   {{ item.label }}
-                </a>
-            </li>
+          <li *ngFor="let item of menuItems">
+            <a [href]="item.href"
+              style="font-family: 'Source Sans Pro sans-serif'; font-size: 17px; text-transform: uppercase; padding: 25px 20px;"
+              class="block py-2 pl-3 pr-4 text-white border-b border-gray-100 lg:border-0">
+              {{ item.label }}
+            </a>
+          </li>
         </ul>
-      </div>    
+      </div>
     </div>
   </nav>
 </div>
 <!--logout Model-->
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-<app-logout></app-logout>
+  <app-logout></app-logout>
 </div>

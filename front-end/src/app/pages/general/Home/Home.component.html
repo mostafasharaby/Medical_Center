@@ -97,7 +97,7 @@
                 <div class="image-content">
                     <div class="section-title text-center">
                         <h3>Best Features
-                            <span>of Our Hospital</span>
+                            <span>of Our PrimeCare Medical Center</span>
                         </h3>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam magni in at debitis
                             <br>
@@ -193,7 +193,6 @@
             </p>
         </div>
         <app-doctorcs></app-doctorcs>
-
     </div>
 </section>
 <!--End team section-->
@@ -213,24 +212,11 @@
                 <div class="inner-box text-center">
                     <div class="image-box">
                         <figure>
-                            <img src="images/testimonials/2.png" alt="">
+                            <img [src]="review.patient.image" alt="">
                         </figure>
                     </div>
                     <h6>{{review.patient.userName}}</h6>
                     <p>{{review.review}}</p>
-                </div>
-            </div>
-            <!--Slide Item-->
-            <div class="slide-item">
-                <div class="inner-box text-center">
-                    <div class="image-box">
-                        <figure>
-                            <img src="images/testimonials/3.png" alt="">
-                        </figure>
-                    </div>
-                    <h6>Amy Adams</h6>
-                    <p>Neque porro quisquam est, qui dolorem ipsum quia consectetur, dolor sit amet, consectetur,
-                        numquam Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, at?</p>
                 </div>
             </div>
         </div>

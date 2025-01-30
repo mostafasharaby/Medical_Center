@@ -120,7 +120,7 @@ export class BoardComponent implements OnInit {
       {
         bgClass: 'bg-success',
         iconClass: 'fas fa-dollar-sign',
-        text: 'Hospital Earning',
+        text: 'PrimeCare Earning',
         number: '3,921$',
         progress: 50,
         description: '50% Increase in 28 Days',
