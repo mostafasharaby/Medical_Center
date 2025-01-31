@@ -64,11 +64,6 @@ export class AuthServiceService {
     localStorage.removeItem('token');
   }
 
-  getUser(): Observable<any> {
-    return this.http.get<any>(`${this.userUrl}v1/auth/profile`);
-  }
-
-
   get isUserLoggedIn(): boolean {
     return (localStorage.getItem('token')) ? true : false;
   }

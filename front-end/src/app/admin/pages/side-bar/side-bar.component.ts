@@ -11,7 +11,7 @@ export class SideBarComponent implements OnInit {
   
   constructor(private router: Router) { }
   ngOnInit() {
-    this.loadFlowbite();
+   // this.loadFlowbite();
     this.checkIfDoctorRoute();
 
   }
@@ -34,6 +34,16 @@ export class SideBarComponent implements OnInit {
         });
       }
     }
+  }
+
+  isDropdownOpen = false; // Track dropdown state
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
   }
  
 }

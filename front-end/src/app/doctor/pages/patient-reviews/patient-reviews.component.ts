@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ReloadService } from '../../../shared/service/reload.service';
-import { PatientReviewService } from '../../../pages/general/services/patient-review.service';
 import { AuthServiceService } from '../../../pages/auth/auth-services/auth-service.service';
 import { RelatedPatientsReviewsService } from '../../services/related-patients-reviews.service';
 

@@ -17,6 +17,7 @@ import { AppointmentRequestComponent } from './appointment-request/appointment-r
 import { DoctorcsComponent } from './doctorcs/doctorcs.component';
 import { DeleteModalComponent } from '../../doctor/pages/delete-modal/delete-modal.component';
 import { CollectedShotsComponent } from './collected-shots/collected-shots.component';
+import { PaymentComponent } from './Payment/Payment.component';
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'service', component: MedicalServiceComponent },
   { path: 'gallery', component: GalleryComponent },
   { path: 'team', component: TeamComponent },
+  { path: 'payment', component: PaymentComponent }
 ]
 
 @NgModule({
@@ -56,7 +58,8 @@ const routes: Routes = [
     DoctorcsComponent,
     FaqComponent,
     AppointmentRequestComponent,
-    DeleteModalComponent
+    DeleteModalComponent,
+    PaymentComponent
   ],
   exports: [DeleteModalComponent]
 })

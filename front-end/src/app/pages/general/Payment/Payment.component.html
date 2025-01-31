@@ -1,0 +1,102 @@
+<!-- Modal Overlay -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <!-- Modal Container -->
+  <div class="bg-white rounded-lg shadow-lg  w-full max-w-2xl">
+    <!-- Close Button -->
+
+    <!-- Payment Form -->
+    <div class="d-flex row col-11 justify-content-center mx-auto my-3 position-relative">
+      <button (click)="closeModal()" class="position-absolute top-0 right-0  text-gray-800 hover:text-gray-900">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="space-y-4 w-full max-w-xl">
+        <div class="lg:col-span-2">
+          <h3 class="text-lg font-bold text-gray-800 text-center">Payment</h3>
+          <div class="grid gap-4 sm:grid-cols-2 mt-4">
+            <!-- Card Payment Option -->
+            <div class="flex items-center">
+              <input type="radio" class="w-5 h-5 cursor-pointer" id="card" checked />
+              <label for="card" class="ml-4 flex gap-2 cursor-pointer">
+                <img src="/images/payment/visa.webp" class="w-12" alt="card1" />
+                <img src="/images/payment/american-express.webp" class="w-12" alt="card2" />
+                <img src="/images/payment/master.webp" class="w-12" alt="card3" />
+              </label>
+            </div>
+
+            <!-- PayPal Payment Option -->
+            <div class="flex items-center">
+              <input type="radio" class="w-5 h-5 cursor-pointer" id="paypal" />
+              <label for="paypal" class="ml-4 flex gap-2 cursor-pointer">
+                <img src="/images/payment/paypal.webp" class="w-20" alt="paypalCard" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Payment Form -->
+          <form [formGroup]="checkoutForm" (ngSubmit)="onSubmitPayment($event)" class="mt-8">
+            <div class="grid sm:col-span-2 sm:grid-cols-2 gap-4">
+              <!-- Card Holder Name -->
+              <div>
+                <label for="cardHolderName" class="block mb-1 text-gray-700">Name of Card Holder</label>
+                <input formControlName="cardHolderName" id="cardHolderName" placeholder="Name of card holder"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                <div *ngIf="cardHolderName?.invalid && cardHolderName?.touched">
+                  <small *ngIf="cardHolderName?.errors?.['required']" class="text-red-500">Name is required.</small>
+                  <small *ngIf="cardHolderName?.errors?.['minlength']" class="text-red-500">Minimum length is 3.</small>
+                </div>
+              </div>
+
+              <!-- Postal Code -->
+              <div>
+                <label for="postalCode" class="block mb-1 text-gray-700">Postal Code</label>
+                <input formControlName="postalCode" id="postalCode" placeholder="Postal code"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                <div *ngIf="postalCode?.invalid && postalCode?.touched">
+                  <small *ngIf="postalCode?.errors?.['required']" class="text-red-500">Postal code is required.</small>
+                </div>
+              </div>
+
+              <!-- Card Number -->
+              <div>
+                <label for="cardNumber" class="block mb-1 text-gray-700">Card Number</label>
+                <input formControlName="cardNumber" id="cardNumber" placeholder="Card number"
+                  class="col-span-full block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                <div *ngIf="cardNumber?.invalid && cardNumber?.touched">
+                  <small *ngIf="cardNumber?.errors?.['required']" class="text-red-500">Card number is required.</small>
+                </div>
+              </div>
+
+              <!-- Expiry Date -->
+              <div>
+                <label for="expiryDate" class="block mb-1 text-gray-700">Expiry Date</label>
+                <input formControlName="expiryDate" id="expiryDate" placeholder="EXP."
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                <div *ngIf="expiryDate?.invalid && expiryDate?.touched">
+                  <small *ngIf="expiryDate?.errors?.['required']" class="text-red-500">Expiry date is required.</small>
+                </div>
+              </div>
+
+              <!-- CVV -->
+              <div>
+                <label for="cvv" class="block mb-1 text-gray-700">CVV</label>
+                <input formControlName="cvv" id="cvv" placeholder="CVV"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                <div *ngIf="cvv?.invalid && cvv?.touched">
+                  <small *ngIf="cvv?.errors?.['required']" class="text-red-500">CVV is required.</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" [disabled]="checkoutForm.invalid"
+              class="mt-4 flex w-full items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300">
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

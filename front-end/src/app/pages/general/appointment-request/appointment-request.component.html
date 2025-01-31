@@ -143,12 +143,11 @@
   
         <!-- Submit Button -->
         <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="form-group text-center">
-            <button
+          <div class="form-group text-center ">
+            <button  
               type="submit"
-              class="btn-style-one"
-              [disabled]="appointmentForm.invalid"
-            >
+              class="btn-style-one"data-toggle="popover" title="Special Offer!" data-content="Book now for $30.00 before prices change. Don't miss out!"
+              [disabled]="appointmentForm.invalid">            
               Submit Now
             </button>
           </div>
@@ -156,4 +155,5 @@
       </div>
     </form>
   </div>
-  
+
+  <app-Payment  (paymentSuccess)="handlePaymentStatus($event)"  *ngIf="showModal" (close)="showModal = false"></app-Payment>

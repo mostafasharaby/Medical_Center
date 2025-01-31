@@ -73,7 +73,7 @@ export class BoardComponent implements OnInit {
   }
 
   fetchPatientLength(): void {
-    this.patientService.getPatientReviews().subscribe({
+    this.patientService.getAllPatient().subscribe({
       next: (data) => {
         this.numOfPatients = data.length;
         this.optimizeWidget();

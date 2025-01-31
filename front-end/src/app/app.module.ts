@@ -33,7 +33,13 @@ import { AdminModule } from './admin/admin.module';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,      
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-left',  
+      preventDuplicates: true,          
+      closeButton: true,                
+      timeOut: 5000,                    
+      progressBar: true                    
+    }),
   ],
   providers: [
     provideClientHydration(),  

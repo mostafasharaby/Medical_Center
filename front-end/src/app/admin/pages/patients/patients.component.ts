@@ -20,7 +20,7 @@ export class PatientsComponent implements OnInit {
   }
 
   fetchPatientReviews(): void {
-    this.patientService.getPatientReviews().subscribe({
+    this.patientService.getAllPatient().subscribe({
       next: (data) => {
         this.patientData = data;
         console.log("Patient retrieved successfully ", this.patientData)

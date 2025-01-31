@@ -19,8 +19,8 @@ export class AppointmentRequestComponent implements OnInit {
     private fb: FormBuilder,
     private appointmentsService: AppointmentService,
     private authService: AuthServiceService,
-    private router : Router,
-    private toastr:ToastrService
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
   specializations: any[] = [];
@@ -118,43 +118,65 @@ export class AppointmentRequestComponent implements OnInit {
       this.filteredDoctors = [];
     }
   }
-  postAppointment(appointmentData:any){
+  postAppointment(appointmentData: any) {
     this.appointmentsService.postAppointment(appointmentData).subscribe(
       (response) => {
         console.log('Appointment posted successfully:', response);
-        this.toastr.success('Appointment saved!');   
+        this.toastr.success('Appointment saved!', 'Success', {
+          positionClass: 'toast-bottom-left'
+        });
+        this.toastr.info('Please Check your email account to verify', 'Success', {
+          positionClass: 'toast-bottom-left'
+        });
       },
       (error) => {
         console.error('Error posting appointment:', error);
-        this.toastr.info('Please fill all required fields.');       
+        this.toastr.info('Please fill all required fields.');
       }
     );
   }
 
+  paymentSuccessful: boolean = false;
+  pendingAppointment: any = null;  
+  showModal = false;
   onSubmit() {
     if (this.isLoggedIn) {
-      if (this.appointmentForm.valid) {
+      if (this.appointmentForm.valid) {  
         const appointmentData = {
           name: this.name?.value,
           email: this.email?.value,
           phone: this.phone?.value,
           doctorName: this.doctor?.value,
           probableStartTime: this.date?.value,
-          appointmentTakenDate:this.date?.value        
+          appointmentTakenDate: this.date?.value
         };
+        this.toastr.info('The total cost for your appointment is $30. Secure your booking now!', 'Payment Details', {
+          positionClass: 'toast-bottom-left'
+        });
+        this.showModal = true;
         console.log('appointmentData:', appointmentData);
-        this.postAppointment(appointmentData);
+        this.pendingAppointment = appointmentData;
       } else {
-        this.toastr.info('Please fill all required fields.');   
-
+        this.toastr.info('Please fill all required fields.');
       }
     } else {
-      this.toastr.warning('Please login to book an appointment');   
-      this.router.navigate(['/auth/login']);  
+      this.toastr.warning('Please login to book an appointment');
+      this.router.navigate(['/auth/login']);
     }
   }
 
 
+  handlePaymentStatus(status: boolean) {
+    this.paymentSuccessful = status;
+    console.log("handlePaymentStatus called:", this.paymentSuccessful);
+    if (this.paymentSuccessful && this.pendingAppointment) {
+      console.log('Payment successful! Posting appointment...');
+      this.postAppointment(this.pendingAppointment);
+      this.appointmentForm.reset();
+      this.showModal = false;  
+      this.pendingAppointment = null; 
+    }
+  }
 
 
 }

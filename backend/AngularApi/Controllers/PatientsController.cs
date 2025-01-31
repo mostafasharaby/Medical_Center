@@ -1,4 +1,5 @@
-﻿using AngularApi.Models;
+﻿using AngularApi.DTO;
+using AngularApi.Models;
 using Hotel_Backend.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,59 +12,60 @@ namespace AngularApi.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+
         private readonly MedicalCenterDbContext _context;
 
-        public PatientsController(UserManager<IdentityUser> userManager, MedicalCenterDbContext context)
+        public PatientsController(MedicalCenterDbContext context)
         {
-            _userManager = userManager;
             _context = context;
         }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPatientById(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
-
-            return Ok(new
-            {
-                user.Email,
-                user.UserName,
-                user.PhoneNumber
-            });
-        }
-
-       
         [HttpGet]
-        public async Task<IActionResult> GetAllPatients()
+        public async Task<IActionResult> GetAllPatientsWithReviews()
         {
-            var patients = await _userManager.Users
-                .Select(user => new
+            var patients = await _context.Patients
+                .Include(p => p.PatientReview)
+                .Select(p => new PatientDTO
                 {
-                    user.Id,
-                    user.Email                  
+                    PatientId = p.Id,
+                    Name = p.Name,
+                    Email = p.Email,
+                    Image = p.Image,
+                    Reviews = p.PatientReview
                 })
                 .ToListAsync();
 
             return Ok(patients);
         }
-        
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePatient(string id, [FromBody] UpdateProfileDto model)
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PatientDTO>> GetPatientById(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
+            var patient = await _context.Patients
+                .Where(p => p.Id == id)
+                .Select(p => new PatientDTO
+                {
+                    PatientId = p.Id,
+                    Name = p.Name,
+                    Email = p.Email,
+                    Image = p.Image
+                })
+                .FirstOrDefaultAsync();
 
-            user.Email = model.Email;
+            if (patient == null) return NotFound();
 
-            var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded) return NoContent();
-
-            return BadRequest(result.Errors);
+            return Ok(patient);
         }
 
+        [HttpGet("{patientId}/appointments")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetPatientAppointments(string patientId)
+        {
+            var appointments = await _context.Appointments
+                .Where(a => a.PatientId == patientId)
+                .ToListAsync();
+
+            return Ok(appointments);
+        }
 
         [HttpPut("{patientId}/reviews/{reviewId}")]
         public async Task<IActionResult> UpdateReview(string patientId, int reviewId, [FromBody] PatientReview review)
@@ -72,37 +74,11 @@ namespace AngularApi.Controllers
             {
                 return BadRequest("Patient ID or Review ID mismatch.");
             }
+
             _context.Entry(review).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+
             return NoContent();
-        }
-
-        [HttpPost("{id}/appointments")]
-        public async Task<IActionResult> CreateAppointment(string id, [FromBody] Appointment appointment)
-        {
-            if (id != appointment.PatientId)
-            {
-                return BadRequest("Patient ID mismatch.");
-            }
-            _context.Appointments.Add(appointment);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetPatientById), new { id = appointment.Id }, appointment);
-        }
-
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePatient(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
-
-            // Soft delete or deactivate user
-            user.LockoutEnd = DateTimeOffset.MaxValue;
-            var result = await _userManager.UpdateAsync(user);
-
-            if (result.Succeeded) return NoContent();
-
-            return BadRequest(result.Errors);
         }
 
         [HttpDelete("{patientId}/appointments/{appointmentId}")]
@@ -110,14 +86,41 @@ namespace AngularApi.Controllers
         {
             var appointment = await _context.Appointments
                 .FirstOrDefaultAsync(a => a.Id == appointmentId && a.PatientId == patientId);
-            if (appointment == null)
-            {
-                return NotFound();
-            }
+            if (appointment == null) return NotFound();
+
             _context.Appointments.Remove(appointment);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePatient(string id, [FromBody] PatientDTO model)
+        {
+            var patient = await _context.Patients.FindAsync(id);
+            if (patient == null) return NotFound();
+
+            patient.Name = model.Name;
+            patient.Email = model.Email;
+            patient.Image = model.Image;
+
+            _context.Patients.Update(patient);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePatient(string id)
+        {
+            var patient = await _context.Patients.FindAsync(id);
+            if (patient == null) return NotFound();
+
+            _context.Patients.Remove(patient);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

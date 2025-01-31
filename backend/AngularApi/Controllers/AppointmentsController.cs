@@ -9,6 +9,7 @@ using AngularApi.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using AngularApi.DTO;
+using AngularApi.Services;
 
 namespace AngularApi.Controllers
 {
@@ -18,11 +19,14 @@ namespace AngularApi.Controllers
     {
         private readonly MedicalCenterDbContext _context;
         private readonly UserManager<AppUser> userManager;
-
-        public AppointmentsController(MedicalCenterDbContext context , UserManager<AppUser> _userManager)
+        private readonly EmailTemplateService _emailTemplateService;
+        private readonly IEmailService _emailService;
+        public AppointmentsController(MedicalCenterDbContext context , UserManager<AppUser> _userManager, IEmailService emailService, EmailTemplateService emailTemplateService)
         {
             userManager = _userManager;
             _context = context;
+            _emailService = emailService;
+            _emailTemplateService = emailTemplateService;
         }
 
         [HttpGet]
@@ -169,6 +173,13 @@ namespace AngularApi.Controllers
 
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
+
+            var emailTemplateService = HttpContext.RequestServices.GetRequiredService<EmailTemplateService>();
+
+            var emailBody = _emailTemplateService.GetAppointmentConfirmationEamil(user.UserName, appointment.DoctorName, appointment.AppointmentTakenDate.ToString());
+            var messageObj = new Message(new[] { user.Email }, "Appointment Confirmation", emailBody);
+          
+            _emailService.SendEmail(messageObj);
 
             return CreatedAtAction("GetAppointment", new { id = appointment.Id  }, appointment);
         }

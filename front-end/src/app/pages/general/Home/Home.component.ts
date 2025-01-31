@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ReloadService } from '../../../shared/service/reload.service';
-import { PatientReviewService } from '../services/patient-review.service';
 import { SpecializationService } from '../services/specialization.service';
+import { PatientService } from '../../../admin/services/patient.service';
 
 @Component({
   selector: 'app-Home',
@@ -11,10 +11,10 @@ import { SpecializationService } from '../services/specialization.service';
 export class HomeComponent implements  OnInit , AfterViewInit {
 
   constructor(private reload : ReloadService , 
-              private patientReviewService: PatientReviewService,
+              private patientService: PatientService,
               private specializationService :SpecializationService) { }
 
-  reviews: any[] = []; 
+  patients: any[] = []; 
   specializations: any[] = [];
 
   ngAfterViewInit(): void {   
@@ -22,9 +22,10 @@ export class HomeComponent implements  OnInit , AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.patientReviewService.getPatientReviews().subscribe(data => {
-      this.reviews = data.slice(0, 3);
-      console.log("reviews ",this.reviews);
+
+    this.patientService.getAllPatient().subscribe(data => {
+      this.patients = data.slice(0, 3);
+      console.log("getAllPatient ",this.patients[0].reviews[0].review);
     });
 
     this.specializationService.getSpecializations().subscribe(
@@ -41,33 +42,33 @@ export class HomeComponent implements  OnInit , AfterViewInit {
 
   services = [
     {
-      image: '/images/resource/1.png',
-      title: 'Orthopedics',
+      image: "/images/resource/1.png",
+      title: "Orthopedics",
       description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
-      link: '#',
+        "Expert care for bone, joint, and muscle conditions. From fractures to joint replacements, we ensure mobility and pain relief with advanced orthopedic treatments.",
+      link: "#",
     },
     {
-      image: '/images/resource/2.png',
-      title: 'Diaginostic',
+      image: "/images/resource/2.png",
+      title: "Diagnostic Services",
       description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
-      link: '#',
+        "State-of-the-art imaging and laboratory tests for accurate disease detection. Our diagnostic services include MRI, CT scans, blood tests, and more.",
+      link: "#",
     },
     {
-      image: '/images/resource/3.png',
-      title: 'Psycology',
+      image: "/images/resource/3.png",
+      title: "Psychology",
       description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
-      link: '#',
+        "Comprehensive mental health support for stress, anxiety, and emotional well-being. Our psychologists provide therapy and counseling tailored to your needs.",
+      link: "#",
     },
     {
-      image: '/images/resource/4.png',
-      title: 'General Treatment',
+      image: "/images/resource/4.png",
+      title: "General Treatment",
       description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ducimus veniam illo quibusdam pariatur ex sunt, est aspernatur at debitis eius vitae vel nostrum dolorem labore autem corrupti odit mollitia?',
-      link: '#',
+        "Comprehensive primary care for all ages. From routine check-ups to common illnesses, our general practitioners provide expert medical care with a personal touch.",
+      link: "#",
     },
   ];
-
+  
 }

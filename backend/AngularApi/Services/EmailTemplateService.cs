@@ -14,10 +14,22 @@
             var templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "EmailTemplates", "ConfirmationEmail.html");
             var emailTemplate = File.ReadAllText(templatePath);
 
-            // Replace placeholders with actual values
             var emailBody = emailTemplate
                 .Replace("{{UserName}}", userName)
-                .Replace("{{ConfirmationLink}}", confirmationLink);
+                 .Replace("{{ConfirmationLink}}", confirmationLink);
+
+            return emailBody;
+        }
+        public string GetAppointmentConfirmationEamil(string patientName , string DoctorName , string date)
+        {
+            var templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "EmailTemplates", "ConfirmAppointment.html");
+            var emailTemplate = File.ReadAllText(templatePath);
+
+            var emailBody = emailTemplate
+                .Replace("{{patientName}}", patientName)
+                 .Replace("{{DoctorName}}", DoctorName)
+                  .Replace("{{date}}", date);
+
 
             return emailBody;
         }
