@@ -24,7 +24,7 @@ export class HomeComponent implements  OnInit , AfterViewInit {
   ngOnInit(): void {
 
     this.patientService.getAllPatient().subscribe(data => {
-      this.patients = data.slice(0, 3);
+      this.patients = data.slice(0, 2);
       console.log("getAllPatient ",this.patients[0].reviews[0].review);
     });
 

@@ -137,18 +137,19 @@ export class AppointmentRequestComponent implements OnInit {
   }
 
   paymentSuccessful: boolean = false;
-  pendingAppointment: any = null;  
+  pendingAppointment: any = null;
   showModal = false;
   onSubmit() {
     if (this.isLoggedIn) {
-      if (this.appointmentForm.valid) {  
+      if (this.appointmentForm.valid) {
         const appointmentData = {
           name: this.name?.value,
           email: this.email?.value,
           phone: this.phone?.value,
           doctorName: this.doctor?.value,
           probableStartTime: this.date?.value,
-          appointmentTakenDate: this.date?.value
+          appointmentTakenDate: this.date?.value,
+          paymentStatus: "complete"
         };
         this.toastr.info('The total cost for your appointment is $30. Secure your booking now!', 'Payment Details', {
           positionClass: 'toast-bottom-left'
@@ -173,8 +174,8 @@ export class AppointmentRequestComponent implements OnInit {
       console.log('Payment successful! Posting appointment...');
       this.postAppointment(this.pendingAppointment);
       this.appointmentForm.reset();
-      this.showModal = false;  
-      this.pendingAppointment = null; 
+      this.showModal = false;
+      this.pendingAppointment = null;
     }
   }
 

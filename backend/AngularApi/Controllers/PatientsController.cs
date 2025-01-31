@@ -67,6 +67,19 @@ namespace AngularApi.Controllers
             return Ok(appointments);
         }
 
+        [HttpGet("{patientId}/appointments/date-range")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointmentsByDateRange(string patientId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var appointments = await _context.Appointments
+                .Where(a => a.PatientId == patientId && a.AppointmentTakenDate >= startDate && a.AppointmentTakenDate <= endDate)
+                .ToListAsync();
+
+            if (appointments == null ) return NotFound();
+
+            return Ok(appointments);
+        }
+
+
         [HttpPut("{patientId}/reviews/{reviewId}")]
         public async Task<IActionResult> UpdateReview(string patientId, int reviewId, [FromBody] PatientReview review)
         {

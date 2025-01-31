@@ -1,9 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnakebarService } from '../../../shared/service/SnakebarService.service';
-import { Router } from '@angular/router';
-import { AuthServiceService } from '../../auth/auth-services/auth-service.service';
-import { Subscription } from 'rxjs';
 
 
 @Component({

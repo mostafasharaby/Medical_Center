@@ -142,6 +142,15 @@ namespace AngularApi.Controllers
         }
 
 
+        [HttpGet("total-earnings")]
+        public async Task<IActionResult> GetPatientTotalEarnings()
+        {
+            var totalEarnings = await _context.Appointments                
+                .SumAsync(p => p.Amount);  
+
+            return Ok(new { TotalEarnings = totalEarnings });
+        }
+
         [HttpPost]
         public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
         {
@@ -169,7 +178,8 @@ namespace AngularApi.Controllers
             appointment.PatientId = user.Id;
             appointment.MedicalCenterId = 2;
             appointment.AppointmentStatusId = (int)AppointmentStatusEnum.Active +(int)1;
-
+            appointment.Amount = 30;
+            appointment.PaymentStatus = "Pending";
 
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
@@ -180,7 +190,6 @@ namespace AngularApi.Controllers
             var messageObj = new Message(new[] { user.Email }, "Appointment Confirmation", emailBody);
           
             _emailService.SendEmail(messageObj);
-
             return CreatedAtAction("GetAppointment", new { id = appointment.Id  }, appointment);
         }
 

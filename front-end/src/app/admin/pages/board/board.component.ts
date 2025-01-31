@@ -7,6 +7,7 @@ import { AppointmentService } from '../../../pages/general/services/appointment.
 import { DoctorService } from '../../../pages/general/services/doctor.service';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { DeleteModalComponent } from '../../../doctor/pages/delete-modal/delete-modal.component';
+import { TotalEarningsService } from '../../services/total-earnings.service';
 
 @Component({
   selector: 'app-board',
@@ -21,6 +22,7 @@ export class BoardComponent implements OnInit {
   numOfAppointments: number = 0;
   numOfDoctors: number = 0;
   numOfPatients: number = 0;
+  totalAmountEarning: number = 0;
   selectedAppointmentId!: number;
   menuItems = MENU;
 
@@ -28,7 +30,8 @@ export class BoardComponent implements OnInit {
     private doctorService: DoctorService,
     private reload: ReloadService,
     private toaster: ToastrService,
-    private patientService: PatientService) { }
+    private patientService: PatientService,
+    private totalEarningService :TotalEarningsService) { }
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
   }
@@ -38,6 +41,7 @@ export class BoardComponent implements OnInit {
     this.fetchPatientLength();
     this.optimizeWidget();
     this.setBadgeForAppointments();
+    this.getTotalEarning();
   }
 
   loadAppointments(): void {
@@ -84,6 +88,17 @@ export class BoardComponent implements OnInit {
     });
   }
 
+  getTotalEarning(): void {
+    this.totalEarningService.getTotalEarnings().subscribe({
+      next: (data) => {
+        this.totalAmountEarning = data.totalEarnings;   
+        console.log( "earing",this.totalAmountEarning);     
+      },
+      error: () => {
+        console.error();
+      }
+    });
+  }
   setBadgeForAppointments() {
     const appointmentItem = this.menuItems.find(item => item.title === 'Appointment');
     if (appointmentItem) {
@@ -121,7 +136,7 @@ export class BoardComponent implements OnInit {
         bgClass: 'bg-success',
         iconClass: 'fas fa-dollar-sign',
         text: 'PrimeCare Earning',
-        number: '3,921$',
+        number: this.totalAmountEarning,
         progress: 50,
         description: '50% Increase in 28 Days',
       },

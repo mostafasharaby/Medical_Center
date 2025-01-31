@@ -19,7 +19,7 @@ export class AuthServiceService {
 
   private loginUrl = `${environment.api}/Account/login`;
   public googleloginUrl = `${environment.api}/Account/LoginWithGoogle`;
-  private registerUrl = `${environment.api}/Account/register`;
+  private registerUrl = `${environment.api}/Account/register/user`;
   private userUrl = '';
 
   usernameTakenError: boolean = false;
