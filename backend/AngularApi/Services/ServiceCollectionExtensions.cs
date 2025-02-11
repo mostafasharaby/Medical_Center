@@ -1,5 +1,6 @@
 ﻿using AngularApi.Models;
-using AngularApi.Services.Implemenation;
+using AngularApi.Services.impelementation;
+using AngularApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SchoolManagementSystem.Infrastructure.GoogleServices;
 using System.Text;
 
 namespace AngularApi.Services
@@ -59,6 +59,8 @@ namespace AngularApi.Services
                     ValidIssuer = configuration["Jwt:ValidIssuer"],
                     ValidateAudience = true,
                     ValidAudience = configuration["Jwt:ValidAudience"],
+                    ValidateLifetime = true, //  Enforce expiration check
+                    ClockSkew = TimeSpan.Zero,//  Prevents extra allowed time
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]))
                 };
             })

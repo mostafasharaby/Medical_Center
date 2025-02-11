@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError, timer } from 'rxjs';
 import { tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +12,23 @@ import { environment } from '../../../../environments/environment';
 
 export class AuthServiceService {
 
-  isLoggedSubject: BehaviorSubject<boolean>;
-  constructor(private http: HttpClient) {
-    this.isLoggedSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn);
-    console.log("isUserLoggedIn", this.isUserLoggedIn);
+  //isLoggedSubject: BehaviorSubject<boolean>;
+  public isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  constructor(private http: HttpClient,  private toaster: ToastrService) {
+    //this.isLoggedSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn);  // old
+   // this.isLoggedSubject = new BehaviorSubject<boolean>(this.isTokenExpired());
+   // console.log("isUserLoggedIn", this.isUserLoggedIn);
+    console.log("this.isTokenExpired()", this.isTokenExpired());
+    this.updateAuthStatus();
+    //this.startTokenExpiryCheck();
   }
 
   private loginUrl = `${environment.api}/Account/login`;
   public googleloginUrl = `${environment.api}/Account/LoginWithGoogle`;
   private registerUrl = `${environment.api}/Account/register/user`;
   private userUrl = '';
-
+  private tokenCheckInterval: any;
   usernameTakenError: boolean = false;
   private username: string | null = null;
 
@@ -33,7 +40,12 @@ export class AuthServiceService {
         console.log("response token: " + response.token);
         if (response && response.token) {
           localStorage.setItem('token', response.token);
-          this.isLoggedSubject.next(true);
+          //this.isLoggedSubject.next(true);
+
+          this.updateAuthStatus();
+          //this.startTokenExpiryCheck(); 
+
+
           this.username = this.getUsernameFromToken();
           console.log("username", this.username,);
           // const decodedToken = jwtDecode(response.token) as any;
@@ -60,8 +72,9 @@ export class AuthServiceService {
   }
 
   logout() {
-    this.isLoggedSubject.next(false);
+    this.toaster.info("Please log in again to your account");
     localStorage.removeItem('token');
+    this.isLoggedSubject.next(false);    
   }
 
   get isUserLoggedIn(): boolean {
@@ -69,10 +82,60 @@ export class AuthServiceService {
   }
 
   getloggedStatus(): Observable<boolean> {
+    console.log("Getting logged status " , this.isLoggedSubject.value)   // false means not logged in (expired token)
     return this.isLoggedSubject.asObservable();
   }
 
-  isRole(role: string): boolean {
+
+  isTokenExpired(): boolean {
+    const token = localStorage.getItem("token");
+    if (!token) return true; 
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log( "isTokenExpired ",Date.now() >= payload.exp * 1000);
+      return Date.now() >= payload.exp * 1000; 
+    } catch (e) {
+      return true; 
+    }
+  }
+
+  private updateAuthStatus(): void {
+    const isLoggedIn = !this.isTokenExpired();
+    this.isLoggedSubject.next(isLoggedIn);
+
+    if (!isLoggedIn) {
+      this.logout(); // If token is expired, log the user out
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiryTime = payload.exp * 1000;
+      const timeRemaining = expiryTime - Date.now();
+
+      timer(timeRemaining).subscribe(() => {
+        this.logout(); // Auto logout when token expires
+      });
+
+    } catch {
+      this.logout();
+    }
+  }
+  
+  private startTokenExpiryCheck(): void {
+    clearInterval(this.tokenCheckInterval); // Ensure no duplicate intervals
+    this.tokenCheckInterval = setInterval(() => {
+      if (this.isTokenExpired()) {
+        this.logout();
+      }
+    }, 10000); // Check every 10 seconds
+  }
+
+isRole(role: string): boolean {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token) as any;

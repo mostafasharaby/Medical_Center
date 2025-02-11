@@ -10,6 +10,7 @@ using System.Security.Claims;
 namespace AngularApi.Controllers
 {
     [Route("api/[controller]")]
+
     [ApiController]
     public class AppointmentsController : ControllerBase
     {

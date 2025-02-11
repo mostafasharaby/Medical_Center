@@ -4,14 +4,15 @@ import { HomeComponent } from './pages/general/Home/Home.component';
 import { ErrorPageComponent } from './pages/general/errorPage/errorPage.component';
 import { DoctorGuard } from './doctor/guard/doctor.guard';
 import { AdminGuard } from './admin/guard/admin.guard';
+import { AuthGuard } from './pages/auth/guard/auth.guard';
 
 
 const routes: Routes = [
   {
-    path: '',component: HomeComponent, pathMatch: 'full'
+    path: '',component: HomeComponent,  pathMatch: 'full'
   },
   {
-    path: 'home', component: HomeComponent // title: 'resolvedChildATitle'
+    path: 'home', component: HomeComponent , canActivate:[AuthGuard] // title: 'resolvedChildATitle'
   },
   { 
     path: 'admin', canActivate: [AdminGuard],

@@ -22,10 +22,10 @@ namespace AngularApi.Services.impelementation
             ValidateUser(user); // Ensure the user object is valid
             var claims = GetClaimsForUser(user);
             var signingCredentials = GetSigningCredentials();
+
             return CreateJwtToken(claims, signingCredentials);
         }
 
-        // ✅ Validate the user object
         private void ValidateUser(AppUser user)
         {
             if (user == null)
@@ -38,7 +38,7 @@ namespace AngularApi.Services.impelementation
                 throw new ArgumentNullException(nameof(user.UserName), "User Name cannot be null or empty");
         }
 
-        // ✅ Get claims for the user, including roles
+
         private List<Claim> GetClaimsForUser(AppUser user)
         {
             var claims = new List<Claim>
@@ -58,14 +58,13 @@ namespace AngularApi.Services.impelementation
             return claims;
         }
 
-        // ✅ Get the signing credentials
+
         private SigningCredentials GetSigningCredentials()
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
             return new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         }
 
-        // ✅ Generate the JWT token
         private string CreateJwtToken(IEnumerable<Claim> claims, SigningCredentials credentials)
         {
             var token = new JwtSecurityToken(
