@@ -1,4 +1,4 @@
-﻿namespace AngularApi.Services
+﻿namespace AngularApi.Services.Interfaces
 {
     public interface IEmailService
     {

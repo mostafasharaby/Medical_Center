@@ -20,7 +20,7 @@
 
             return emailBody;
         }
-        public string GetAppointmentConfirmationEamil(string patientName , string DoctorName , string date)
+        public string GetAppointmentConfirmationEamil(string patientName, string DoctorName, string date)
         {
             var templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "EmailTemplates", "ConfirmAppointment.html");
             var emailTemplate = File.ReadAllText(templatePath);

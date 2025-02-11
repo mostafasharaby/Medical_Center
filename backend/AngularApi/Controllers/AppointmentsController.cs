@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AngularApi.DTO;
+using AngularApi.Models;
+using AngularApi.Services;
+using AngularApi.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AngularApi.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using AngularApi.DTO;
-using AngularApi.Services;
 
 namespace AngularApi.Controllers
 {
@@ -18,12 +14,12 @@ namespace AngularApi.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly MedicalCenterDbContext _context;
-        private readonly UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly EmailTemplateService _emailTemplateService;
         private readonly IEmailService _emailService;
-        public AppointmentsController(MedicalCenterDbContext context , UserManager<AppUser> _userManager, IEmailService emailService, EmailTemplateService emailTemplateService)
+        public AppointmentsController(MedicalCenterDbContext context, UserManager<AppUser> userManager, IEmailService emailService, EmailTemplateService emailTemplateService)
         {
-            userManager = _userManager;
+            _userManager = userManager;
             _context = context;
             _emailService = emailService;
             _emailTemplateService = emailTemplateService;
@@ -32,7 +28,7 @@ namespace AngularApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
         {
-            return await _context.Appointments.Include(i=>i.Patient).ToListAsync();
+            return await _context.Appointments.Include(i => i.Patient).ToListAsync();
         }
 
         [HttpGet("GetAllAppointments")]
@@ -82,7 +78,7 @@ namespace AngularApi.Controllers
             return appointment;
         }
 
-       
+
         //[HttpPut("{id}")]
         //public async Task<IActionResult> PutAppointment(int id, Appointment appointment)
         //{
@@ -124,7 +120,7 @@ namespace AngularApi.Controllers
             if (appointment == null)
             {
                 return NotFound();
-            }                     
+            }
             appointment.AppointmentTakenDate = appointmentDto.AppointmentTakenDate;
 
             _context.Entry(appointment).State = EntityState.Modified;
@@ -145,8 +141,8 @@ namespace AngularApi.Controllers
         [HttpGet("total-earnings")]
         public async Task<IActionResult> GetPatientTotalEarnings()
         {
-            var totalEarnings = await _context.Appointments                
-                .SumAsync(p => p.Amount);  
+            var totalEarnings = await _context.Appointments
+                .SumAsync(p => p.Amount);
 
             return Ok(new { TotalEarnings = totalEarnings });
         }
@@ -160,7 +156,7 @@ namespace AngularApi.Controllers
                 var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Name == appointment.DoctorName);
                 if (doctor != null)
                 {
-                    appointment.DoctorId = doctor.Id; 
+                    appointment.DoctorId = doctor.Id;
                 }
                 else
                 {
@@ -169,7 +165,7 @@ namespace AngularApi.Controllers
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound("User not found");
@@ -177,7 +173,7 @@ namespace AngularApi.Controllers
 
             appointment.PatientId = user.Id;
             appointment.MedicalCenterId = 2;
-            appointment.AppointmentStatusId = (int)AppointmentStatusEnum.Active +(int)1;
+            appointment.AppointmentStatusId = (int)AppointmentStatusEnum.Active + (int)1;
             appointment.Amount = 30;
             appointment.PaymentStatus = "Pending";
 
@@ -188,9 +184,9 @@ namespace AngularApi.Controllers
 
             var emailBody = _emailTemplateService.GetAppointmentConfirmationEamil(user.UserName, appointment.DoctorName, appointment.AppointmentTakenDate.ToString());
             var messageObj = new Message(new[] { user.Email }, "Appointment Confirmation", emailBody);
-          
+
             _emailService.SendEmail(messageObj);
-            return CreatedAtAction("GetAppointment", new { id = appointment.Id  }, appointment);
+            return CreatedAtAction("GetAppointment", new { id = appointment.Id }, appointment);
         }
 
         [HttpDelete("{id}")]

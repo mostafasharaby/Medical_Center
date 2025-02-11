@@ -1,4 +1,4 @@
-﻿namespace Hotel_Backend.DTO
+﻿namespace AngularApi.DTO
 {
     public class ForgotPasswordDTO
     {

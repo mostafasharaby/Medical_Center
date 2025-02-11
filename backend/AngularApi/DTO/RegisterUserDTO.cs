@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hotel_Backend.DTO
+namespace AngularApi.DTO
 {
     public class RegisterUserDTO
     {

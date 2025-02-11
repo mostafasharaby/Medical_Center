@@ -1,8 +1,5 @@
 ﻿using AngularApi.DTO;
 using AngularApi.Models;
-using Hotel_Backend.DTO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -74,7 +71,7 @@ namespace AngularApi.Controllers
                 .Where(a => a.PatientId == patientId && a.AppointmentTakenDate >= startDate && a.AppointmentTakenDate <= endDate)
                 .ToListAsync();
 
-            if (appointments == null ) return NotFound();
+            if (appointments == null) return NotFound();
 
             return Ok(appointments);
         }

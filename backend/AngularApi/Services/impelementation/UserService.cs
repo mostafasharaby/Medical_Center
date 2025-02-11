@@ -1,13 +1,10 @@
 ﻿using AngularApi.Models;
+using AngularApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace AngularApi.Services
+namespace AngularApi.Services.impelementation
 {
-    public interface IUserService
-    {
-        Task<AppUser> GetCurrentUserAsync();
-    }
     public class UserService : IUserService
     {
         private readonly UserManager<AppUser> _userManager;
@@ -36,7 +33,6 @@ namespace AngularApi.Services
             var user = await _userManager.FindByIdAsync(userId);
             return user;
         }
-
 
     }
 }

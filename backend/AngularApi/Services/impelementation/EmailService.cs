@@ -1,6 +1,7 @@
-﻿using System.Net.Mail;
+﻿using AngularApi.Services.Interfaces;
+using System.Net.Mail;
 
-namespace AngularApi.Services
+namespace AngularApi.Services.impelementation
 {
     public class EmailService : IEmailService
     {

@@ -1,4 +1,5 @@
 ﻿using AngularApi.Models;
+using AngularApi.Services.Implemenation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SchoolManagementSystem.Infrastructure.GoogleServices;
 using System.Text;
 
 namespace AngularApi.Services
@@ -15,8 +17,10 @@ namespace AngularApi.Services
         public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>(); // should be addTrasient
             services.AddScoped<EmailTemplateService>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IGoogleService, GoogleService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -115,7 +119,7 @@ namespace AngularApi.Services
         }
         public static async Task EnsureRolesCreatedAsync(this RoleManager<IdentityRole> roleManager)
         {
-            var roles = new[] { "admin", "user" , "doctor" };
+            var roles = new[] { "admin", "user", "doctor" };
 
             foreach (var role in roles)
             {
