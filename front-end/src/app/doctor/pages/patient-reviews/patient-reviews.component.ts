@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { AuthServiceService } from '../../../pages/auth/auth-services/auth-service.service';
 import { RelatedPatientsReviewsService } from '../../services/related-patients-reviews.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-patient-reviews',
   templateUrl: './patient-reviews.component.html'
 })
-export class PatientReviewsComponent implements OnInit {
+export class PatientReviewsComponent implements OnInit, OnDestroy {
 
-  constructor(private reload:ReloadService , private patientsReviewService:RelatedPatientsReviewsService , private authService:AuthServiceService) { }
+  patientReviewsSubscribtion !: Subscription;
+  constructor(private reload: ReloadService, private patientsReviewService: RelatedPatientsReviewsService, private authService: AuthServiceService) { }
+  ngOnDestroy(): void {
+    if (this.patientReviewsSubscribtion) {
+      this.patientReviewsSubscribtion.unsubscribe();
+    }
+  }
 
   ngOnInit() {
     this.setDoctorId();
@@ -37,7 +44,7 @@ export class PatientReviewsComponent implements OnInit {
     if (this.doctorId == null) {
       console.error(this.errorMessage);
     }
-    this.patientsReviewService.getPatientsReview(this.doctorId).subscribe({
+    this.patientReviewsSubscribtion = this.patientsReviewService.getPatientsReview(this.doctorId).subscribe({
       next: (data) => {
         this.reviews = data;
         console.log("reviews", this.reviews);

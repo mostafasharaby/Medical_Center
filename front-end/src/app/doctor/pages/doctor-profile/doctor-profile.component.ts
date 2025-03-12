@@ -1,23 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../../pages/auth/auth-services/auth-service.service';
-import { DoctorService } from '../../../pages/general/services/doctor.service';
 import { DoctorAppointmentsService } from '../../services/doctor-appointments.service';
 import { ReloadService } from '../../../shared/service/reload.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-doctor-profile',
-  templateUrl: './doctor-profile.component.html',
-  styleUrls: ['./doctor-profile.component.css']
+  templateUrl: './doctor-profile.component.html'
 })
-export class DoctorProfileComponent implements OnInit {
+export class DoctorProfileComponent implements OnInit, OnDestroy {
 
-  constructor(private authService :AuthServiceService , private doctorService:DoctorAppointmentsService , private reload:ReloadService) { }
+  doctorSubscription !: Subscription;
+  constructor(private authService: AuthServiceService, private doctorService: DoctorAppointmentsService, private reload: ReloadService) { }
+  ngOnDestroy(): void {
+    if (this.doctorSubscription) {
+      this.doctorSubscription.unsubscribe();
+    }
+  }
 
   doctorId: string = '';
   errorMessage: string = '';
-  profile :any=null;
+  profile: any = null;
   ngOnInit(): void {
-    this.setDoctorId();  
+    this.setDoctorId();
     this.getDoctor();
 
   }
@@ -36,14 +41,14 @@ export class DoctorProfileComponent implements OnInit {
       console.error(this.errorMessage);
     }
   }
-  
+
   getDoctor(): void {
-    this.doctorService.getSpecialDoctor(this.doctorId).subscribe({
+    this.doctorSubscription = this.doctorService.getSpecialDoctor(this.doctorId).subscribe({
       next: (data) => {
         this.profile = data;
         console.log("profile", this.profile);
       },
-      error: (error) => {  
+      error: (error) => {
         console.error(error);
       },
     });
