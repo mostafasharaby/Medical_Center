@@ -25,7 +25,6 @@ EXPOSE 80
 # Command to run the app when the container starts
 CMD ["dotnet", "AngularApi.dll"]
 
-D:\My_Projects\Medical\backend\AngularApi\Dockerfile
 
 # the image name is  mvc-test-docker
 # docker run -d --name TestDocker-app -p 8004:8080 mvc-test-docker     -> this was the issue :8080  not 80 

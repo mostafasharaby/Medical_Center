@@ -1,30 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { ForgotServiceService } from '../auth-services/forgot-service.service';
 import { ModelService } from '../auth-services/model.service';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-forgetPassword',
   templateUrl: './forgetPassword.component.html'
 })
-export class ForgetPasswordComponent implements OnInit {
+export class ForgetPasswordComponent implements OnInit, OnDestroy {
 
-  constructor(private forgetpasswordService: ForgotServiceService ,
-     private modalService :ModelService,
-     private toaster :ToastrService
-    ) { }
+  isDialogOpen = false;
+  isDialogMounted = false;
+  forgetForm!: FormGroup;
+  private modalSubscription!: Subscription;
+
+  constructor(private forgetpasswordService: ForgotServiceService,
+              private modalService: ModelService,
+              private toaster: ToastrService) { }
 
   ngOnInit() {
-    this.modalService.dialogState$.subscribe((state) => {
+    this.modalSubscription = this.modalService.dialogState$.subscribe((state) => {
       this.isDialogOpen = state;
       this.isDialogMounted = state;
     });
   }
-
-
-  isDialogOpen = false;
-  isDialogMounted = false;
-
+  ngOnDestroy(): void {
+    if (this.modalSubscription) {
+      this.modalSubscription.unsubscribe();
+    }
+  }
   openDialog(): void {
     this.isDialogOpen = true;
     setTimeout(() => {
@@ -36,7 +42,6 @@ export class ForgetPasswordComponent implements OnInit {
     this.modalService.closeDialog();
   }
 
-  forgetForm !: FormGroup;
   get Forgotemail() {
     return this.forgetForm.get('emailForgot');
   }
@@ -52,8 +57,5 @@ export class ForgetPasswordComponent implements OnInit {
     });
   }
 
+
 }
-
-
-
-

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DoctorService } from '../services/doctor.service';
 import { Doctor } from '../../models/doctor';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { TEAM_TABS } from '../../models/teamTabs ';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-team',
@@ -10,20 +11,25 @@ import { TEAM_TABS } from '../../models/teamTabs ';
   styleUrls: ['./team.component.css']
 })
 
-export class TeamComponent implements OnInit {
+export class TeamComponent implements OnInit, OnDestroy {
 
-  constructor(private doctorService:DoctorService , private reload :ReloadService) { }
   doctorsData: Doctor [] =[];
+  private subscriptions: Subscription[] = [];
   
+  constructor(private doctorService:DoctorService , private reload :ReloadService) { }
+
+
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
   }
   ngOnInit() {
     this.loadDoctor();          
   }
-  
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
   loadDoctor() {
-    this.doctorService.getAllDoctors().subscribe(
+    const doctorSub =  this.doctorService.getAllDoctors().subscribe(
       (doctorFetched: Doctor[]) => {
         if (doctorFetched) {
           this.doctorsData = doctorFetched;
@@ -36,6 +42,7 @@ export class TeamComponent implements OnInit {
         console.error('Error fetching doctorsData :', error);
       }
     );
+    this.subscriptions.push(doctorSub);
   }
 
   teamTabs = [

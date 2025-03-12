@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { SpecializationService } from '../services/specialization.service';
 import { PatientService } from '../../../admin/services/patient.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-Home',
@@ -10,12 +11,13 @@ import { PatientService } from '../../../admin/services/patient.service';
 })
 export class HomeComponent implements  OnInit , AfterViewInit {
 
+  private subscriptions: Subscription[] = [];
+  patients: any[] = []; 
+  specializations: any[] = [];
+
   constructor(private reload : ReloadService , 
               private patientService: PatientService,
               private specializationService :SpecializationService) { }
-
-  patients: any[] = []; 
-  specializations: any[] = [];
 
   ngAfterViewInit(): void {   
     this.reload.initializeLoader();
@@ -23,10 +25,10 @@ export class HomeComponent implements  OnInit , AfterViewInit {
 
   ngOnInit(): void {
 
-    this.patientService.getAllPatient().subscribe(data => {
+    this.subscriptions.push(  this.patientService.getAllPatient().subscribe(data => {
       this.patients = data.slice(0, 2);
       console.log("getAllPatient ",this.patients[0].reviews[0].review);
-    });
+    }),
 
     this.specializationService.getSpecializations().subscribe(
       (data) => {
@@ -36,9 +38,16 @@ export class HomeComponent implements  OnInit , AfterViewInit {
       (error) => {
         console.error('Error fetching specializations', error);
       }
-    );
+    )
+  );
 
   }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    console.log('All subscriptions unsubscribed.');
+  }
+
 
   services = [
     {

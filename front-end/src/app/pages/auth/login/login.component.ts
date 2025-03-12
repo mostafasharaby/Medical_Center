@@ -5,7 +5,7 @@ import { SnakebarService } from '../../../shared/service/SnakebarService.service
 import { ReloadService } from '../../../shared/service/reload.service';
 import { AuthServiceService } from '../auth-services/auth-service.service';
 import { ForgotServiceService } from '../auth-services/forgot-service.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ResetPasswordService } from '../auth-services/resetPassword.service';
 import { ModelService } from '../auth-services/model.service';
 import { ToastrService } from 'ngx-toastr';
@@ -15,13 +15,10 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit, AfterViewInit{
-  ngOnInit() {
-  }
-  ngAfterViewInit(): void {   
-    this.reload.initializeLoader();
-  }
 
+  private subscriptions: Subscription[] = [];
    loginForm: FormGroup;
+
   constructor(private fb: FormBuilder,
     private toastr: ToastrService,
     private reload : ReloadService,
@@ -47,7 +44,14 @@ export class LoginComponent implements OnInit, AfterViewInit{
     
   }
 
-
+  ngOnInit() {
+  }
+  ngAfterViewInit(): void {   
+    this.reload.initializeLoader();
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
   isDialogOpen = false;
   isDialogMounted = false;
 
@@ -103,7 +107,7 @@ export class LoginComponent implements OnInit, AfterViewInit{
     const { email, password } = this.loginForm.value;
       console.log("login val : " + email, password);
     if (this.loginForm.valid) {         
-      this.authService.login(email, password).subscribe(
+      const loginSub =   this.authService.login(email, password).subscribe(
         (response: any) => {          
           this.onLoginSuccess();
           if (this.authService.isRole('admin')) {
@@ -123,6 +127,7 @@ export class LoginComponent implements OnInit, AfterViewInit{
           this.onLoginFailed();
         }
       );
+      this.subscriptions.push(loginSub);
     }
   }
 
@@ -141,13 +146,13 @@ get Forgotemail() {
 onForgotSubmit() {
   const emailForgetVal = this.forgetForm.value.emailForgot;
   console.log("emailForgot",emailForgetVal);
-  this.forgetpasswordService.forgetPassword(emailForgetVal).subscribe({
+  const forgetSub = this.forgetpasswordService.forgetPassword(emailForgetVal).subscribe({
     next: (res) => {
       this.toastr.success(`Success: ${res.message}`);   
     },
     error: (err) =>  this.toastr.error(`Error: ${err.message}`)
   });
-  
+  this.subscriptions.push(forgetSub);
 }
 
 // -------------------------------------------------------Reset password---------

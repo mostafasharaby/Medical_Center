@@ -1,17 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PatientService } from '../../services/patient.service';
 import { ReloadService } from '../../../shared/service/reload.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-patients',
   templateUrl: './patients.component.html'
 })
-export class PatientsComponent implements OnInit {
+export class PatientsComponent implements OnInit , OnDestroy{
 
   patientData: any[] = [];
   isLoading: boolean = true;
   errorMessage: string = '';
+  patientSubscription !: Subscription;
 
   constructor(private patientService: PatientService , private reload :ReloadService) {}
+  ngOnDestroy(): void {
+   if(this.patientService){
+      this.patientSubscription.unsubscribe();
+   }
+  }
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
   }
@@ -20,7 +27,7 @@ export class PatientsComponent implements OnInit {
   }
 
   fetchPatientReviews(): void {
-    this.patientService.getAllPatient().subscribe({
+   this.patientSubscription= this.patientService.getAllPatient().subscribe({
       next: (data) => {
         this.patientData = data;
         console.log("Patient retrieved successfully ", this.patientData)

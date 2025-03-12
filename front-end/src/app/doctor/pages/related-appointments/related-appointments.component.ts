@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { DoctorService } from '../../../pages/general/services/doctor.service';
 import { DoctorAppointmentsService } from '../../services/doctor-appointments.service';
@@ -8,23 +8,28 @@ import * as Flowbite from 'flowbite';
 import { SearchService } from '../../services/search.service';
 import { ToastrService } from 'ngx-toastr';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
+import { Subscription } from 'rxjs';
 
 
 @Component({
   selector: 'app-related-appointments',
   templateUrl: './related-appointments.component.html'
 })
-export class RelatedAppointmentsComponent implements OnInit {
+
+export class RelatedAppointmentsComponent implements OnInit, OnDestroy {
 
   @ViewChild(DeleteModalComponent) deleteModal!: DeleteModalComponent;
+
+  private subscriptions: Subscription[] = []; // Track subscriptions
   
-  constructor(private reload: ReloadService,
+  constructor(
+    private reload: ReloadService,
     private doctorService: DoctorAppointmentsService,
     private authService: AuthServiceService,
     private flowbiteService: FlowbiteService,
     private toaster: ToastrService,
-    private searchService: SearchService) { }
-
+    private searchService: SearchService
+  ) { }
 
   doctorId: string = '';
   allBookings: any[] = [];
@@ -34,6 +39,14 @@ export class RelatedAppointmentsComponent implements OnInit {
   tempBookings: any[] = [];
   errorMessage: string = '';
   selectedAppointmentId!: number;
+  selectedFilter: string = '1';
+
+  filters = [
+    { id: '1', label: 'All days' },
+    { id: '2', label: 'Today' },
+    { id: '3', label: 'Up Coming' },
+    { id: '4', label: 'Last 30 days' }
+  ];
 
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
@@ -46,9 +59,12 @@ export class RelatedAppointmentsComponent implements OnInit {
     this.getUpComingBookings();
     this.getLast30DaysBookings();
     this.loadFlowbite();
-
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    console.log("Component destroyed, subscriptions unsubscribed.");
+  }
 
   loadFlowbite(): void {
     if (typeof Flowbite !== 'undefined') {
@@ -63,6 +79,8 @@ export class RelatedAppointmentsComponent implements OnInit {
     }
   }
 
+
+
   setDoctorId(): void {
     const id = this.authService.getNameIdentifier();
     console.log("id", id);
@@ -74,59 +92,60 @@ export class RelatedAppointmentsComponent implements OnInit {
   }
 
   getAllBookings(): void {
-    this.doctorService.getAllDoctorBookings(this.doctorId).subscribe({
+    const sub = this.doctorService.getAllDoctorBookings(this.doctorId).subscribe({
       next: (data) => {
         this.allBookings = data;
-        console.log("allBookings", this.allBookings);
         this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
-      },
+      }
     });
+    this.subscriptions.push(sub);
   }
+
   getTodayBookings(): void {
-    this.doctorService.getTodayDoctorBookings(this.doctorId).subscribe({
+    const sub = this.doctorService.getTodayDoctorBookings(this.doctorId).subscribe({
       next: (data) => {
         this.todayBookings = data;
-        console.log("todayBookings", this.todayBookings);
         this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
-      },
+      }
     });
+    this.subscriptions.push(sub);
   }
+
   getUpComingBookings(): void {
-    this.doctorService.getUpCommingDoctorBookings(this.doctorId).subscribe({
+    const sub = this.doctorService.getUpCommingDoctorBookings(this.doctorId).subscribe({
       next: (data) => {
         this.upComingBookings = data;
-        console.log("upComingBookings", this.upComingBookings);
         this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
-      },
+      }
     });
+    this.subscriptions.push(sub);
   }
 
   getLast30DaysBookings(): void {
-    this.doctorService.getLast30DaysDoctorBookings(this.doctorId).subscribe({
+    const sub = this.doctorService.getLast30DaysDoctorBookings(this.doctorId).subscribe({
       next: (data) => {
         this.last30DaysBookings = data;
-        console.log("last30DaysBookings", this.last30DaysBookings);
         this.filterBookingsByDropDownList();
       },
       error: (error) => {
         console.error(error);
-      },
+      }
     });
+    this.subscriptions.push(sub);
   }
 
   deleteAppointment(appointmentId: number): void {
-    this.doctorService.deleteBooking(this.doctorId, appointmentId).subscribe(
-      (response) => {
-        console.log("Appointment deleted successfully");
+    const sub = this.doctorService.deleteBooking(this.doctorId, appointmentId).subscribe(
+      () => {
         this.toaster.success("Appointment deleted successfully");
         this.getAllBookings();
       },
@@ -135,26 +154,16 @@ export class RelatedAppointmentsComponent implements OnInit {
         this.toaster.error("Error deleting appointment");
       }
     );
-
+    this.subscriptions.push(sub);
   }
+
   openDeleteModal(id: number) {
     this.selectedAppointmentId = id;
     this.deleteModal.showModal();
   }
- 
-
-  selectedFilter: string = '1';
-  filters = [
-    { id: '1', label: 'All days' },
-    { id: '2', label: 'Todday' },
-    { id: '3', label: 'Up Coming' },
-    { id: '4', label: 'Last 30 days' }
-
-  ];
 
   onFilterChange(selected: string): void {
     this.selectedFilter = selected;
-    console.log('Selected filter:', this.selectedFilter);
     this.filterBookingsByDropDownList();
   }
 
@@ -166,28 +175,23 @@ export class RelatedAppointmentsComponent implements OnInit {
   filterBookingsByDropDownList(): void {
     switch (this.selectedFilter) {
       case '2':
-        this.tempBookings = this.todayBookings
+        this.tempBookings = this.todayBookings;
         break;
       case '3':
-        this.tempBookings = this.upComingBookings
+        this.tempBookings = this.upComingBookings;
         break;
       case '4':
-        this.tempBookings = this.last30DaysBookings
+        this.tempBookings = this.last30DaysBookings;
         break;
       case '1':
         this.tempBookings = this.allBookings;
         break;
-      default:
-        break;
     }
-    console.log('Filtered Bookings:', this.tempBookings, this.selectedFilter); // Debug the bookings
   }
 
-
-  public searchItem !: string;
+  searchItem!: string;
   search(event: any) {
     const query = this.searchItem.toLowerCase().trim();
-    console.log('Searching ', this.searchItem);
     this.searchService.setSearchTerm(query);
     this.filterBookingsBySearch(query);
   }
@@ -201,6 +205,4 @@ export class RelatedAppointmentsComponent implements OnInit {
       );
     }
   }
-
-
 }

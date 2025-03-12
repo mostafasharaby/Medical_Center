@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MENU } from '../../menu';
 import { PatientService } from '../../services/patient.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +15,7 @@ import { TotalEarningsService } from '../../services/total-earnings.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
 
   appointments: any[] = [];
   infoBoxes: any[] = [];
@@ -26,15 +27,21 @@ export class BoardComponent implements OnInit {
   selectedAppointmentId!: number;
   menuItems = MENU;
 
-  constructor(private appointmentService: AppointmentService,
+  private subscriptions: Subscription[] = [];  // Store subscriptions
+
+  constructor(
+    private appointmentService: AppointmentService,
     private doctorService: DoctorService,
     private reload: ReloadService,
     private toaster: ToastrService,
     private patientService: PatientService,
-    private totalEarningService :TotalEarningsService) { }
+    private totalEarningService: TotalEarningsService
+  ) {}
+
   ngAfterViewInit(): void {
     this.reload.initializeLoader();
   }
+
   ngOnInit(): void {
     this.loadAppointments();
     this.loadDoctor();
@@ -45,60 +52,60 @@ export class BoardComponent implements OnInit {
   }
 
   loadAppointments(): void {
-    this.appointmentService.getAppointments().subscribe(
+    const appointmentSub = this.appointmentService.getAppointments().subscribe(
       (data) => {
         this.appointments = data;
         this.numOfAppointments = this.appointments.length;
         this.optimizeWidget();
         this.setBadgeForAppointments();
-        console.log('Fetched appointments:', this.appointments);
       },
       (error) => {
         console.error('Error fetching appointments:', error);
       }
     );
+    this.subscriptions.push(appointmentSub);
   }
 
   loadDoctor(): void {
-    this.doctorService.getAllDoctors().subscribe(
+    const doctorSub = this.doctorService.getAllDoctors().subscribe(
       (doctorFetched: Doctor[]) => {
         if (doctorFetched) {
           this.doctorsData = doctorFetched;
           this.numOfDoctors = this.doctorsData.length;
-          console.log('Fetched doctorsData :', this.doctorsData, this.doctorsData.length);
-        } else {
-          console.log('No  doctorsData');
         }
       },
       (error) => {
-        console.error('Error fetching doctorsData :', error);
+        console.error('Error fetching doctors:', error);
       }
     );
+    this.subscriptions.push(doctorSub);
   }
 
   fetchPatientLength(): void {
-    this.patientService.getAllPatient().subscribe({
+    const patientSub = this.patientService.getAllPatient().subscribe({
       next: (data) => {
         this.numOfPatients = data.length;
         this.optimizeWidget();
       },
-      error: () => {
-        console.error();
+      error: (err) => {
+        console.error('Error fetching patients:', err);
       }
     });
+    this.subscriptions.push(patientSub);
   }
 
   getTotalEarning(): void {
-    this.totalEarningService.getTotalEarnings().subscribe({
+    const earningSub = this.totalEarningService.getTotalEarnings().subscribe({
       next: (data) => {
-        this.totalAmountEarning = data.totalEarnings;   
-        console.log( "earing",this.totalAmountEarning);     
+        this.totalAmountEarning = data.totalEarnings;
       },
-      error: () => {
-        console.error();
+      error: (err) => {
+        console.error('Error fetching total earnings:', err);
       }
     });
+    this.subscriptions.push(earningSub);
   }
+
   setBadgeForAppointments() {
     const appointmentItem = this.menuItems.find(item => item.title === 'Appointment');
     if (appointmentItem) {
@@ -147,9 +154,11 @@ export class BoardComponent implements OnInit {
     this.selectedAppointmentId = id;
     this.deleteModal.showModal();
   }
+
   @ViewChild(DeleteModalComponent) deleteModal!: DeleteModalComponent;
+
   onDeleteAppointment(id: number) {
-    this.appointmentService.deleteBookingById(id).subscribe({
+    const deleteSub = this.appointmentService.deleteBookingById(id).subscribe({
       next: () => {
         this.toaster.success("Appointment deleted successfully");
         this.loadAppointments();
@@ -159,18 +168,18 @@ export class BoardComponent implements OnInit {
         this.toaster.error("Error deleting appointment");
       }
     });
+    this.subscriptions.push(deleteSub);
   }
 
   @ViewChild('editModal', { static: false }) editModal!: ElementRef;
   appointmentDate: string = '';
   appointmentTime: string = '';
-  // Open Modal
+
   onEditeAppointment(id: number, appointmentDate: string): void {
     this.selectedAppointmentId = id;
     this.appointmentDate = appointmentDate.split('T')[0];
     this.appointmentTime = appointmentDate.split('T')[1]?.substring(0, 5) || '';
 
-    console.log("selectedAppointmentId", this.selectedAppointmentId);
     const modalElement = document.getElementById('editModal');
     if (modalElement) {
       modalElement.classList.remove('hidden');
@@ -189,13 +198,13 @@ export class BoardComponent implements OnInit {
       id: this.selectedAppointmentId,
       appointmentTakenDate: this.appointmentDate + 'T' + this.appointmentTime,
     };
-    console.log("Updated", JSON.stringify(updatedAppointment));
+
     if (!this.selectedAppointmentId) {
       this.toaster.error("No appointment selected!");
       return;
     }
 
-    this.appointmentService.editeBooking(this.selectedAppointmentId, updatedAppointment).subscribe({
+    const editSub = this.appointmentService.editeBooking(this.selectedAppointmentId, updatedAppointment).subscribe({
       next: () => {
         this.toaster.success("Appointment Updated successfully");
         this.loadAppointments();
@@ -205,8 +214,14 @@ export class BoardComponent implements OnInit {
         this.toaster.error("Error Updating appointment");
       }
     });
-    console.log('Updated Date:', this.appointmentDate);
+    this.subscriptions.push(editSub);
+
     this.closeModal();
   }
 
+  // Clean up when component is destroyed
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    console.log("BoardComponent destroyed and subscriptions cleaned up.");
+  }
 }
