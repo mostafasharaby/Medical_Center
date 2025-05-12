@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AngularApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AngularApi.Models;
 
 namespace AngularApi.Controllers
 {
@@ -20,19 +15,21 @@ namespace AngularApi.Controllers
             _context = context;
         }
 
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PatientReview>>> GetPatientReviews()
         {
-            return await _context.PatientReviews.Include(i=>i.Patient).ToListAsync();
+            var reviews = await _context.PatientReviews.Include(i => i.Patient).ToListAsync();
+            return Ok(reviews);
         }
+
         [HttpGet("unique-patients")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetUniquePatients()
         {
             var uniquePatients = await _context.PatientReviews
-                .Include(i => i.Patient) 
-                .Select(pr => pr.Patient) 
-                .Distinct() 
+                .Include(i => i.Patient)
+                .Select(pr => pr.Patient)
+                .Distinct()
                 .ToListAsync();
 
             return Ok(uniquePatients);
@@ -48,10 +45,10 @@ namespace AngularApi.Controllers
                 return NotFound();
             }
 
-            return patientReview;
+            return Ok(patientReview);
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatientReview(int id, PatientReview patientReview)
         {
@@ -81,7 +78,7 @@ namespace AngularApi.Controllers
             return NoContent();
         }
 
-        
+
         [HttpPost]
         public async Task<ActionResult<PatientReview>> PostPatientReview(PatientReview patientReview)
         {

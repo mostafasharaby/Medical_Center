@@ -41,6 +41,18 @@ namespace AngularApi.Controllers
             // this._signInManager = _signInManager;
 
         }
+
+        public AccountController(UserManager<AppUser> userManager, IConfiguration Configuration, IEmailService emailService,
+           IJwtService jwtService, IGoogleService googleService)
+        {
+            _userManager = userManager;
+            _Configuration = Configuration;
+            _emailService = emailService;
+            _jwtService = jwtService;
+            _googleService = googleService;
+            // this._signInManager = _signInManager;
+
+        }
         [HttpPost("register/user")]
         public async Task<IActionResult> Register(RegisterUserDTO registerUser)
         {
@@ -64,7 +76,7 @@ namespace AngularApi.Controllers
                     var confirmtionLinkForFront = $"http://localhost:4200/auth/confirm-email?userId={appUser.Id}&token={WebUtility.UrlEncode(token)}";
 
                     var emailBody = _emailTemplateService.GetConfirmationEmail(appUser.UserName, confirmtionLinkForFront);
-                    var message = new Message(new[] { appUser.Email }, "Confirm Your Email", emailBody);
+                    var message = new Message(new[] { appUser.Email }, "Confirm Your Email", "emailBody");
 
                     try
                     {
