@@ -26,6 +26,14 @@ namespace AngularApi.Controllers
             _emailTemplateService = emailTemplateService;
         }
 
+        public AppointmentsController(MedicalCenterDbContext context, UserManager<AppUser> userManager, IEmailService emailService)
+        {
+            _userManager = userManager;
+            _context = context;
+            _emailService = emailService;
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
         {

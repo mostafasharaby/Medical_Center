@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AngularApi.DTO;
+using AngularApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AngularApi.Models;
-using AngularApi.DTO;
-using Microsoft.AspNetCore.Authorization;
 
 namespace AngularApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Authorize(Roles = "doctor")]
+    //  [Authorize(Roles = "doctor")]
     public class DoctorsController : ControllerBase
     {
         private readonly MedicalCenterDbContext _context;
@@ -22,7 +16,7 @@ namespace AngularApi.Controllers
         {
             _context = context;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctors()
         {
@@ -50,7 +44,7 @@ namespace AngularApi.Controllers
             return Ok(doctorDTOs);
         }
 
-        
+
         [HttpGet("{doctorId}")]
         public async Task<ActionResult<Doctor>> GetDoctor(string doctorId)
         {
@@ -61,10 +55,10 @@ namespace AngularApi.Controllers
                 return NotFound();
             }
 
-            return doctor;
+            return Ok(doctor);
         }
 
-          
+
         [HttpPost]
         public async Task<ActionResult<Doctor>> PostDoctor(Doctor doctor)
         {
@@ -79,9 +73,9 @@ namespace AngularApi.Controllers
         public async Task<IActionResult> GetBookings(string doctorId)
         {
             var bookings = await _context.Appointments
-                .Include(a => a.Patient)  
+                .Include(a => a.Patient)
                 .Where(a => a.DoctorId == doctorId &&
-                            a.AppointmentStatus!.Status == AppointmentStatusEnum.Active) 
+                            a.AppointmentStatus!.Status == AppointmentStatusEnum.Active)
                 .ToListAsync();
 
             return Ok(bookings);
@@ -91,11 +85,11 @@ namespace AngularApi.Controllers
         public async Task<IActionResult> GetBookingsByStatus(string doctorId, AppointmentStatusEnum status)
         {
             var bookings = await _context.Appointments
-                .Include(i=>i.AppointmentStatus)
+                .Include(i => i.AppointmentStatus)
                 .Where(a => a.DoctorId == doctorId && a.AppointmentStatus!.Status == status)
                 .ToListAsync();
             return Ok(bookings);
-        }    
+        }
 
         [HttpGet("{doctorId}/bookings/today")]
         public async Task<IActionResult> GetTodaysBookings(string doctorId)
@@ -142,13 +136,13 @@ namespace AngularApi.Controllers
         public async Task<IActionResult> GetReviews(string doctorId)
         {
             var reviews = await _context.PatientReviews
-                .Include(i=>i.Patient)
+                .Include(i => i.Patient)
                 .Where(r => r.DoctorId == doctorId)
                 .ToListAsync();
             return Ok(reviews);
         }
 
-        
+
         [HttpGet("{doctorId}/rating")]
         public async Task<IActionResult> GetRating(string doctorId)
         {
@@ -158,7 +152,7 @@ namespace AngularApi.Controllers
             return Ok(rating);
         }
 
-        
+
         [HttpGet("{doctorId}/qualifications")]
         public async Task<IActionResult> GetQualifications(string doctorId)
         {
@@ -172,13 +166,13 @@ namespace AngularApi.Controllers
         [HttpGet("{doctorId}/specializations")]
         public async Task<IActionResult> GetSpecializations(string doctorId)
         {
-            var specializations = await _context.DoctorSpecialization.Include(i=>i.Specialization)
+            var specializations = await _context.DoctorSpecialization.Include(i => i.Specialization)
                 .Where(s => s.DoctorId == doctorId)
                 .ToListAsync();
             return Ok(specializations);
         }
 
-       
+
         //[HttpGet("{doctorId}/schedules")]
         //public async Task<IActionResult> GetSchedules(int doctorId)
         //{
@@ -216,7 +210,7 @@ namespace AngularApi.Controllers
 
             return NoContent();
         }
-        
+
 
         [HttpPut("bookings/{bookingId}")]
         public async Task<IActionResult> UpdateBooking(int bookingId, [FromBody] Appointment updatedBooking)
@@ -232,9 +226,8 @@ namespace AngularApi.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Doctors/5
         [HttpDelete("{doctorId}")]
-        public async Task<IActionResult> DeleteDoctor(int id)
+        public async Task<IActionResult> DeleteDoctor(string id)
         {
             var doctor = await _context.Doctors.FindAsync(id);
             if (doctor == null)
@@ -262,8 +255,8 @@ namespace AngularApi.Controllers
             }
             appointment.AppointmentStatusId = (int)AppointmentStatusEnum.Canceled;
             //_context.Appointments.Remove(appointment);
-            await _context.SaveChangesAsync();           
-            return NoContent(); 
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
 
