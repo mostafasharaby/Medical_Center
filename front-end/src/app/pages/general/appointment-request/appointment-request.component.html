@@ -102,7 +102,7 @@
               >
             </div>
           </div>
-        </div>
+        </div>  
   
         <!-- Doctor Dropdown -->
         <div class="col-md-6 col-sm-12 col-xs-12">
@@ -156,4 +156,57 @@
     </form>
   </div>
 
+
+<div class="contact-area style-two">
+  <div class="section-title">
+    <div class="text-right mb-3">
+      <button type="button" class="btn-style-one" (click)="toggleAppointmentsTable()">
+        {{ showAppointments ? 'Hide My Appointments' : 'Show My Appointments' }}
+      </button>
+    </div>
+  </div>
+
+ <div class="appointments-table-container" *ngIf="showAppointments">
+    <div class="card shadow">
+      <div class="card-header text-white"  style="background-color: #48bdc5;">
+        <h5 class="mb-0">My Appointments</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="userAppointments.length === 0">
+                <td colspan="6" class="text-center">No appointments found</td>
+              </tr>
+              <tr *ngFor="let appointment of userAppointments">
+                <td>{{ appointment.doctorName }}</td>
+                <td>{{ appointment.probableStartTime | date:'mediumDate' }}</td>
+                <td>{{ appointment.probableStartTime | date:'shortTime' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getStatusBadgeClass(appointment.status)">
+                    {{ appointment.appointmentStatus }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-danger" (click)="cancelAppointment(appointment.id)">
+                    Cancel
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <app-Payment  (paymentSuccess)="handlePaymentStatus($event)"  *ngIf="showModal" (close)="showModal = false"></app-Payment>

@@ -28,5 +28,13 @@ export class AppointmentService {
     const headers = this.authService.getHeaders();
     return this.http.put(`${this.apiUrl}/${Id}`,updatedAppointment, { headers });
   }
+ // Add new methods for the appointments table functionality
+  getUserAppointments(): Observable<any[]> {
+    const headers = this.authService.getHeaders();  
+    return this.http.get<any[]>(`${this.apiUrl}/patient/`+this.authService.getNameIdentifier(),{ headers });
+  }
 
+  cancelAppointment(appointmentId: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/appointments/${appointmentId}/cancel`, {});
+  }
 }

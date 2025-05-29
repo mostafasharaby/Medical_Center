@@ -23,7 +23,11 @@ export class AppointmentRequestComponent implements OnInit, OnDestroy {
   appointmentForm!: FormGroup;
   isLoggedIn = true;
 
-
+ // New properties for the appointments table
+  showAppointments: boolean = false;
+  userAppointments: any[] = [];
+  isLoading: boolean = false;
+  
   constructor(
     private specializationService: SpecializationService,
     private doctorService: DoctorService,
@@ -194,5 +198,64 @@ export class AppointmentRequestComponent implements OnInit, OnDestroy {
     }
   }
 
+   // New methods for handling appointments table
+  toggleAppointmentsTable() {
+    this.showAppointments = !this.showAppointments;
+    if (this.showAppointments) {
+      this.loadUserAppointments();
+    }
+  }
+
+  loadUserAppointments() {
+    if (!this.isLoggedIn) {
+      this.toastr.warning('Please login to view your appointments');
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    this.isLoading = true;
+    const appointmentsSub = this.appointmentsService.getUserAppointments().subscribe(
+      (appointments) => {
+        this.userAppointments = appointments;
+        this.isLoading = false;
+        console.log('User appointments loaded:', this.userAppointments);
+      },
+      (error) => {
+        console.error('Error fetching user appointments:', error);
+        this.toastr.error('Unable to load appointments', 'Error');
+        this.isLoading = false;
+      }
+    );
+    this.subscriptions.add(appointmentsSub);
+  }
+
+  cancelAppointment(appointmentId: number) {
+      const cancelSub = this.appointmentsService.deleteBookingById(appointmentId).subscribe(
+        () => {
+          this.toastr.success('Appointment cancelled successfully');
+          this.userAppointments = this.userAppointments.filter(app => app.id !== appointmentId);
+        },
+        (error) => {
+          console.error('Error cancelling appointment:', error);
+          this.toastr.error('Failed to cancel appointment', 'Error');
+        }
+      );
+      this.subscriptions.add(cancelSub);
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'confirmed':
+        return 'bg-success';
+      case 'pending':
+        return 'bg-warning';
+      case 'cancelled':
+        return 'bg-danger';
+      case 'completed':
+        return 'bg-info';
+      default:
+        return 'bg-secondary';
+    }
+  }
 
 }

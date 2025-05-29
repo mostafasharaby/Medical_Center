@@ -42,17 +42,17 @@ namespace AngularApi.Controllers
 
         }
 
-        public AccountController(UserManager<AppUser> userManager, IConfiguration Configuration, IEmailService emailService,
-           IJwtService jwtService, IGoogleService googleService)
-        {
-            _userManager = userManager;
-            _Configuration = Configuration;
-            _emailService = emailService;
-            _jwtService = jwtService;
-            _googleService = googleService;
-            // this._signInManager = _signInManager;
+        //public AccountController(UserManager<AppUser> userManager, IConfiguration Configuration, IEmailService emailService,
+        //   IJwtService jwtService, IGoogleService googleService)
+        //{
+        //    _userManager = userManager;
+        //    _Configuration = Configuration;
+        //    _emailService = emailService;
+        //    _jwtService = jwtService;
+        //    _googleService = googleService;
+        //    // this._signInManager = _signInManager;
 
-        }
+        //}
         [HttpPost("register/user")]
         public async Task<IActionResult> Register(RegisterUserDTO registerUser)
         {
@@ -81,7 +81,6 @@ namespace AngularApi.Controllers
                     try
                     {
                         _emailService.SendEmail(message);
-
                         return Ok(new { message = "Account created successfully. Please check your email to confirm your account." });
                     }
                     catch (Exception ex)

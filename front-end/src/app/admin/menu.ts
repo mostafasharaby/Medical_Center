@@ -5,16 +5,10 @@ export const MENU = [
       icon: 'fas fa-tachometer-alt'
     },
     {
-      title: 'Calendar',
-      path: '#',
-      icon: 'fas fa-calendar-alt',
-      badge: 'Pro'
-    },
-    {
       title: 'Appointment',
       path: '/admin/appointments',
       icon: 'fas fa-calendar-check',
-      badge: null
+      badge: '0'
     },
     {
       title: 'Doctors',
