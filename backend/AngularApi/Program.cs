@@ -1,13 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.OpenApi.Models;
 using AngularApi.Services;
-using AngularApi.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace WebApiDemo
 {
@@ -20,17 +11,17 @@ namespace WebApiDemo
             builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerServices();                       
+            builder.Services.AddSwaggerServices();
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddAuthenticationServices(builder.Configuration);
-           
+
             var app = builder.Build();
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                await roleManager.EnsureRolesCreatedAsync();
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            //    await roleManager.EnsureRolesCreatedAsync();
+            //}
 
             if (app.Environment.IsDevelopment())
             {
@@ -41,14 +32,14 @@ namespace WebApiDemo
                 });
             }
 
-            app.UseStaticFiles();  
+            app.UseStaticFiles();
             app.UseCors("MyPolicy");
-            app.UseAuthentication(); 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
         }
 
-       
+
     }
 }

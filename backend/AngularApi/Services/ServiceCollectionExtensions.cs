@@ -119,17 +119,17 @@ namespace AngularApi.Services
                 });
             });
         }
-        public static async Task EnsureRolesCreatedAsync(this RoleManager<IdentityRole> roleManager)
-        {
-            var roles = new[] { "admin", "user", "doctor" };
+        //public static async Task EnsureRolesCreatedAsync(this RoleManager<IdentityRole> roleManager)
+        //{
+        //    var roles = new[] { "admin", "user", "doctor" };
 
-            foreach (var role in roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-        }
+        //    foreach (var role in roles)
+        //    {
+        //        if (!await roleManager.RoleExistsAsync(role))
+        //        {
+        //            await roleManager.CreateAsync(new IdentityRole(role));
+        ////        }
+        ////    }
+        //}
     }
 }

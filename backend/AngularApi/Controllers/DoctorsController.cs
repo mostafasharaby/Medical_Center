@@ -2,6 +2,8 @@
 using AngularApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Polly;
+using Polly.Retry;
 
 namespace AngularApi.Controllers
 {
@@ -11,17 +13,23 @@ namespace AngularApi.Controllers
     public class DoctorsController : ControllerBase
     {
         private readonly MedicalCenterDbContext _context;
-
+        private readonly AsyncRetryPolicy _retryPolicy;
         public DoctorsController(MedicalCenterDbContext context)
         {
             _context = context;
+            _retryPolicy = Policy.Handle<Exception>()
+                .WaitAndRetryAsync(3, sleepDurationProvider =>
+                TimeSpan.FromMilliseconds(1000 * sleepDurationProvider));
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctors()
         {
             return await _context.Doctors.Include(i => i.DoctorSpecializations)!.ThenInclude(i => i.Specialization).ToListAsync();
         }
+
+
 
         [HttpGet("/api/DoctorsWithSpectialization")]
         public async Task<IActionResult> GetDoctorsWithSpectialization()
@@ -45,17 +53,55 @@ namespace AngularApi.Controllers
         }
 
 
+        //[HttpGet("{doctorId}")]
+        //public async Task<ActionResult<Doctor>> GetDoctor(string doctorId)
+        //{
+        //    var maxRetries = 3;
+        //    var leftRetries = maxRetries;
+
+
+        //    while (leftRetries > 0)
+        //    {
+        //        try
+        //        {
+        //            var doctor = await _context.Doctors.FindAsync(doctorId);
+
+        //            if (doctor == null)
+        //                return NotFound($"Doctor with ID {doctorId} not found.");
+
+        //            return Ok(doctor);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            leftRetries--;
+
+        //            Console.WriteLine($"Attempt failed. Retries left: {leftRetries}. Error: {ex.Message}");
+
+        //            if (leftRetries == 0)
+        //            {
+        //                return StatusCode(500, "Internal server error while retrieving doctor data.");
+        //            }
+
+        //            await Task.Delay(1000);
+        //        }
+        //    }
+
+        //    return StatusCode(500, "An unexpected error occurred.");
+        //}
+
         [HttpGet("{doctorId}")]
         public async Task<ActionResult<Doctor>> GetDoctor(string doctorId)
         {
-            var doctor = await _context.Doctors.FindAsync(doctorId);
-
-            if (doctor == null)
+            var result = await _retryPolicy.ExecuteAsync(async () =>
             {
-                return NotFound();
-            }
+                var doctor = await _context.Doctors.FindAsync(doctorId);
 
-            return Ok(doctor);
+                if (doctor == null)
+                    return null;
+
+                return doctor;
+            });
+            return result != null ? Ok(result) : NotFound(result);
         }
 
 
@@ -72,13 +118,17 @@ namespace AngularApi.Controllers
         [HttpGet("{doctorId}/bookings")]
         public async Task<IActionResult> GetBookings(string doctorId)
         {
-            var bookings = await _context.Appointments
+            var result = await _retryPolicy.ExecuteAsync(async () =>
+            {
+                var bookings = await _context.Appointments
                 .Include(a => a.Patient)
                 .Where(a => a.DoctorId == doctorId &&
                             a.AppointmentStatus!.Status == AppointmentStatusEnum.Active)
                 .ToListAsync();
 
-            return Ok(bookings);
+                return bookings;
+            });
+            return Ok(result);
         }
 
         [HttpGet("{doctorId}/bookings/status/{status}")]
