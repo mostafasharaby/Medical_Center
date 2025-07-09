@@ -9,6 +9,10 @@ import { DoctorService } from '../../../pages/general/services/doctor.service';
 import { ReloadService } from '../../../shared/service/reload.service';
 import { DeleteModalComponent } from '../../../doctor/pages/delete-modal/delete-modal.component';
 import { TotalEarningsService } from '../../services/total-earnings.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-board',
@@ -217,6 +221,25 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(editSub);
 
     this.closeModal();
+  }
+
+
+  downloadAsPDF(){
+    const doc = new jsPDF();
+
+    autoTable(doc,{
+      head:[["Patient Name","Assigned Doctor","Date","Time"]],
+      body:this.appointments .map(i => [i.patient.name , i.doctor.name , i.appointmentDate , i.appointmentDate])
+    })
+    doc.save("table.pdf")
+  }
+@ViewChild('tableRef') tableRef!: ElementRef;
+  downloadAsExcel(){
+   const ws: XLSX.WorkSheet  = XLSX.utils.table_to_sheet(this.tableRef.nativeElement); // Converts an HTML <table> element into an Excel-compatible worksheet (XLSX.WorkSheet).
+   console.log("WorkSheet",this.tableRef.nativeElement, ws)
+   const wb: XLSX.WorkBook  = XLSX.utils.book_new();//  like a new Excel file with no sheets in it yet.
+   XLSX.utils.book_append_sheet(wb,ws,'appointments'); //Adds the worksheet ws (your table data) into the workbook wb
+   XLSX.writeFile(wb,'appointments.xlsx');
   }
 
   // Clean up when component is destroyed
